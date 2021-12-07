@@ -1,11 +1,12 @@
 %{
-    const { DataType, getToken, Operator } = require('../compiler/utils')
-    const symbols = require('../compiler/lexical/symbols')
-    const errors = require('../compiler/lexical/error')
+    const symbols = require('../compiler/lexical/symbols/index').default
+    const errors = require('../compiler/lexical/error/index').default
+    const DataType = require('../compiler/utils/types').default
+		const getToken = require('../compiler/utils/tools').default
 
 		// AGREGAR TOKEN
 		const addToken = (yylloc, name) => {
-				symbols.default.push({ ...getToken(yylloc), name })
+				symbols.push({ ...getToken(yylloc), name })
 				return name
 		}
 %}
@@ -97,7 +98,7 @@ NULLCHAR "\\0"
 
 <<EOF>>				        			return 'EOF'
 .					        					{
-															errors.default.push({
+															errors.push({
                                 type: 'Lexical',
                                 token: {
 																	line: yylloc.first_line,
@@ -130,7 +131,7 @@ NULLCHAR "\\0"
 %%
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* INICIO */
-START : EOF {
+START : TYPE EOF {
         return $1;
     };
 

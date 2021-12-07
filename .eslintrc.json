@@ -1,12 +1,13 @@
 {
   "env": {
-    "node": true,
+    "browser": true,
     "es2021": true
   },
   "extends": ["airbnb-base", "airbnb-typescript", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": "./tsconfig.json",
+    "sourceType": "module"
   },
   "plugins": ["@typescript-eslint"],
   "rules": {

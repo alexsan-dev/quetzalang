@@ -1,4 +1,4 @@
-import { TokenInfo } from 'compiler/utils'
+import { TokenInfo } from 'compiler/utils/types'
 
 const errors: {
   type: 'Lex' | 'Syntax' | 'Semantic'
