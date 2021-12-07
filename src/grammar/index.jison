@@ -131,7 +131,7 @@ NULLCHAR "\\0"
 %%
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* INICIO */
-START : TYPE EOF {
+START : TYPE TYPE EOF {
         return $1;
     };
 

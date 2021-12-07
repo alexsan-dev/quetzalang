@@ -22,6 +22,6 @@ const compile = (code: string) => {
   }
 }
 
-compile('int')
+compile('int int')
 
 export { compile }

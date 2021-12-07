@@ -3,6 +3,7 @@ const path = require('path')
 module.exports = {
   mode: 'production',
   entry: './src/index.ts',
+  watch: true,
   output: {
     path: path.resolve(__dirname, 'scripts'),
     filename: 'index.js',

@@ -1,6 +1,12 @@
 ## Desarrollo
 
-### Lista de dependencias globales para desarrollo
+### 0) Clonar o descargar este repositorio
+
+```bash
+git clone https://github.com/alexsan-dev/quetzalang.git
+```
+
+### 1) Instalar lista de dependencias globales para desarrollo
 
 - jison
 - typescript
@@ -9,17 +15,13 @@
 npm i -g jison typescript
 ```
 
-### Lista de dependencias locales
-
-- eslint
-- prettier
-- nodemon
+### 2) Instalar lista de dependencias locales
 
 ```bash
 npm i
 ```
 
-### Iniciar en modo desarrollo
+### 3) Iniciar en modo desarrollo
 
 Al iniciar en este modo compilara todos los archivos .ts, creara la gramatica jison y creara un servidor estatico para el index.html en http://localhost:3000
 

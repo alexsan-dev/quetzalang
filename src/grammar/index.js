@@ -1,12 +1,12 @@
 
 
 define(function(require){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o};
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,3],$V1=[1,4],$V2=[1,5],$V3=[1,6],$V4=[1,7],$V5=[5,6,7,8,9,10];
 var parser = {trace: function trace () { },
 yy: {},
 symbols_: {"error":2,"START":3,"TYPE":4,"EOF":5,"intType":6,"dblType":7,"boolType":8,"charType":9,"strType":10,"$accept":0,"$end":1},
 terminals_: {2:"error",5:"EOF",6:"intType",7:"dblType",8:"boolType",9:"charType",10:"strType"},
-productions_: [0,[3,2],[4,1],[4,1],[4,1],[4,1],[4,1]],
+productions_: [0,[3,3],[4,1],[4,1],[4,1],[4,1],[4,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -14,7 +14,7 @@ var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
 
-        return $$[$0-1];
+        return $$[$0-2];
     
 break;
 case 2:
@@ -44,8 +44,8 @@ case 6:
 break;
 }
 },
-table: [{3:1,4:2,6:[1,3],7:[1,4],8:[1,5],9:[1,6],10:[1,7]},{1:[3]},{5:[1,8]},{5:[2,2]},{5:[2,3]},{5:[2,4]},{5:[2,5]},{5:[2,6]},{1:[2,1]}],
-defaultActions: {3:[2,2],4:[2,3],5:[2,4],6:[2,5],7:[2,6],8:[2,1]},
+table: [{3:1,4:2,6:$V0,7:$V1,8:$V2,9:$V3,10:$V4},{1:[3]},{4:8,6:$V0,7:$V1,8:$V2,9:$V3,10:$V4},o($V5,[2,2]),o($V5,[2,3]),o($V5,[2,4]),o($V5,[2,5]),o($V5,[2,6]),{5:[1,9]},{1:[2,1]}],
+defaultActions: {9:[2,1]},
 parseError: function parseError (str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -193,9 +193,9 @@ parse: function parse(input) {
     return true;
 }};
 
-    const DataType = require('../compiler/utils/types').default
     const symbols = require('../compiler/lexical/symbols/index').default
     const errors = require('../compiler/lexical/error/index').default
+    const DataType = require('../compiler/utils/types').default
 		const getToken = require('../compiler/utils/tools').default
 
 		// AGREGAR TOKEN
