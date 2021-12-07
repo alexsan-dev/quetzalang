@@ -6,6 +6,7 @@ import logs from 'compiler/logs'
 
 // LISTA DE INSTRUCCIONES
 let instructions: unknown[] = []
+let expandedConsole = false
 
 const compile = () => {
   const editor = document.querySelector(
@@ -34,13 +35,29 @@ const cleanConsole = () => {
   textarea.value = ''
 }
 
+// OCULTAR CONSOLA
+const collapseConsole = () => {
+  // TEXTAREA
+  const textarea = document.getElementById('console') as HTMLTextAreaElement
+  const chevron = document.getElementById('chevron') as HTMLTextAreaElement
+
+  textarea.style.height = expandedConsole ? '0px' : '40vh'
+  chevron.style.transform = `rotate(${expandedConsole ? 180 : 0}deg)`
+  expandedConsole = !expandedConsole
+}
+
 // EVENTOS
 const setEvents = () => {
   const cleanBtn = document.getElementById('cleanBtn')
   const compileBtn = document.getElementById('runtimeBtn')
+  const collapseBtn = document.getElementById('collapseBtn')
+  const terminalBtn = document.getElementById('terminalBtn')
 
   compileBtn?.addEventListener('click', compile)
   cleanBtn?.addEventListener('click', cleanConsole)
+  collapseBtn?.addEventListener('click', collapseConsole)
+  terminalBtn?.addEventListener('click', collapseConsole)
+
   window.addEventListener('keydown', (ev: KeyboardEvent) => {
     // CONTROL KEY
     if (ev.ctrlKey || ev.metaKey) {
@@ -49,8 +66,11 @@ const setEvents = () => {
       if (ev.key === 'p') {
         compile()
         isCtrl = true
-      } else if (ev.key === 'm') {
+      } else if (ev.key === 'r') {
         cleanConsole()
+        isCtrl = true
+      } else if (ev.key === 'm') {
+        collapseConsole()
         isCtrl = true
       }
 
