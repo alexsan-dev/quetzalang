@@ -4,11 +4,36 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prueba</title>
+    <title>Quetzalang</title>
     <link rel="stylesheet" href="styles/index.css" />
   </head>
   <body>
-    <p>Prueba</p>
+    <main>
+      <div id="toolbar">
+        <button id="runtimeBtn"><i data-feather="skip-forward"></i></button>
+        <button id="compileBtn"><i data-feather="globe"></i></button>
+        <button id="cleanBtn"><i data-feather="x-circle"></i></button>
+      </div>
+      <div id="editor"></div>
+      <div id="consoleContainer">
+        <span><i data-feather="terminal"></i> Salida de consola: </span>
+        <textarea id="console" readonly></textarea>
+      </div>
+    </main>
+
     <script type="module" src="scripts/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/ace.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/mode-java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/theme-monokai.min.js"></script>
+    <script>
+      // CONFIGURAR EDITOR
+      const editor = ace.edit('editor')
+      const JavaMode = ace.require('ace/mode/java').Mode
+      editor.session.setMode(new JavaMode())
+      editor.setTheme('ace/theme/monokai')
+      editor.setFontSize(18)
+      feather.replace()
+    </script>
   </body>
 </html>

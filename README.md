@@ -28,3 +28,13 @@ Al iniciar en este modo compilara todos los archivos .ts, creara la gramatica ji
 ```bash
 npm start
 ```
+
+## Editor
+
+### Atajos de teclado para editor
+
+| Comando | Accion         |
+| ------- | -------------- |
+| Ctr+P   | Interpretar    |
+| Ctr+M   | Borrar consola |
+| Ctr+T   | Traducir       |
