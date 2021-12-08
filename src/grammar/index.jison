@@ -1,14 +1,19 @@
 %{
+    // TOOLS
     const symbols = require('../compiler/lexical/symbols/index').default
     const errors = require('../compiler/lexical/error/index').default
     const DataType = require('../compiler/utils/types').default
-		const getToken = require('../compiler/utils/tools').default
+    const getToken = require('../compiler/utils/tools').default
 
-		// AGREGAR TOKEN
-		const addToken = (yylloc, name) => {
-				symbols.push({ ...getToken(yylloc), name })
-				return name
-		}
+    // INSTRUCCIONES
+    const Expression = require('../compiler/instruction/expression/index').default
+    const Value = require('../compiler/instruction/value/index').default
+
+    // AGREGAR TOKEN
+    const addToken = (yylloc, name) => {
+        symbols.push({ ...getToken(yylloc), name })
+        return name
+    }
 %}
 
 %lex
@@ -84,29 +89,30 @@ NULLCHAR "\\0"
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* REGEX */
-\"[^\"]*\"				    			{
-															yytext = yytext.substr(1,yyleng-2);
-															return addToken(yylloc, 'text');
-														}
+\"[^\"]*\"				    {
+                                yytext = yytext.substr(1,yyleng-2);
+                                return addToken(yylloc, 'text');
+                            }
 \'[^\']?\'                  {
-															yytext = yytext.substr(1,yyleng-2);
-															return addToken(yylloc, 'character');
-														}
-[0-9]*"."[0-9]+\b           return addToken(yylloc, 'decimal')
-[0-9]+\b				    				return addToken(yylloc, 'integer')
-([a-zA-Z])[a-zA-Z0-9_]*	    return addToken(yylloc, 'id')
+                                yytext = yytext.substr(1,yyleng-2);
+                                return addToken(yylloc, 'character');
+						    }
 
-<<EOF>>				        			return 'EOF'
-.					        					{
-															errors.push({
-                                type: 'Lexical',
-                                token: {
-																	line: yylloc.first_line,
-																	col: yylloc.fist_column
-																},
-                                msg: `${yytext} no reconocido`
-                            	});
-														}
+[0-9]*"."[0-9]+\b           return addToken(yylloc, 'decimal')
+[0-9]+\b				    return addToken(yylloc, 'integer')
+([a-zA-Z])[a-zA-Z0-9_]*	    return addToken(yylloc, 'id')
+<<EOF>>				        return 'EOF'
+
+.                           {
+                                errors.push({
+                                    type: 'Lexical',
+                                    token: {
+                                        line: yylloc.first_line,
+                                        col: yylloc.fist_column
+                                    },
+                                    msg: `${yytext} no reconocido`
+                                });
+                            }
 
 /lex
 
@@ -148,4 +154,109 @@ TYPE :
         $$ = DataType.CHARACTER;
     } | strType  {
         $$ = DataType.STRING;
+    };
+
+/*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+/* TODAS LAS EXPRESIONES VALIDAS */
+EXPRESSIONS : EXPRESSIONS plus EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.PLUS });
+    }
+    | EXPRESSIONS equalsEquals EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.EQUALSEQUALS });
+    }
+    | EXPRESSIONS moreOrEquals EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.MOREOREQUALS });
+    }
+    | EXPRESSIONS lessOrEquals EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.LESSOREQUALS });
+    }
+    | EXPRESSIONS nonEquals EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.NONEQUALS });
+    }
+    | EXPRESSIONS division EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.DIVISION });
+    }
+    | EXPRESSIONS module EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.MODULE });
+    }
+    | EXPRESSIONS power EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.POWER });
+    }
+    | EXPRESSIONS times EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.TIMES });
+    }
+    | EXPRESSIONS minus EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.MINUS });
+    }
+    | EXPRESSIONS minor EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.MINOR });
+    }
+    | EXPRESSIONS major EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.MAJOR });
+    }
+    | EXPRESSIONS and EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.AND });
+    }
+    | EXPRESSIONS or EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator:Operator.OR });
+    }
+    | not EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $2, operator: Operator.NOT });
+    }
+    | minus EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $2, operator: Operator.NEGATION });
+    }
+    | openParenthesis EXPRESSIONS closeParenthesis {
+        $$ = new Expression(getToken(@1), { left: $2 });
+    }
+    | VARVALUE {
+        $$ = new Expression(getToken(@1), { value: $1 });
+    }
+    | openParenthesis TERNARY closeParenthesis {
+        $$ = $2;
+    };
+
+TERNARY : EXPRESSIONS questionMark EXPRESSIONS colom EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $3, right: $5, condition: $1, operator: Operator.TERNARY })
+    };
+
+/*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+/* VALORES DE VARIABLES */
+VARVALUE : decimal {
+        $$ = new Value(getToken(@1), { value: $1, type: DataType.DOUBLE })
+    }
+    | text {
+        $$ = new Value(getToken(@1), { value: $1, type: DataType.STRING })
+    }
+    | id {
+        $$ = new Value(getToken(@1), { value: $1, type: DataType.ID })
+    }
+    | integer {
+        $$ = new Value(getToken(@1), { value: $1, type: DataType.INTEGER })
+    }
+    | character {
+        $$ = new Value(getToken(@1), { value: $1, type: DataType.CHARACTER })
+    }
+    | trBool {
+        $$ = new Value(getToken(@1), { value: $1, type: DataType.BOOLEAN })
+    }
+    | flBool {
+        $$ = new Value(getToken(@1), { value: $1, type: DataType.BOOLEAN })
     };

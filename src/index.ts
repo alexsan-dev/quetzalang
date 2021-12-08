@@ -23,6 +23,7 @@ const compile = () => {
   try {
     instructions = parser.parse(value as string)
     console.log(instructions)
+    if (errors.length) console.log(errors.join('\n'))
   } catch (err) {
     console.log(err)
   }

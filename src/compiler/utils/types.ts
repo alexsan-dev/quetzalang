@@ -1,5 +1,6 @@
 // TIPOS DE DATOS
 enum DataType {
+  ID = 'ID',
   NULL = 'NULL',
   INTEGER = 'INT',
   ARRAY = 'ARRAY',

@@ -4,9 +4,9 @@ define(function(require){
 var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,3],$V1=[1,4],$V2=[1,5],$V3=[1,6],$V4=[1,7],$V5=[5,6,7,8,9,10];
 var parser = {trace: function trace () { },
 yy: {},
-symbols_: {"error":2,"START":3,"TYPE":4,"EOF":5,"intType":6,"dblType":7,"boolType":8,"charType":9,"strType":10,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",6:"intType",7:"dblType",8:"boolType",9:"charType",10:"strType"},
-productions_: [0,[3,3],[4,1],[4,1],[4,1],[4,1],[4,1]],
+symbols_: {"error":2,"START":3,"TYPE":4,"EOF":5,"intType":6,"dblType":7,"boolType":8,"charType":9,"strType":10,"EXPRESSIONS":11,"plus":12,"equalsEquals":13,"moreOrEquals":14,"lessOrEquals":15,"nonEquals":16,"division":17,"module":18,"power":19,"times":20,"minus":21,"minor":22,"major":23,"and":24,"or":25,"not":26,"openParenthesis":27,"closeParenthesis":28,"VARVALUE":29,"TERNARY":30,"questionMark":31,"colom":32,"decimal":33,"text":34,"id":35,"integer":36,"character":37,"trBool":38,"flBool":39,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",6:"intType",7:"dblType",8:"boolType",9:"charType",10:"strType",12:"plus",13:"equalsEquals",14:"moreOrEquals",15:"lessOrEquals",16:"nonEquals",17:"division",18:"module",19:"power",20:"times",21:"minus",22:"minor",23:"major",24:"and",25:"or",26:"not",27:"openParenthesis",28:"closeParenthesis",31:"questionMark",32:"colom",33:"decimal",34:"text",35:"id",36:"integer",37:"character",38:"trBool",39:"flBool"},
+productions_: [0,[3,3],[4,1],[4,1],[4,1],[4,1],[4,1],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,2],[11,2],[11,3],[11,1],[11,3],[30,5],[29,1],[29,1],[29,1],[29,1],[29,1],[29,1],[29,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -40,6 +40,153 @@ break;
 case 6:
 
         this.$ = DataType.STRING;
+    
+break;
+case 7:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.PLUS });
+    
+break;
+case 8:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.EQUALSEQUALS });
+    
+break;
+case 9:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.MOREOREQUALS });
+    
+break;
+case 10:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.LESSOREQUALS });
+    
+break;
+case 11:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.NONEQUALS });
+    
+break;
+case 12:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.DIVISION });
+    
+break;
+case 13:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.MODULE });
+    
+break;
+case 14:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.POWER });
+    
+break;
+case 15:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.TIMES });
+    
+break;
+case 16:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.MINUS });
+    
+break;
+case 17:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.MINOR });
+    
+break;
+case 18:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.MAJOR });
+    
+break;
+case 19:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.AND });
+    
+break;
+case 20:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator:Operator.OR });
+    
+break;
+case 21:
+
+        this.$ = new Expression(getToken(_$[$0-1]), {
+            left: $$[$0], operator: Operator.NOT });
+    
+break;
+case 22:
+
+        this.$ = new Expression(getToken(_$[$0-1]), {
+            left: $$[$0], operator: Operator.NEGATION });
+    
+break;
+case 23:
+
+        this.$ = new Expression(getToken(_$[$0-2]), { left: $$[$0-1] });
+    
+break;
+case 24:
+
+        this.$ = new Expression(getToken(_$[$0]), { value: $$[$0] });
+    
+break;
+case 25:
+
+        this.$ = $$[$0-1];
+    
+break;
+case 26:
+
+        this.$ = new Expression(getToken(_$[$0-4]), {
+            left: $$[$0-2], right: $$[$0], condition: $$[$0-4], operator: Operator.TERNARY })
+    
+break;
+case 27:
+
+        this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.DOUBLE })
+    
+break;
+case 28:
+
+        this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.STRING })
+    
+break;
+case 29:
+
+        this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.ID })
+    
+break;
+case 30:
+
+        this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.INTEGER })
+    
+break;
+case 31:
+
+        this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.CHARACTER })
+    
+break;
+case 32: case 33:
+
+        this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.BOOLEAN })
     
 break;
 }
@@ -193,16 +340,21 @@ parse: function parse(input) {
     return true;
 }};
 
+    // TOOLS
     const symbols = require('../compiler/lexical/symbols/index').default
     const errors = require('../compiler/lexical/error/index').default
     const DataType = require('../compiler/utils/types').default
-		const getToken = require('../compiler/utils/tools').default
+    const getToken = require('../compiler/utils/tools').default
 
-		// AGREGAR TOKEN
-		const addToken = (yylloc, name) => {
-				symbols.push({ ...getToken(yylloc), name })
-				return name
-		}
+    // INSTRUCCIONES
+    const Expression = require('../compiler/expression/index').default
+    const Value = require('../compiler/value/index').default
+
+    // AGREGAR TOKEN
+    const addToken = (yylloc, name) => {
+        symbols.push({ ...getToken(yylloc), name })
+        return name
+    }
 
 
 /* generated by jison-lex 0.3.4 */
@@ -624,14 +776,14 @@ break;
 case 44:"\\0"
 break;
 case 45:
-															yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2);
-															return addToken(yy_.yylloc, 'text');
-														
+                                yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2);
+                                return addToken(yy_.yylloc, 'text');
+                            
 break;
 case 46:
-															yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2);
-															return addToken(yy_.yylloc, 'character');
-														
+                                yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2);
+                                return addToken(yy_.yylloc, 'character');
+						    
 break;
 case 47:return addToken(yy_.yylloc, 'decimal')
 break;
@@ -642,15 +794,15 @@ break;
 case 50:return 5
 break;
 case 51:
-															errors.push({
-                                type: 'Lexical',
-                                token: {
-																	line: yy_.yylloc.first_line,
-																	col: yy_.yylloc.fist_column
-																},
-                                msg: `${yy_.yytext} no reconocido`
-                            	});
-														
+                                errors.push({
+                                    type: 'Lexical',
+                                    token: {
+                                        line: yy_.yylloc.first_line,
+                                        col: yy_.yylloc.fist_column
+                                    },
+                                    msg: `${yy_.yytext} no reconocido`
+                                });
+                            
 break;
 }
 },
