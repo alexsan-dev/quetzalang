@@ -11,6 +11,7 @@
     <main>
       <div id="toolbar">
         <button id="runtimeBtn"><i data-feather="skip-forward"></i></button>
+        <button id="compileBtn"><i data-feather="save"></i></button>
         <button id="compileBtn"><i data-feather="globe"></i></button>
         <button id="cleanBtn"><i data-feather="x-circle"></i></button>
         <button id="terminalBtn"><i data-feather="terminal"></i></button>
@@ -38,11 +39,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/theme-monokai.min.js"></script>
     <script>
       // CONFIGURAR EDITOR
-      const editor = ace.edit('editor')
+      const editor = ace.edit('editor', {
+        wrap: true,
+        autoScrollEditorIntoView: true,
+      })
       const JavaMode = ace.require('ace/mode/java').Mode
       editor.session.setMode(new JavaMode())
       editor.setTheme('ace/theme/monokai')
       editor.setFontSize(18)
+
+      if (window.localStorage.getItem('code'))
+        editor.setValue(window.localStorage.getItem('code'), -1)
 
       // CURSOR
       const codeInfoCursor = document.getElementById('cursor')

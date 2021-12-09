@@ -9,10 +9,8 @@ let instructions: unknown[] = []
 let expandedConsole = false
 
 const compile = () => {
-  const editor = document.querySelector(
-    '#editor > textarea',
-  ) as HTMLTextAreaElement
-  const value = editor?.value ?? ''
+  // @ts-ignore
+  const value = editor.getValue();
 
   // REINICIAR
   symbols.length = 0
@@ -45,7 +43,19 @@ const collapseConsole = () => {
   textarea.style.height = expandedConsole ? '0px' : '40vh'
   textarea.style.padding = expandedConsole ? '33px 12px 12px 12px' : '54px 12px 12px 12px'
   chevron.style.transform = `rotate(${expandedConsole ? 180 : 0}deg)`
+  setTimeout(() => {
+    // @ts-ignore
+    editor.resize(true)
+  }, expandedConsole ? 250 : 450)
+
   expandedConsole = !expandedConsole
+}
+
+// GUARDAR CODIGO
+const saveCode = () => {
+  // @ts-ignore
+  const value = editor.getValue();
+  window.localStorage.setItem("code", value)
 }
 
 // EVENTOS
@@ -54,11 +64,13 @@ const setEvents = () => {
   const compileBtn = document.getElementById('runtimeBtn')
   const collapseBtn = document.getElementById('collapseBtn')
   const terminalBtn = document.getElementById('terminalBtn')
+  const saveBtn = document.getElementById('saveBtn')
 
   compileBtn?.addEventListener('click', compile)
   cleanBtn?.addEventListener('click', cleanConsole)
   collapseBtn?.addEventListener('click', collapseConsole)
   terminalBtn?.addEventListener('click', collapseConsole)
+  saveBtn?.addEventListener('click', saveCode)
 
   window.addEventListener('keydown', (ev: KeyboardEvent) => {
     // CONTROL KEY
@@ -73,6 +85,9 @@ const setEvents = () => {
         isCtrl = true
       } else if (ev.key === 'm') {
         collapseConsole()
+        isCtrl = true
+      } else if (ev.key === 's') {
+        saveCode()
         isCtrl = true
       }
 
