@@ -98,7 +98,8 @@ main {
 }
 
 #console {
-  height: 0px;
+  height: 40vh;
+  padding: 54px 12px 12px 12px;
   resize: none;
   outline: none;
   border: none;

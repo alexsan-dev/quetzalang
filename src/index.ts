@@ -8,7 +8,7 @@ import compile from 'compiler'
 
 // LISTA DE INSTRUCCIONES
 let instructions: Instruction[] = []
-let expandedConsole = false
+let expandedConsole = true
 
 // EJECUTAR
 const runCode = () => {
