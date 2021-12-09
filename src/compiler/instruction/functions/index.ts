@@ -9,8 +9,8 @@ import Value from '../value'
 
 class FunctionBlock extends Instruction {
   // GLOBALES
-  private scope: Scope | undefined
   private functionValue: Value | undefined
+  private scope: Scope | undefined
   private isOnBreak = false
 
   // CONSTRUCTOR

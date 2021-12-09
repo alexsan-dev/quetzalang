@@ -47,7 +47,8 @@ class Value extends Instruction {
 					case DataType.CHARACTER:
 						return (this.props.value as string).charAt(0)
 					case DataType.ID:
-						return this.props.value
+						const idValue = scope.getVar(this.props.value as string)
+						return idValue.getValue(scope)
 					case DataType.NULL:
 						return null
 					default:

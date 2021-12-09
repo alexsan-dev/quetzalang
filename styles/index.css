@@ -60,7 +60,7 @@ main {
   height: 100%;
 }
 
-#consoleContainer span {
+#consoleContainer #consoleTitle {
   display: flex;
   align-items: center;
   position: absolute;
@@ -93,7 +93,7 @@ main {
   align-items: center;
 }
 
-#consoleContainer span svg {
+#consoleContainer #consoleTitle svg {
   margin-right: 5px;
 }
 
@@ -102,13 +102,13 @@ main {
   resize: none;
   outline: none;
   border: none;
-  white-space: nowrap;
+  white-space: pre-wrap;
   background: hsl(70, 8%, 10%);
   color: rgba(255, 255, 255, 0.8);
   font-weight: bold;
   font-size: 18px;
   font-family: monospace;
-  padding: 33px 12px 12px 12px;
+  overflow-y: auto;
   transition: height 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -137,4 +137,16 @@ main {
 
 #codeInfo span {
   margin-left: 10px;
+}
+
+.clsLog {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.clsWarn {
+  color: rgba(255, 208, 0, 0.658);
+}
+
+.clsError {
+  color: rgba(238, 80, 52, 0.8);
 }

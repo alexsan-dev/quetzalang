@@ -12,6 +12,7 @@
       <div id="toolbar">
         <button id="runtimeBtn"><i data-feather="skip-forward"></i></button>
         <button id="compileBtn"><i data-feather="save"></i></button>
+        <button id="shareBtn"><i data-feather="share"></i></button>
         <button id="compileBtn"><i data-feather="globe"></i></button>
         <button id="cleanBtn"><i data-feather="x-circle"></i></button>
         <button id="terminalBtn"><i data-feather="terminal"></i></button>
@@ -24,11 +25,13 @@
         </div>
       </div>
       <div id="consoleContainer">
-        <span><i data-feather="terminal"></i> Salida de consola: </span>
+        <span id="consoleTitle"
+          ><i data-feather="terminal"></i> Salida de consola:
+        </span>
         <button id="collapseBtn">
           <i id="chevron" data-feather="chevron-down"></i>
         </button>
-        <textarea id="console" readonly></textarea>
+        <pre id="console" readonly></pre>
       </div>
     </main>
 
@@ -38,6 +41,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/mode-java.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/theme-monokai.min.js"></script>
     <script>
+      // VALORES INICIALES
+      const urlParams = new URLSearchParams(window.location.search)
+      const initialValue =
+        urlParams.get('code') || window.localStorage.getItem('code')
+
       // CONFIGURAR EDITOR
       const editor = ace.edit('editor', {
         wrap: true,
@@ -48,8 +56,7 @@
       editor.setTheme('ace/theme/monokai')
       editor.setFontSize(18)
 
-      if (window.localStorage.getItem('code'))
-        editor.setValue(window.localStorage.getItem('code'), -1)
+      if (initialValue) editor.setValue(initialValue, -1)
 
       // CURSOR
       const codeInfoCursor = document.getElementById('cursor')

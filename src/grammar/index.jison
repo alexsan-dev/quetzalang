@@ -2,6 +2,7 @@
     // TOOLS
     const symbols = require('../compiler/lexical/symbols/index').default
     const errors = require('../compiler/lexical/error/index').default
+    const Operator = require('../compiler/utils/types').Operator
     const DataType = require('../compiler/utils/types').default
     const getToken = require('../compiler/utils/tools').default
 
@@ -11,6 +12,9 @@
     const Declaration = require('../compiler/instruction/assignment/declaration/index').default
     const Expression = require('../compiler/instruction/expression/index').default
     const Value = require('../compiler/instruction/value/index').default
+    
+    // FUNCIONES NATIVAS
+    const Print = require('../compiler/instruction/functions/builtin/print/index').default
 
     // AGREGAR TOKEN
     const addToken = (yylloc, name) => {
@@ -80,6 +84,8 @@
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* PALABRAS RESERVADAS */
+'print'                 return addToken(yylloc, 'printRw')
+'printLn'               return addToken(yylloc, 'printLnRw')
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* SECUENCIAS DE ESCAPE */
@@ -112,7 +118,7 @@ NULLCHAR "\\0"
                                     type: 'Lexical',
                                     token: {
                                         line: yylloc.first_line,
-                                        col: yylloc.fist_column
+                                        col: yylloc.first_column + 1
                                     },
                                     msg: `${yytext} no reconocido`
                                 });
@@ -172,6 +178,8 @@ INSTRUCTIONS : INSTRUCTIONS INSTRUCTION {
 INSTRUCTION : DECLARATION semicolom {
         $$ = $1;
     } | ASSIGNMENT semicolom {
+        $$ = $1;
+    } | METHODS semicolom {
         $$ = $1;
     };
 
@@ -269,6 +277,13 @@ TERNARY : EXPRESSIONS questionMark EXPRESSIONS colom EXPRESSIONS {
             left: $3, right: $5, condition: $1, operator: Operator.TERNARY })
     };
 
+EXPLIST : EXPLIST comma EXPRESSIONS {
+        $$ = $1;
+        $$.push($3);
+    } | EXPRESSIONS {
+        $$ = [$1];
+    };
+
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* VALORES DE VARIABLES */
 VARVALUE : decimal {
@@ -287,4 +302,20 @@ VARVALUE : decimal {
         $$ = new Value(getToken(@1), { value: $1, type: DataType.BOOLEAN })
     } | nullType {
         $$ = new Value(getToken(@1), { value: $1, type: DataType.NULL })
+    };
+    
+/*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+/* BUILT-IN FUNCTIONS */
+METHODS : PRINT {
+        $$ = $1;
+    } | PRINTLN {
+        $$ = $1;
+    };
+
+PRINT : printRw openParenthesis EXPLIST closeParenthesis {
+        $$ = new Print(getToken(@1), { params: $3, breakLine: false });
+    };
+
+PRINTLN : printLnRw openParenthesis EXPLIST closeParenthesis {
+        $$ = new Print(getToken(@1), { params: $3, breakLine: true });
     };

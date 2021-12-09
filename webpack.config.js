@@ -1,5 +1,4 @@
 const path = require('path')
-
 module.exports = {
   mode: 'production',
   entry: './src/index.ts',
@@ -13,6 +12,7 @@ module.exports = {
     fallback: {
       path: false,
       fs: false,
+      process: false,
     },
     alias: {
       compiler: path.resolve(__dirname, 'src/compiler/'),

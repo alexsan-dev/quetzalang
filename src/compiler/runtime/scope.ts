@@ -58,7 +58,7 @@ class Scope {
   // AGREGAR VARIABLE
   public addVar(id: string, type: DataType, value?: Value): void {
     // NO EXISTE
-    if (this.vars[id] === undefined) {
+    if (!this.vars[id]) {
       this.vars[id] = { value, type }
     } else
       addError(

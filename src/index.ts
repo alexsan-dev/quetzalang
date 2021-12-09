@@ -1,14 +1,18 @@
 // TOOLS
+import Instruction from 'compiler/instruction/abstract'
 import symbols from 'compiler/lexical/symbols'
 import errors from 'compiler/lexical/error'
 import * as parser from 'parser'
 import logs from 'compiler/logs'
+import compile from 'compiler'
 
 // LISTA DE INSTRUCCIONES
-let instructions: unknown[] = []
+let instructions: Instruction[] = []
 let expandedConsole = false
 
-const compile = () => {
+// EJECUTAR
+const runCode = () => {
+  cleanConsole()
   // @ts-ignore
   const value = editor.getValue();
 
@@ -19,11 +23,14 @@ const compile = () => {
 
   // COMPILAR
   try {
-    instructions = parser.parse(value as string)
-    console.log(instructions)
-    if (errors.length) console.log(errors.join('\n'))
-  } catch (err) {
-    console.log(err)
+    instructions = parser.parse(value as string) as Instruction[]
+    compile(instructions)
+
+    if (logs.length) console.log(logs.join(''))
+    if (errors.length) console.error(errors)
+
+  } catch {
+    console.error("Error sintactico")
   }
 }
 
@@ -31,7 +38,7 @@ const compile = () => {
 const cleanConsole = () => {
   // TEXTAREA
   const textarea = document.getElementById('console') as HTMLTextAreaElement
-  textarea.value = ''
+  textarea.innerHTML = ''
 }
 
 // OCULTAR CONSOLA
@@ -51,6 +58,22 @@ const collapseConsole = () => {
   expandedConsole = !expandedConsole
 }
 
+// COMPARTIR CODIGO
+const shareCode = () => {
+  // @ts-ignore
+  const value = editor.getValue();
+  window.localStorage.setItem("code", value)
+  const url = `${window.location.href}/?code=${encodeURIComponent(value)}`
+
+  if ('clipboard' in navigator)
+    navigator.clipboard.writeText(url)
+  if ('share' in navigator)
+    navigator.share({
+      title: 'Quetzalang',
+      url
+    })
+}
+
 // GUARDAR CODIGO
 const saveCode = () => {
   // @ts-ignore
@@ -65,12 +88,14 @@ const setEvents = () => {
   const collapseBtn = document.getElementById('collapseBtn')
   const terminalBtn = document.getElementById('terminalBtn')
   const saveBtn = document.getElementById('saveBtn')
+  const shareBtn = document.getElementById('shareBtn')
 
-  compileBtn?.addEventListener('click', compile)
+  compileBtn?.addEventListener('click', runCode)
   cleanBtn?.addEventListener('click', cleanConsole)
   collapseBtn?.addEventListener('click', collapseConsole)
   terminalBtn?.addEventListener('click', collapseConsole)
   saveBtn?.addEventListener('click', saveCode)
+  shareBtn?.addEventListener('click', shareCode)
 
   window.addEventListener('keydown', (ev: KeyboardEvent) => {
     // CONTROL KEY
@@ -78,7 +103,7 @@ const setEvents = () => {
       let isCtrl = false
 
       if (ev.key === 'p') {
-        compile()
+        runCode()
         isCtrl = true
       } else if (ev.key === 'r') {
         cleanConsole()
@@ -89,6 +114,9 @@ const setEvents = () => {
       } else if (ev.key === 's') {
         saveCode()
         isCtrl = true
+      } else if (ev.key === 'u') {
+        shareCode()
+        isCtrl = true
       }
 
       if (isCtrl) ev.preventDefault()
@@ -96,22 +124,29 @@ const setEvents = () => {
   })
 }
 // CONSOLA
-const bindConsole = () => {
-  // TEXTAREA
-  const textarea = document.getElementById('console') as HTMLTextAreaElement
+const bindConsole = (hide: boolean = false) => {
+  if (!hide) {
+    // TEXTAREA
+    const textarea = document.getElementById('console') as HTMLTextAreaElement
 
-  const console_log = window.console.log
-  window.console.log = function (...args) {
-    console_log(...args)
+    const logClousure = (mode: string, fallback: (...exp) => void) => function logFunction(...args) {
+      fallback(...args)
 
-    if (!textarea) return
-    args.forEach((arg) => {
-      if (textarea)
-        textarea.value += `${JSON.stringify(arg).substring(
-          1,
-          JSON.stringify(arg).length - 1,
-        )}\n`
-    })
+      if (!textarea) return
+      args.forEach((arg) => {
+        if (textarea) {
+          const parsedValue = JSON.stringify(arg, null, 2).replace(/\\n/g, '\n')
+          const span = document.createElement("span")
+          span.className = mode
+          span.innerText = `${parsedValue.substring(1, parsedValue.length - 1)}`
+          textarea.appendChild(span)
+        }
+      })
+    }
+
+    window.console.log = logClousure("clsLog", window.console.log)
+    window.console.warn = logClousure("clsWarn", window.console.warn)
+    window.console.error = logClousure("clsError", window.console.error)
   }
 }
 
