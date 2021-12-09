@@ -1,12 +1,12 @@
 
 
 define(function(require){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,3],$V1=[1,4],$V2=[1,5],$V3=[1,6],$V4=[1,7],$V5=[5,6,7,8,9,10];
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,9],$V1=[1,10],$V2=[1,11],$V3=[1,12],$V4=[1,13],$V5=[1,7],$V6=[5,7,8,9,10,11,18],$V7=[14,17],$V8=[1,32],$V9=[1,27],$Va=[1,26],$Vb=[1,28],$Vc=[1,30],$Vd=[1,31],$Ve=[1,33],$Vf=[1,34],$Vg=[1,35],$Vh=[1,36],$Vi=[1,37],$Vj=[1,39],$Vk=[1,40],$Vl=[1,41],$Vm=[1,42],$Vn=[1,43],$Vo=[1,44],$Vp=[1,45],$Vq=[1,46],$Vr=[1,47],$Vs=[1,48],$Vt=[1,49],$Vu=[1,50],$Vv=[1,51],$Vw=[1,52],$Vx=[1,53],$Vy=[14,17,25,26,27,28,29,30,31,32,33,34,35,36,37,38,41,43,44],$Vz=[14,17,25,26,27,28,29,34,35,36,41,43,44],$VA=[14,17,26,27,28,29,35,36,41,43,44],$VB=[14,17,25,26,27,28,29,30,31,32,33,34,35,36,41,43,44];
 var parser = {trace: function trace () { },
 yy: {},
-symbols_: {"error":2,"START":3,"TYPE":4,"EOF":5,"intType":6,"dblType":7,"boolType":8,"charType":9,"strType":10,"EXPRESSIONS":11,"plus":12,"equalsEquals":13,"moreOrEquals":14,"lessOrEquals":15,"nonEquals":16,"division":17,"module":18,"power":19,"times":20,"minus":21,"minor":22,"major":23,"and":24,"or":25,"not":26,"openParenthesis":27,"closeParenthesis":28,"VARVALUE":29,"TERNARY":30,"questionMark":31,"colom":32,"decimal":33,"text":34,"id":35,"integer":36,"character":37,"trBool":38,"flBool":39,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",6:"intType",7:"dblType",8:"boolType",9:"charType",10:"strType",12:"plus",13:"equalsEquals",14:"moreOrEquals",15:"lessOrEquals",16:"nonEquals",17:"division",18:"module",19:"power",20:"times",21:"minus",22:"minor",23:"major",24:"and",25:"or",26:"not",27:"openParenthesis",28:"closeParenthesis",31:"questionMark",32:"colom",33:"decimal",34:"text",35:"id",36:"integer",37:"character",38:"trBool",39:"flBool"},
-productions_: [0,[3,3],[4,1],[4,1],[4,1],[4,1],[4,1],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,3],[11,2],[11,2],[11,3],[11,1],[11,3],[30,5],[29,1],[29,1],[29,1],[29,1],[29,1],[29,1],[29,1]],
+symbols_: {"error":2,"START":3,"INSTRUCTIONS":4,"EOF":5,"TYPE":6,"intType":7,"dblType":8,"boolType":9,"charType":10,"strType":11,"INSTRUCTION":12,"DECLARATION":13,"semicolom":14,"ASSIGNMENT":15,"ASSIGNMENTS":16,"comma":17,"id":18,"equals":19,"EXPRESSIONS":20,"TERNARY":21,"INCREMENTALASSIGNMENT":22,"plusPlus":23,"minusMinus":24,"plus":25,"equalsEquals":26,"moreOrEquals":27,"lessOrEquals":28,"nonEquals":29,"division":30,"module":31,"power":32,"times":33,"minus":34,"minor":35,"major":36,"and":37,"or":38,"not":39,"openParenthesis":40,"closeParenthesis":41,"VARVALUE":42,"questionMark":43,"colom":44,"decimal":45,"text":46,"integer":47,"character":48,"trBool":49,"flBool":50,"nullType":51,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",7:"intType",8:"dblType",9:"boolType",10:"charType",11:"strType",14:"semicolom",17:"comma",18:"id",19:"equals",23:"plusPlus",24:"minusMinus",25:"plus",26:"equalsEquals",27:"moreOrEquals",28:"lessOrEquals",29:"nonEquals",30:"division",31:"module",32:"power",33:"times",34:"minus",35:"minor",36:"major",37:"and",38:"or",39:"not",40:"openParenthesis",41:"closeParenthesis",43:"questionMark",44:"colom",45:"decimal",46:"text",47:"integer",48:"character",49:"trBool",50:"flBool",51:"nullType"},
+productions_: [0,[3,2],[6,1],[6,1],[6,1],[6,1],[6,1],[4,2],[4,1],[12,2],[12,2],[13,2],[16,3],[16,1],[15,1],[15,3],[15,3],[15,1],[22,2],[22,2],[20,3],[20,3],[20,3],[20,3],[20,3],[20,3],[20,3],[20,3],[20,3],[20,3],[20,3],[20,3],[20,3],[20,3],[20,2],[20,2],[20,3],[20,1],[20,3],[21,5],[42,1],[42,1],[42,1],[42,1],[42,1],[42,1],[42,1],[42,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -14,7 +14,7 @@ var $0 = $$.length - 1;
 switch (yystate) {
 case 1:
 
-        return $$[$0-2];
+        return $$[$0-1];
     
 break;
 case 2:
@@ -44,155 +44,214 @@ case 6:
 break;
 case 7:
 
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.PLUS });
+        this.$ = $$[$0-1];
+        this.$.push($$[$0]);
     
 break;
-case 8:
+case 8: case 13:
 
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.EQUALSEQUALS });
+        this.$ = [$$[$0]];
     
 break;
-case 9:
+case 9: case 10: case 38:
 
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.MOREOREQUALS });
-    
-break;
-case 10:
-
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.LESSOREQUALS });
+        this.$ = $$[$0-1];
     
 break;
 case 11:
 
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.NONEQUALS });
+        this.$ = new Declaration(getToken(_$[$0-1]), { type: $$[$0-1], assignments: $$[$0] });
     
 break;
 case 12:
 
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.DIVISION });
-    
-break;
-case 13:
-
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.MODULE });
+        this.$ = $$[$0-2];
+        this.$.push($$[$0]);
     
 break;
 case 14:
 
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.POWER });
+        this.$ = new ExpAssignment(getToken(_$[$0]), { id: $$[$0] });
     
 break;
 case 15:
 
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.TIMES });
+        this.$ = new ExpAssignment(getToken(_$[$0-2]), { id: $$[$0-2], exp: $$[$0] });  
     
 break;
 case 16:
 
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.MINUS });
+        this.$ = new ExpAssignment(getToken(_$[$0-2]), { id: $$[$0-2], exp: $$[$0] });
     
 break;
 case 17:
 
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.MINOR });
+        this.$ = $$[$0];
     
 break;
 case 18:
 
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.MAJOR });
+        this.$ = new IncrementalAssignment(getToken(_$[$0-1]), { 
+            id: $$[$0-1], operator: Operator.PLUSPLUS })
     
 break;
 case 19:
 
-        this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator: Operator.AND });
+        this.$ = new IncrementalAssignment(getToken(_$[$0-1]), { 
+            id: $$[$0-1], operator: Operator.MINUSMINUS })
     
 break;
 case 20:
 
         this.$ = new Expression(getToken(_$[$0-2]), {
-            left: $$[$0-2], right: $$[$0], operator:Operator.OR });
+            left: $$[$0-2], right: $$[$0], operator: Operator.PLUS });
     
 break;
 case 21:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.EQUALSEQUALS });
+    
+break;
+case 22:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.MOREOREQUALS });
+    
+break;
+case 23:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.LESSOREQUALS });
+    
+break;
+case 24:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.NONEQUALS });
+    
+break;
+case 25:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.DIVISION });
+    
+break;
+case 26:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.MODULE });
+    
+break;
+case 27:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.POWER });
+    
+break;
+case 28:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.TIMES });
+    
+break;
+case 29:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.MINUS });
+    
+break;
+case 30:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.MINOR });
+    
+break;
+case 31:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.MAJOR });
+    
+break;
+case 32:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator: Operator.AND });
+    
+break;
+case 33:
+
+        this.$ = new Expression(getToken(_$[$0-2]), {
+            left: $$[$0-2], right: $$[$0], operator:Operator.OR });
+    
+break;
+case 34:
 
         this.$ = new Expression(getToken(_$[$0-1]), {
             left: $$[$0], operator: Operator.NOT });
     
 break;
-case 22:
+case 35:
 
         this.$ = new Expression(getToken(_$[$0-1]), {
             left: $$[$0], operator: Operator.NEGATION });
     
 break;
-case 23:
+case 36:
 
         this.$ = new Expression(getToken(_$[$0-2]), { left: $$[$0-1] });
     
 break;
-case 24:
+case 37:
 
         this.$ = new Expression(getToken(_$[$0]), { value: $$[$0] });
     
 break;
-case 25:
-
-        this.$ = $$[$0-1];
-    
-break;
-case 26:
+case 39:
 
         this.$ = new Expression(getToken(_$[$0-4]), {
             left: $$[$0-2], right: $$[$0], condition: $$[$0-4], operator: Operator.TERNARY })
     
 break;
-case 27:
+case 40:
 
         this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.DOUBLE })
     
 break;
-case 28:
+case 41:
 
         this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.STRING })
     
 break;
-case 29:
+case 42:
 
         this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.ID })
     
 break;
-case 30:
+case 43:
 
         this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.INTEGER })
     
 break;
-case 31:
+case 44:
 
         this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.CHARACTER })
     
 break;
-case 32: case 33:
+case 45: case 46:
 
         this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.BOOLEAN })
     
 break;
+case 47:
+
+        this.$ = new Value(getToken(_$[$0]), { value: $$[$0], type: DataType.NULL })
+    
+break;
 }
 },
-table: [{3:1,4:2,6:$V0,7:$V1,8:$V2,9:$V3,10:$V4},{1:[3]},{4:8,6:$V0,7:$V1,8:$V2,9:$V3,10:$V4},o($V5,[2,2]),o($V5,[2,3]),o($V5,[2,4]),o($V5,[2,5]),o($V5,[2,6]),{5:[1,9]},{1:[2,1]}],
-defaultActions: {9:[2,1]},
+table: [{3:1,4:2,6:6,7:$V0,8:$V1,9:$V2,10:$V3,11:$V4,12:3,13:4,15:5,18:$V5,22:8},{1:[3]},{5:[1,14],6:6,7:$V0,8:$V1,9:$V2,10:$V3,11:$V4,12:15,13:4,15:5,18:$V5,22:8},o($V6,[2,8]),{14:[1,16]},{14:[1,17]},{15:19,16:18,18:$V5,22:8},o($V7,[2,14],{19:[1,20],23:[1,21],24:[1,22]}),o($V7,[2,17]),{18:[2,2]},{18:[2,3]},{18:[2,4]},{18:[2,5]},{18:[2,6]},{1:[2,1]},o($V6,[2,7]),o($V6,[2,9]),o($V6,[2,10]),{14:[2,11],17:[1,23]},o($V7,[2,13]),{18:$V8,20:24,21:25,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},o($V7,[2,18]),o($V7,[2,19]),{15:38,18:$V5,22:8},o($V7,[2,15],{25:$Vj,26:$Vk,27:$Vl,28:$Vm,29:$Vn,30:$Vo,31:$Vp,32:$Vq,33:$Vr,34:$Vs,35:$Vt,36:$Vu,37:$Vv,38:$Vw,43:$Vx}),o($V7,[2,16]),{18:$V8,20:54,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:55,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:56,21:57,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},o($Vy,[2,37]),o($Vy,[2,40]),o($Vy,[2,41]),o($Vy,[2,42]),o($Vy,[2,43]),o($Vy,[2,44]),o($Vy,[2,45]),o($Vy,[2,46]),o($Vy,[2,47]),o($V7,[2,12]),{18:$V8,20:58,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:59,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:60,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:61,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:62,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:63,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:64,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:65,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:66,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:67,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:68,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:69,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:70,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:71,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},{18:$V8,20:72,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},o($Vy,[2,34]),o($Vz,[2,35],{30:$Vo,31:$Vp,32:$Vq,33:$Vr,37:$Vv,38:$Vw}),{25:$Vj,26:$Vk,27:$Vl,28:$Vm,29:$Vn,30:$Vo,31:$Vp,32:$Vq,33:$Vr,34:$Vs,35:$Vt,36:$Vu,37:$Vv,38:$Vw,41:[1,73],43:$Vx},{41:[1,74]},o($Vz,[2,20],{30:$Vo,31:$Vp,32:$Vq,33:$Vr,37:$Vv,38:$Vw}),o($VA,[2,21],{25:$Vj,30:$Vo,31:$Vp,32:$Vq,33:$Vr,34:$Vs,37:$Vv,38:$Vw}),o($VA,[2,22],{25:$Vj,30:$Vo,31:$Vp,32:$Vq,33:$Vr,34:$Vs,37:$Vv,38:$Vw}),o($VA,[2,23],{25:$Vj,30:$Vo,31:$Vp,32:$Vq,33:$Vr,34:$Vs,37:$Vv,38:$Vw}),o($VA,[2,24],{25:$Vj,30:$Vo,31:$Vp,32:$Vq,33:$Vr,34:$Vs,37:$Vv,38:$Vw}),o($VB,[2,25],{37:$Vv,38:$Vw}),o($VB,[2,26],{37:$Vv,38:$Vw}),o($VB,[2,27],{37:$Vv,38:$Vw}),o($VB,[2,28],{37:$Vv,38:$Vw}),o($Vz,[2,29],{30:$Vo,31:$Vp,32:$Vq,33:$Vr,37:$Vv,38:$Vw}),o($VA,[2,30],{25:$Vj,30:$Vo,31:$Vp,32:$Vq,33:$Vr,34:$Vs,37:$Vv,38:$Vw}),o($VA,[2,31],{25:$Vj,30:$Vo,31:$Vp,32:$Vq,33:$Vr,34:$Vs,37:$Vv,38:$Vw}),o($Vy,[2,32]),o($Vy,[2,33]),{25:$Vj,26:$Vk,27:$Vl,28:$Vm,29:$Vn,30:$Vo,31:$Vp,32:$Vq,33:$Vr,34:$Vs,35:$Vt,36:$Vu,37:$Vv,38:$Vw,44:[1,75]},o($Vy,[2,36]),o($Vy,[2,38]),{18:$V8,20:76,34:$V9,39:$Va,40:$Vb,42:29,45:$Vc,46:$Vd,47:$Ve,48:$Vf,49:$Vg,50:$Vh,51:$Vi},o([14,17,41],[2,39],{25:$Vj,26:$Vk,27:$Vl,28:$Vm,29:$Vn,30:$Vo,31:$Vp,32:$Vq,33:$Vr,34:$Vs,35:$Vt,36:$Vu,37:$Vv,38:$Vw})],
+defaultActions: {9:[2,2],10:[2,3],11:[2,4],12:[2,5],13:[2,6],14:[2,1]},
 parseError: function parseError (str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -347,8 +406,11 @@ parse: function parse(input) {
     const getToken = require('../compiler/utils/tools').default
 
     // INSTRUCCIONES
-    const Expression = require('../compiler/expression/index').default
-    const Value = require('../compiler/value/index').default
+    const IncrementalAssignment = require('../compiler/instruction/assignment/incremental/index').default
+    const ExpAssignment = require('../compiler/instruction/assignment/expression/index').default
+    const Declaration = require('../compiler/instruction/assignment/declaration/index').default
+    const Expression = require('../compiler/instruction/expression/index').default
+    const Value = require('../compiler/instruction/value/index').default
 
     // AGREGAR TOKEN
     const addToken = (yylloc, name) => {
@@ -695,105 +757,107 @@ case 3:return addToken(yy_.yylloc, 'charType')
 break;
 case 4:return addToken(yy_.yylloc, 'boolType')
 break;
-case 5:return addToken(yy_.yylloc, 'strType')
+case 5:return addToken(yy_.yylloc, 'nullType')
 break;
-case 6:return addToken(yy_.yylloc, 'dblType')
+case 6:return addToken(yy_.yylloc, 'strType')
 break;
-case 7:return addToken(yy_.yylloc, 'intType')
+case 7:return addToken(yy_.yylloc, 'dblType')
 break;
-case 8:return addToken(yy_.yylloc, 'trBool')
+case 8:return addToken(yy_.yylloc, 'intType')
 break;
-case 9:return addToken(yy_.yylloc, 'flBool')
+case 9:return addToken(yy_.yylloc, 'trBool')
 break;
-case 10:return addToken(yy_.yylloc, 'lessOrEquals')
+case 10:return addToken(yy_.yylloc, 'flBool')
 break;
-case 11:return addToken(yy_.yylloc, 'moreOrEquals')
+case 11:return addToken(yy_.yylloc, 'lessOrEquals')
 break;
-case 12:return addToken(yy_.yylloc, 'equalsEquals')
+case 12:return addToken(yy_.yylloc, 'moreOrEquals')
 break;
-case 13:return addToken(yy_.yylloc, 'minusMinus')
+case 13:return addToken(yy_.yylloc, 'equalsEquals')
 break;
-case 14:return addToken(yy_.yylloc, 'nonEquals')
+case 14:return addToken(yy_.yylloc, 'minusMinus')
 break;
-case 15:return addToken(yy_.yylloc, 'plusPlus')
+case 15:return addToken(yy_.yylloc, 'nonEquals')
 break;
-case 16:return addToken(yy_.yylloc, 'questionMark')
+case 16:return addToken(yy_.yylloc, 'plusPlus')
 break;
-case 17:return addToken(yy_.yylloc, 'colom')
+case 17:return addToken(yy_.yylloc, 'questionMark')
 break;
-case 18:return addToken(yy_.yylloc, 'division')
+case 18:return addToken(yy_.yylloc, 'colom')
 break;
-case 19:return addToken(yy_.yylloc, 'module')
+case 19:return addToken(yy_.yylloc, 'division')
 break;
-case 20:return addToken(yy_.yylloc, 'times')
+case 20:return addToken(yy_.yylloc, 'module')
 break;
-case 21:return addToken(yy_.yylloc, 'power')
+case 21:return addToken(yy_.yylloc, 'times')
 break;
-case 22:return addToken(yy_.yylloc, 'equals')
+case 22:return addToken(yy_.yylloc, 'power')
 break;
-case 23:return addToken(yy_.yylloc, 'minor')
+case 23:return addToken(yy_.yylloc, 'equals')
 break;
-case 24:return addToken(yy_.yylloc, 'major')
+case 24:return addToken(yy_.yylloc, 'minor')
 break;
-case 25:return addToken(yy_.yylloc, 'minus')
+case 25:return addToken(yy_.yylloc, 'major')
 break;
-case 26:return addToken(yy_.yylloc, 'plus')
+case 26:return addToken(yy_.yylloc, 'minus')
 break;
-case 27:return addToken(yy_.yylloc, 'and')
+case 27:return addToken(yy_.yylloc, 'plus')
 break;
-case 28:return addToken(yy_.yylloc, 'not')
+case 28:return addToken(yy_.yylloc, 'and')
 break;
-case 29:return addToken(yy_.yylloc, 'or')
+case 29:return addToken(yy_.yylloc, 'not')
 break;
-case 30:return addToken(yy_.yylloc, 'comma')
+case 30:return addToken(yy_.yylloc, 'or')
 break;
-case 31:return addToken(yy_.yylloc, 'semicolom')
+case 31:return addToken(yy_.yylloc, 'comma')
 break;
-case 32:return addToken(yy_.yylloc, 'openBracket')
+case 32:return addToken(yy_.yylloc, 'semicolom')
 break;
-case 33:return addToken(yy_.yylloc, 'closeBracket')
+case 33:return addToken(yy_.yylloc, 'openBracket')
 break;
-case 34:return addToken(yy_.yylloc, 'openParenthesis')
+case 34:return addToken(yy_.yylloc, 'closeBracket')
 break;
-case 35:return addToken(yy_.yylloc, 'closeParenthesis')
+case 35:return addToken(yy_.yylloc, 'openParenthesis')
 break;
-case 36:return addToken(yy_.yylloc, 'openSquareBracket')
+case 36:return addToken(yy_.yylloc, 'closeParenthesis')
 break;
-case 37:return addToken(yy_.yylloc, 'closeSquareBracket')
+case 37:return addToken(yy_.yylloc, 'openSquareBracket')
 break;
-case 38:"\""
+case 38:return addToken(yy_.yylloc, 'closeSquareBracket')
 break;
-case 39:"\\\""
+case 39:"\""
 break;
-case 40:"\\\\"
+case 40:"\\\""
 break;
-case 41:"\\n"
+case 41:"\\\\"
 break;
-case 42:"\\r"
+case 42:"\\n"
 break;
-case 43:"\\t"
+case 43:"\\r"
 break;
-case 44:"\\0"
+case 44:"\\t"
 break;
-case 45:
+case 45:"\\0"
+break;
+case 46:
                                 yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2);
                                 return addToken(yy_.yylloc, 'text');
                             
 break;
-case 46:
+case 47:
                                 yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2);
                                 return addToken(yy_.yylloc, 'character');
 						    
 break;
-case 47:return addToken(yy_.yylloc, 'decimal')
+case 48:return addToken(yy_.yylloc, 'decimal')
 break;
-case 48:return addToken(yy_.yylloc, 'integer')
+case 49:return addToken(yy_.yylloc, 'integer')
 break;
-case 49:return addToken(yy_.yylloc, 'id')
+case 50:return addToken(yy_.yylloc, 'id')
 break;
-case 50:return 5
+case 51:return 5
 break;
-case 51:
+case 52:
                                 errors.push({
                                     type: 'Lexical',
                                     token: {
@@ -806,8 +870,8 @@ case 51:
 break;
 }
 },
-rules: [/^(?:\s+)/i,/^(?:\/\/.*)/i,/^(?:[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/])/i,/^(?:char\b)/i,/^(?:boolean\b)/i,/^(?:string\b)/i,/^(?:double\b)/i,/^(?:int\b)/i,/^(?:true\b)/i,/^(?:false\b)/i,/^(?:<=)/i,/^(?:>=)/i,/^(?:==)/i,/^(?:--)/i,/^(?:!=)/i,/^(?:\+\+)/i,/^(?:\?)/i,/^(?::)/i,/^(?:\/)/i,/^(?:%)/i,/^(?:\*)/i,/^(?:\^)/i,/^(?:=)/i,/^(?:<)/i,/^(?:>)/i,/^(?:-)/i,/^(?:\+)/i,/^(?:&&)/i,/^(?:!)/i,/^(?:\|\|)/i,/^(?:,)/i,/^(?:;)/i,/^(?:\{)/i,/^(?:\})/i,/^(?:\()/i,/^(?:\))/i,/^(?:\[)/i,/^(?:\])/i,/^(?:QUOTES\b)/i,/^(?:PIPE_QUOTES\b)/i,/^(?:DOUBLE_PIPES\b)/i,/^(?:BREAKLINE\b)/i,/^(?:CARRETURN\b)/i,/^(?:TABULATION\b)/i,/^(?:NULLCHAR\b)/i,/^(?:"[^\"]*")/i,/^(?:'[^\']?')/i,/^(?:[0-9]*\.[0-9]+\b)/i,/^(?:[0-9]+\b)/i,/^(?:([a-zA-Z])[a-zA-Z0-9_]*)/i,/^(?:$)/i,/^(?:.)/i],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51],"inclusive":true}}
+rules: [/^(?:\s+)/i,/^(?:\/\/.*)/i,/^(?:[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/])/i,/^(?:char\b)/i,/^(?:boolean\b)/i,/^(?:null\b)/i,/^(?:string\b)/i,/^(?:double\b)/i,/^(?:int\b)/i,/^(?:true\b)/i,/^(?:false\b)/i,/^(?:<=)/i,/^(?:>=)/i,/^(?:==)/i,/^(?:--)/i,/^(?:!=)/i,/^(?:\+\+)/i,/^(?:\?)/i,/^(?::)/i,/^(?:\/)/i,/^(?:%)/i,/^(?:\*)/i,/^(?:\^)/i,/^(?:=)/i,/^(?:<)/i,/^(?:>)/i,/^(?:-)/i,/^(?:\+)/i,/^(?:&&)/i,/^(?:!)/i,/^(?:\|\|)/i,/^(?:,)/i,/^(?:;)/i,/^(?:\{)/i,/^(?:\})/i,/^(?:\()/i,/^(?:\))/i,/^(?:\[)/i,/^(?:\])/i,/^(?:QUOTES\b)/i,/^(?:PIPE_QUOTES\b)/i,/^(?:DOUBLE_PIPES\b)/i,/^(?:BREAKLINE\b)/i,/^(?:CARRETURN\b)/i,/^(?:TABULATION\b)/i,/^(?:NULLCHAR\b)/i,/^(?:"[^\"]*")/i,/^(?:'[^\']?')/i,/^(?:[0-9]*\.[0-9]+\b)/i,/^(?:[0-9]+\b)/i,/^(?:([a-zA-Z])[a-zA-Z0-9_]*)/i,/^(?:$)/i,/^(?:.)/i],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52],"inclusive":true}}
 });
 return lexer;
 })();

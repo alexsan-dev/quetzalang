@@ -6,6 +6,9 @@
     const getToken = require('../compiler/utils/tools').default
 
     // INSTRUCCIONES
+    const IncrementalAssignment = require('../compiler/instruction/assignment/incremental/index').default
+    const ExpAssignment = require('../compiler/instruction/assignment/expression/index').default
+    const Declaration = require('../compiler/instruction/assignment/declaration/index').default
     const Expression = require('../compiler/instruction/expression/index').default
     const Value = require('../compiler/instruction/value/index').default
 
@@ -29,6 +32,7 @@
 /* TIPOS DE DATOS */
 "char"                      return addToken(yylloc, 'charType')
 "boolean"                   return addToken(yylloc, 'boolType')
+"null"                      return addToken(yylloc, 'nullType')
 "string"                    return addToken(yylloc, 'strType')
 "double"                    return addToken(yylloc, 'dblType')
 "int"                       return addToken(yylloc, 'intType')
@@ -137,7 +141,7 @@ NULLCHAR "\\0"
 %%
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* INICIO */
-START : TYPE TYPE EOF {
+START : INSTRUCTIONS EOF {
         return $1;
     };
 
@@ -157,78 +161,106 @@ TYPE :
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+/* INSTRUCCIONES */
+INSTRUCTIONS : INSTRUCTIONS INSTRUCTION {
+        $$ = $1;
+        $$.push($2);
+    } | INSTRUCTION {
+        $$ = [$1];
+    };
+
+INSTRUCTION : DECLARATION semicolom {
+        $$ = $1;
+    } | ASSIGNMENT semicolom {
+        $$ = $1;
+    };
+
+/*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+/* DECLARACION DE VARIABLES */
+DECLARATION : TYPE ASSIGNMENTS {
+        $$ = new Declaration(getToken(@1), { type: $1, assignments: $2 });
+    };
+
+ASSIGNMENTS : ASSIGNMENTS comma ASSIGNMENT {
+        $$ = $1;
+        $$.push($3);
+    } | ASSIGNMENT {
+        $$ = [$1];
+    };
+
+ASSIGNMENT : id {
+        $$ = new ExpAssignment(getToken(@1), { id: $1 });
+    } | id equals EXPRESSIONS {
+        $$ = new ExpAssignment(getToken(@1), { id: $1, exp: $3 });  
+    } | id equals TERNARY {
+        $$ = new ExpAssignment(getToken(@1), { id: $1, exp: $3 });
+    } | INCREMENTALASSIGNMENT {
+        $$ = $1;
+    };
+
+INCREMENTALASSIGNMENT : id plusPlus {
+        $$ = new IncrementalAssignment(getToken(@1), { 
+            id: $1, operator: Operator.PLUSPLUS })
+    } | id minusMinus {
+        $$ = new IncrementalAssignment(getToken(@1), { 
+            id: $1, operator: Operator.MINUSMINUS })
+    };
+
+/*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* TODAS LAS EXPRESIONES VALIDAS */
 EXPRESSIONS : EXPRESSIONS plus EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.PLUS });
-    }
-    | EXPRESSIONS equalsEquals EXPRESSIONS {
+    } | EXPRESSIONS equalsEquals EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.EQUALSEQUALS });
-    }
-    | EXPRESSIONS moreOrEquals EXPRESSIONS {
+    } | EXPRESSIONS moreOrEquals EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.MOREOREQUALS });
-    }
-    | EXPRESSIONS lessOrEquals EXPRESSIONS {
+    } | EXPRESSIONS lessOrEquals EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.LESSOREQUALS });
-    }
-    | EXPRESSIONS nonEquals EXPRESSIONS {
+    } | EXPRESSIONS nonEquals EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.NONEQUALS });
-    }
-    | EXPRESSIONS division EXPRESSIONS {
+    } | EXPRESSIONS division EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.DIVISION });
-    }
-    | EXPRESSIONS module EXPRESSIONS {
+    } | EXPRESSIONS module EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.MODULE });
-    }
-    | EXPRESSIONS power EXPRESSIONS {
+    } | EXPRESSIONS power EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.POWER });
-    }
-    | EXPRESSIONS times EXPRESSIONS {
+    } | EXPRESSIONS times EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.TIMES });
-    }
-    | EXPRESSIONS minus EXPRESSIONS {
+    } | EXPRESSIONS minus EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.MINUS });
-    }
-    | EXPRESSIONS minor EXPRESSIONS {
+    } | EXPRESSIONS minor EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.MINOR });
-    }
-    | EXPRESSIONS major EXPRESSIONS {
+    } | EXPRESSIONS major EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.MAJOR });
-    }
-    | EXPRESSIONS and EXPRESSIONS {
+    } | EXPRESSIONS and EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.AND });
-    }
-    | EXPRESSIONS or EXPRESSIONS {
+    } | EXPRESSIONS or EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator:Operator.OR });
-    }
-    | not EXPRESSIONS {
+    } | not EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $2, operator: Operator.NOT });
-    }
-    | minus EXPRESSIONS {
+    } | minus EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $2, operator: Operator.NEGATION });
-    }
-    | openParenthesis EXPRESSIONS closeParenthesis {
+    } | openParenthesis EXPRESSIONS closeParenthesis {
         $$ = new Expression(getToken(@1), { left: $2 });
-    }
-    | VARVALUE {
+    } | VARVALUE {
         $$ = new Expression(getToken(@1), { value: $1 });
-    }
-    | openParenthesis TERNARY closeParenthesis {
+    } | openParenthesis TERNARY closeParenthesis {
         $$ = $2;
     };
 
@@ -241,22 +273,18 @@ TERNARY : EXPRESSIONS questionMark EXPRESSIONS colom EXPRESSIONS {
 /* VALORES DE VARIABLES */
 VARVALUE : decimal {
         $$ = new Value(getToken(@1), { value: $1, type: DataType.DOUBLE })
-    }
-    | text {
+    } | text {
         $$ = new Value(getToken(@1), { value: $1, type: DataType.STRING })
-    }
-    | id {
+    } | id {
         $$ = new Value(getToken(@1), { value: $1, type: DataType.ID })
-    }
-    | integer {
+    } | integer {
         $$ = new Value(getToken(@1), { value: $1, type: DataType.INTEGER })
-    }
-    | character {
+    } | character {
         $$ = new Value(getToken(@1), { value: $1, type: DataType.CHARACTER })
-    }
-    | trBool {
+    } | trBool {
         $$ = new Value(getToken(@1), { value: $1, type: DataType.BOOLEAN })
-    }
-    | flBool {
+    } | flBool {
         $$ = new Value(getToken(@1), { value: $1, type: DataType.BOOLEAN })
+    } | nullType {
+        $$ = new Value(getToken(@1), { value: $1, type: DataType.NULL })
     };

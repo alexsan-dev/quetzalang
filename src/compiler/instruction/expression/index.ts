@@ -27,22 +27,20 @@ class Expression extends Instruction {
 
   // COMPILAR VALORES
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public execute(_env?: Scope): boolean {
-    return true
-  }
+  public execute(_scope?: Scope): void { }
 
   // OBTENER VALOR REAL
-  public getValue(env: Scope): Value | undefined {
+  public getValue(scope: Scope): Value {
     // OBTENER RESULTADOS ANTERIORES
-    const left: Value | undefined = this.props.left?.getValue(env)
-    const right: Value | undefined = this.props.right?.getValue(env)
-    const condition: Value | undefined = this.props.condition?.getValue(env)
+    const left: Value | undefined = this.props.left?.getValue(scope)
+    const right: Value | undefined = this.props.right?.getValue(scope)
+    const condition: Value | undefined = this.props.condition?.getValue(scope)
 
     // OPERAR
     if (left) {
       if (this.props.operator) {
         const result: Value | undefined = operateValues(
-          env,
+          scope,
           this.childToken,
           left,
           this.props.operator,
@@ -51,10 +49,10 @@ class Expression extends Instruction {
         )
         if (result) return result
       } else {
-        if (left.execute(env)) return left
+        return left
       }
     } else if (this.props.value) {
-      if (this.props.value.execute(env)) return this.props.value
+      return this.props.value
     }
   }
 }

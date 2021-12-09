@@ -1,5 +1,5 @@
-import Scope from '../../runtime/scope'
 import { TokenInfo } from '../../utils/types'
+import Scope from '../../runtime/scope'
 
 // INSTRUCCIONES
 export type InstructionName =
@@ -9,7 +9,6 @@ export type InstructionName =
 	| 'Value'
 	| 'Function'
 	| 'FunctionCall'
-	| 'Main'
 	| 'Return'
 	| 'Condition'
 	| 'Loop'
@@ -22,7 +21,7 @@ abstract class Instruction {
 	constructor(public token: TokenInfo, public name: InstructionName) {}
 
 	// COMPILAR
-	public abstract execute(env: Scope, type?: string): boolean
+	public abstract execute(scope: Scope, type?: string): void
 }
 
 export default Instruction

@@ -12,7 +12,7 @@ import Value from '../../value'
  * @param right
  */
 const operateValues = (
-	env: Scope,
+	scope: Scope,
 	token: TokenInfo,
 	left: Value,
 	operator: Operator,
@@ -22,15 +22,15 @@ const operateValues = (
 	// COMPILAR PRIMERO
 
 	// PROPIEDADES DE EXP IZQUIERDA
-	const lValue: DataValue | undefined = left.execute(env) ? left.getValue(env) : undefined
-	const lType: DataType | undefined = left.getType()
+	const lValue: DataValue | undefined = left.getValue(scope) ?? undefined
+	const lType: DataType | undefined = left.getType(scope)
 
 	// PROPIEDADES DE EXP DERECHA
-	const rValue: DataValue | undefined = right?.execute(env) ? right?.getValue(env) : undefined
-	const rType: DataType | undefined = right?.getType()
+	const rValue: DataValue | undefined = right?.getValue(scope) ?? undefined
+	const rType: DataType | undefined = right?.getType(scope)
 
 	// PROPIEDADES DE CONDICION
-	const conditionValue: DataValue | undefined = condition?.getValue(env)
+	const conditionValue: DataValue | undefined = condition?.getValue(scope)
 
 	// RESULTADOS
 	let value: DataValue | undefined
@@ -459,9 +459,11 @@ const operateValues = (
 
 	// RETORNO
 	if (value !== undefined && type !== undefined)
-		return new Value(token, { value: value.toString(), type })
-	else  
-    addError(token, `No es posible operar la expresion ${lType} ${operator} ${rType}.`)
+		return new Value(token, { value, type })
+	else {
+		addError(token, `No es posible operar la expresion ${lType} ${operator} ${rType}.`)
+		return new Value(token, { value: null, type: DataType.NULL })
+	}
 }
 
 /**
@@ -482,6 +484,8 @@ export const defaultValues = (type: DataType): DataValue => {
 			return true
 		case DataType.CHARACTER:
 			return '0'
+		case DataType.NULL:
+			return null
 		default:
 			return ''
 	}

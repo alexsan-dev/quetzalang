@@ -9,7 +9,7 @@ import Value from '../value'
 
 class FunctionBlock extends Instruction {
   // GLOBALES
-  private env: Scope | undefined
+  private scope: Scope | undefined
   private functionValue: Value | undefined
   private isOnBreak = false
 
@@ -24,7 +24,7 @@ class FunctionBlock extends Instruction {
     },
   ) {
     super(token, 'Function')
-    this.env = {} as Scope
+    this.scope = {} as Scope
     this.functionValue = undefined
   }
 
@@ -34,11 +34,11 @@ class FunctionBlock extends Instruction {
   }
 
   // ASIGNAR ENTORNO
-  public setScope(env: Scope): void {
-    this.env = new Scope('Function', this.props.id, env)
+  public setScope(scope: Scope): void {
+    this.scope = new Scope('Function', this.props.id, scope)
     this.isOnBreak = false
     this.functionValue = undefined
-    this.env.addFunction(
+    this.scope.addFunction(
       'return',
       'void',
       new FunctionBlock(this.token, {
@@ -60,44 +60,39 @@ class FunctionBlock extends Instruction {
   }
 
   // COMPILAR FUNCION
-  public execute(): boolean {
+  public execute(): void {
     // COMPILAR CONTENIDO
-    const compiles: boolean[] = []
     for (
       let instructionIndex = 0, length = this.props.content.length;
       instructionIndex < length;
       instructionIndex++
     ) {
-      if (this.env) {
+      if (this.scope) {
         if (!this.isOnBreak)
-          compiles.push(this.props.content[instructionIndex].execute(this.env))
+          this.props.content[instructionIndex].execute(this.scope)
         else break
       }
     }
 
     // OBTENER VALOR DE RETORNO
-    if (this.env && 'getVar' in this.env)
-      this.functionValue = this.env?.getVar('return')
+    if (this.scope && 'getVar' in this.scope)
+      this.functionValue = this.scope?.getVar('return')
 
     if (this.props.type !== 'void') {
-      if (this.props.type === this.functionValue?.getType()) {
-        return compiles.every((result: boolean) => result === true)
-      } else {
+      const functionType = this.functionValue?.getType(this.scope)
+      if (this.props.type === functionType) {
         addError(
           this.token,
-          `La funcion retorna un ${this.functionValue?.getType()} pero se esperaba un ${
-            this.props.type
+          `La funcion retorna un ${functionType} pero se esperaba un ${this.props.type
           }`,
         )
-
-        return false
       }
-    } else return true
+    }
   }
 
   // OBTENER ENTORNO DE FUNCION
   public getScope(): Scope | undefined {
-    return this.env
+    return this.scope
   }
 }
 

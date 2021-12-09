@@ -43,6 +43,7 @@ const collapseConsole = () => {
   const chevron = document.getElementById('chevron') as HTMLTextAreaElement
 
   textarea.style.height = expandedConsole ? '0px' : '40vh'
+  textarea.style.padding = expandedConsole ? '33px 12px 12px 12px' : '54px 12px 12px 12px'
   chevron.style.transform = `rotate(${expandedConsole ? 180 : 0}deg)`
   expandedConsole = !expandedConsole
 }
