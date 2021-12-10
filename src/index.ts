@@ -32,6 +32,9 @@ const runCode = () => {
   } catch {
     console.error("Error sintactico")
   }
+
+  // ABRIR
+  if (!expandedConsole) collapseConsole()
 }
 
 // LIMPIAR CONSOLA
