@@ -63,7 +63,7 @@ const shareCode = () => {
   // @ts-ignore
   const value = editor.getValue();
   window.localStorage.setItem("code", value)
-  const url = `${window.location.href}/?code=${encodeURIComponent(value)}`
+  const url = `${window.location.href}?code=${encodeURIComponent(value)}`
 
   if ('clipboard' in navigator)
     navigator.clipboard.writeText(url)
