@@ -33,9 +33,11 @@ npm start
 
 ### Atajos de teclado para editor
 
-| Comando | Accion          |
-| ------- | --------------- |
-| Ctr+P   | Interpretar     |
-| Ctr+R   | Borrar consola  |
-| Ctr+T   | Traducir        |
-| Ctr+M   | Ocultar consola |
+| Comando | Accion           |
+| ------- | ---------------- |
+| Ctr+P   | Interpretar      |
+| Ctr+R   | Borrar consola   |
+| Ctr+T   | Traducir         |
+| Ctr+M   | Ocultar consola  |
+| Ctr+S   | Guardar codigo   |
+| Ctr+U   | Compartir codigo |
