@@ -26,7 +26,8 @@ class FunctionCall extends Instruction {
   }
 
   // OBTENER VALOR
-  public getValue(): DataValue | undefined {
+  public getValue(scope: Scope): DataValue | undefined {
+    this.execute(scope)
     return this.functionValue
   }
 
@@ -75,7 +76,6 @@ class FunctionCall extends Instruction {
             }
           })
 
-          functionBlock.execute()
           const functionValue = functionBlock.getValue()
           if (functionValue) {
             this.functionValue = functionValue?.getValue(scope)

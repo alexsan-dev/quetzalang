@@ -10,12 +10,8 @@ const compile = (instructions: Instruction[]) => {
   // PRIMER CICLO PARA ASIGNAR FUNCIONES Y VARIABLES
   instructions.forEach((instruction: Instruction) => {
     // GUARDAR VARIABLES Y FUNCIONES
-    if (instruction.name === 'Function') {
-      const functionBlock = instruction as FunctionBlock
-      globalEnv.addFunction(functionBlock.props.id, functionBlock.props.type, functionBlock)
-    } else if (instruction.name === 'Declaration') {
+    if (instruction.name === 'Function' || instruction.name === 'Declaration')
       instruction.execute(globalEnv)
-    }
   })
 
   // SEGUNDO PARA CORRER PROGRAMA

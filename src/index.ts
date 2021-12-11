@@ -86,19 +86,19 @@ const saveCode = () => {
 
 // EVENTOS
 const setEvents = () => {
-  const cleanBtn = document.getElementById('cleanBtn')
-  const compileBtn = document.getElementById('runtimeBtn')
   const collapseBtn = document.getElementById('collapseBtn')
   const terminalBtn = document.getElementById('terminalBtn')
-  const saveBtn = document.getElementById('saveBtn')
+  const compileBtn = document.getElementById('runtimeBtn')
   const shareBtn = document.getElementById('shareBtn')
+  const cleanBtn = document.getElementById('cleanBtn')
+  const saveBtn = document.getElementById('saveBtn')
 
-  compileBtn?.addEventListener('click', runCode)
-  cleanBtn?.addEventListener('click', cleanConsole)
   collapseBtn?.addEventListener('click', collapseConsole)
   terminalBtn?.addEventListener('click', collapseConsole)
-  saveBtn?.addEventListener('click', saveCode)
+  cleanBtn?.addEventListener('click', cleanConsole)
   shareBtn?.addEventListener('click', shareCode)
+  compileBtn?.addEventListener('click', runCode)
+  saveBtn?.addEventListener('click', saveCode)
 
   window.addEventListener('keydown', (ev: KeyboardEvent) => {
     // CONTROL KEY
@@ -147,9 +147,9 @@ const bindConsole = (hide: boolean = false) => {
       })
     }
 
-    window.console.log = logClousure("clsLog", window.console.log)
-    window.console.warn = logClousure("clsWarn", window.console.warn)
     window.console.error = logClousure("clsError", window.console.error)
+    window.console.warn = logClousure("clsWarn", window.console.warn)
+    window.console.log = logClousure("clsLog", window.console.log)
   }
 }
 

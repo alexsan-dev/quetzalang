@@ -10,7 +10,10 @@
     const IncrementalAssignment = require('../compiler/instruction/assignment/incremental/index').default
     const ExpAssignment = require('../compiler/instruction/assignment/expression/index').default
     const Declaration = require('../compiler/instruction/assignment/declaration/index').default
+    const ReturnValue = require('../compiler/instruction/control/return/index').default
     const Expression = require('../compiler/instruction/expression/index').default
+    const Switch = require('../compiler/instruction/control/switch/index').default
+    const Condition = require('../compiler/instruction/control/index').default
     const Value = require('../compiler/instruction/value/index').default
     
     // FUNCIONES NATIVAS
@@ -84,8 +87,19 @@
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* PALABRAS RESERVADAS */
-'print'                 return addToken(yylloc, 'printRw')
-'printLn'               return addToken(yylloc, 'printLnRw')
+'print'                     return addToken(yylloc, 'printRw')
+'printLn'                   return addToken(yylloc, 'printLnRw')
+
+'else'                      return addToken(yylloc, 'elseRw')
+'if'                        return addToken(yylloc, 'ifRw')
+
+'default'                   return addToken(yylloc, 'defaultRw')
+'switch'                    return addToken(yylloc, 'switchRw')
+'break'                     return addToken(yylloc, 'breakRw')
+'case'                      return addToken(yylloc, 'caseRw')
+
+'continue'                  return addToken(yylloc, 'continueRw')
+'return'                    return addToken(yylloc, 'returnRw')
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* SECUENCIAS DE ESCAPE */
@@ -168,6 +182,10 @@ TYPE :
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* INSTRUCCIONES */
+BLOCKCONTENT : openBracket INSTRUCTIONS closeBracket {
+        $$ = $2;
+    };
+
 INSTRUCTIONS : INSTRUCTIONS INSTRUCTION {
         $$ = $1;
         $$.push($2);
@@ -180,6 +198,12 @@ INSTRUCTION : DECLARATION semicolom {
     } | ASSIGNMENT semicolom {
         $$ = $1;
     } | METHODS semicolom {
+        $$ = $1;
+    } | CONTROLSEQ {
+        $$ = $1;
+    } | SWITCHSEQ {
+        $$ = $1;
+    } | LOOPESCAPE {
         $$ = $1;
     };
 
@@ -318,4 +342,81 @@ PRINT : printRw openParenthesis EXPLIST closeParenthesis {
 
 PRINTLN : printLnRw openParenthesis EXPLIST closeParenthesis {
         $$ = new Print(getToken(@1), { params: $3, breakLine: true });
+    };
+
+/*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+/* SENTENCIAS DE CONTROL */
+CONTROLSEQ : ifRw openParenthesis EXPRESSIONS closeParenthesis BLOCKCONTENT {
+        $$ = new Condition(getToken(@1), { 
+            valid: { exp: $3, body: $5 }
+        })
+    } | ifRw openParenthesis EXPRESSIONS closeParenthesis BLOCKCONTENT
+    elseRw BLOCKCONTENT {
+        $$ = new Condition(getToken(@1), { 
+            valid: { exp: $3, body: $5 },
+            inValid: { exp: $3, body: $7 }
+        })
+    } | ifRw openParenthesis EXPRESSIONS closeParenthesis BLOCKCONTENT
+    CONTROLSEQELIFS {
+        $$ = new Condition(getToken(@1), { 
+            valid: { exp: $3, body: $5 },
+            fallback: $6
+        })
+    } | ifRw openParenthesis EXPRESSIONS closeParenthesis BLOCKCONTENT
+    CONTROLSEQELIFS elseRw BLOCKCONTENT {
+        $$ = new Condition(getToken(@1), { 
+            inValid: { exp: $3, body: $8 },
+            valid: { exp: $3, body: $5 },
+            fallback: $6
+        })
+    };
+
+CONTROLSEQELIFS : CONTROLSEQELIFS CONTROLSEQELIF {
+        $$ = $1;
+        $$.push($2);
+    } | CONTROLSEQELIF {
+        $$ = [$1];
+    };
+
+CONTROLSEQELIF : elseRw ifRw 
+    openParenthesis EXPRESSIONS closeParenthesis BLOCKCONTENT {
+        $$ = { exp: $4, body: $6 };
+    };
+
+/*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+/* SWITCH */
+SWITCHSEQ : switchRw openParenthesis EXPRESSIONS closeParenthesis
+    openBracket SWITCHSEQCASES closeBracket {
+        $$ = new Switch(getToken(@1), { value: $3, cases: $6 })
+    } | switchRw openParenthesis EXPRESSIONS closeParenthesis
+    openBracket SWITCHSEQCASES defaultRw colom INSTRUCTIONS closeBracket {
+        $$ = new Switch(getToken(@1), { 
+            value: $3, cases: $6, default: { body: $9 } })
+    } | switchRw openParenthesis EXPRESSIONS closeParenthesis
+    openBracket defaultRw colom INSTRUCTIONS closeBracket {
+        $$ = new Switch(getToken(@1), { 
+            value: $3, default: { body: $8 } })
+    };
+
+SWITCHSEQCASES : SWITCHSEQCASES SWITCHSEQCONTENT {
+        $$ = $1;
+        $$.push($2);
+    } | SWITCHSEQCONTENT {
+        $$ = [$1];
+    };
+
+SWITCHSEQCONTENT : caseRw EXPRESSIONS colom INSTRUCTIONS {
+        $$ = { case: $2, body: $4 };
+    };
+
+/*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+/* CICLOS */
+LOOPESCAPE : breakRw semicolom {
+        $$ = new ReturnValue(getToken(@1), { type: 'break' })
+    }
+    | continueRw semicolom {
+        $$ = new ReturnValue(getToken(@1), { type: 'continue' })
+    }
+    | returnRw EXPRESSIONS semicolom {
+        $$ = new ReturnValue(getToken(@1), { content: $2, type: 'return'  });
     };

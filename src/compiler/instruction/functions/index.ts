@@ -28,10 +28,6 @@ class FunctionBlock extends Instruction {
     this.functionValue = undefined
   }
 
-  // OBTENER VALOR DE FUNCION
-  public getValue(): Value | undefined {
-    return this.functionValue
-  }
 
   // OBTENER TIPO DE FUNCION
   public getType(): DataType | 'void' {
@@ -65,7 +61,7 @@ class FunctionBlock extends Instruction {
   }
 
   // COMPILAR FUNCION
-  public execute(): void {
+  public getValue(): Value | undefined {
     // COMPILAR CONTENIDO
     for (
       let instructionIndex = 0, length = this.props.content.length;
@@ -93,6 +89,15 @@ class FunctionBlock extends Instruction {
           this.functionValue = this.scope?.getVar('return')
       }
     } else this.functionValue = undefined
+
+
+    // VALOR
+    return this.functionValue
+  }
+
+  // AGREGAR FUNCION
+  public execute(scope: Scope): void {
+    scope.addFunction(this.props.id, this.props.type, this)
   }
 
   // OBTENER ENTORNO DE FUNCION
