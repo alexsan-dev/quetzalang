@@ -23,7 +23,7 @@ class Print extends FunctionCall {
     // OBTENER VALORES
     this.props.params.forEach((exp) => {
       const expValue = exp.getValue(scope)
-      logs.push(expValue.getValue(scope))
+      logs.push(expValue?.getValue(scope))
       if (this.props.breakLine) logs.push('\n')
     })
   }

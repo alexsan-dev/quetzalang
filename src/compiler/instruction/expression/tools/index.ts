@@ -410,6 +410,16 @@ const operateValues = (
 					break
 			}
 			break
+		case Operator.NOT:
+			switch (lType) {
+				case DataType.BOOLEAN:
+					value = !(lValue as boolean);
+					type = DataType.BOOLEAN;
+					break;
+				default:
+					break;
+			}
+			break;
 
 		// OPERADORES BOOLEANOS
 		case Operator.OR:
@@ -417,7 +427,7 @@ const operateValues = (
 			type = DataType.BOOLEAN
 			break
 		case Operator.AND:
-			value = (lValue as boolean) || (rValue as boolean)
+			value = (lValue as boolean) && (rValue as boolean)
 			type = DataType.BOOLEAN
 			break
 		case Operator.TERNARY:

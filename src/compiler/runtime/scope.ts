@@ -94,11 +94,7 @@ class Scope {
   // OBTENER FUNCION
   public getFunction(id: string): FunctionBlock | undefined {
     if (id in this.functions) {
-      if (this.functions[id]?.value)
-        return Object.create(
-          Object.getPrototypeOf(this.functions[id]?.value),
-          Object.getOwnPropertyDescriptors(this.functions[id]?.value),
-        )
+      return this.functions[id]?.value;
     } else {
       if (this.prevScope) return this.prevScope.getFunction(id)
       else return undefined

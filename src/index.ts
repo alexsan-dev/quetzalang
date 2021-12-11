@@ -29,8 +29,8 @@ const runCode = () => {
     if (logs.length) console.log(logs.join(''))
     if (errors.length) console.error(errors)
 
-  } catch {
-    console.error("Error sintactico")
+  } catch (err) {
+    console.error("Error sintactico", err)
   }
 
   // ABRIR

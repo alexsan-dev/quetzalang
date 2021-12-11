@@ -33,6 +33,11 @@ class FunctionBlock extends Instruction {
     return this.functionValue
   }
 
+  // OBTENER TIPO DE FUNCION
+  public getType(): DataType | 'void' {
+    return this.props.type
+  }
+
   // ASIGNAR ENTORNO
   public setScope(scope: Scope): void {
     this.scope = new Scope('Function', this.props.id, scope)
@@ -75,9 +80,6 @@ class FunctionBlock extends Instruction {
     }
 
     // OBTENER VALOR DE RETORNO
-    if (this.scope && 'getVar' in this.scope)
-      this.functionValue = this.scope?.getVar('return')
-
     if (this.props.type !== 'void') {
       const functionType = this.functionValue?.getType(this.scope)
       if (this.props.type === functionType) {
@@ -86,8 +88,11 @@ class FunctionBlock extends Instruction {
           `La funcion retorna un ${functionType} pero se esperaba un ${this.props.type
           }`,
         )
+      } else {
+        if (this.scope && 'getVar' in this.scope)
+          this.functionValue = this.scope?.getVar('return')
       }
-    }
+    } else this.functionValue = undefined
   }
 
   // OBTENER ENTORNO DE FUNCION

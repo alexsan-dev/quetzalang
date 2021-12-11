@@ -49,9 +49,9 @@ class FunctionCall extends Instruction {
     if (functionBlock) {
       // OBTENER EXPRESIONES
       functionBlock.setScope(scope)
-      const functionEnv: Scope | undefined = functionBlock.getScope()
+      const functionScope: Scope | undefined = functionBlock.getScope()
 
-      if (functionEnv) {
+      if (functionScope) {
         const values: { value: Value; type: DataType }[] = this.props.params.map(
           (exp: Expression) => {
             const expValue = exp.getValue(scope)
@@ -68,7 +68,7 @@ class FunctionCall extends Instruction {
           values.forEach((value, index: number) => {
             if (value.type === functionBlock.props.params[index].type) {
               // ASIGNAR VARIABLE A ENTORNO DE FUNCION
-              functionEnv.addVar(functionBlock.props.params[index].id, value.type, value.value)
+              functionScope.addVar(functionBlock.props.params[index].id, value.type, value.value)
             } else {
               addError(this.token, `Se esperaba un ${functionBlock.props.params[index].type
                 } en el parametro ${index + 1} en la function.`)
