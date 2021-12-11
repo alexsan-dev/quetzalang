@@ -148,12 +148,13 @@ NULLCHAR "\\0"
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* PRESEDENCIA */
 %left 'questionMark'
+%left 'and' 'or'
 %left 'minor' 'lessOrEquals' 'major' 'moreOrEquals' 'equalsEquals' 'nonEquals'
 %left 'plus' 'minus'
 %left 'times' 'division' 'module' 'power'
-%left 'and' 'or'
 %right 'not'
-
+%left UMIN
+%left UNOT
 %nonassoc 'comma' 'openParenthesis' 'closeParenthesis'
 
 %start START

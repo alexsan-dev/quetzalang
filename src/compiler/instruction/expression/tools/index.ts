@@ -19,8 +19,6 @@ const operateValues = (
 	right?: Value,
 	condition?: Value
 ): Value | undefined => {
-	// COMPILAR PRIMERO
-
 	// PROPIEDADES DE EXP IZQUIERDA
 	const lValue: DataValue | undefined = left.getValue(scope) ?? undefined
 	const lType: DataType | undefined = left.getType(scope)
