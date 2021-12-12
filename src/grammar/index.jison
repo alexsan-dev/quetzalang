@@ -1,23 +1,26 @@
 %{
     // TOOLS
-    const symbols = require('../compiler/lexical/symbols/index').default
-    const errors = require('../compiler/lexical/error/index').default
+    const symbols = require('../compiler/lexical/symbols').default
+    const errors = require('../compiler/lexical/error').default
     const Operator = require('../compiler/utils/types').Operator
     const DataType = require('../compiler/utils/types').default
     const getToken = require('../compiler/utils/tools').default
 
     // INSTRUCCIONES
-    const IncrementalAssignment = require('../compiler/instruction/assignment/incremental/index').default
-    const ExpAssignment = require('../compiler/instruction/assignment/expression/index').default
-    const Declaration = require('../compiler/instruction/assignment/declaration/index').default
-    const ReturnValue = require('../compiler/instruction/control/return/index').default
-    const Expression = require('../compiler/instruction/expression/index').default
-    const Switch = require('../compiler/instruction/control/switch/index').default
-    const Condition = require('../compiler/instruction/control/index').default
-    const Value = require('../compiler/instruction/value/index').default
+    const IncrementalAssignment = require('../compiler/instruction/assignment/incremental').default
+    const ExpAssignment = require('../compiler/instruction/assignment/expression').default
+    const Declaration = require('../compiler/instruction/assignment/declaration').default
+    const FunctionCall = require('../compiler/instruction/functions/call').default
+    const ReturnValue = require('../compiler/instruction/control/return').default
+    const FunctionBlock = require('../compiler/instruction/functions').default
+    const Expression = require('../compiler/instruction/expression').default
+    const Switch = require('../compiler/instruction/control/switch').default
+    const Condition = require('../compiler/instruction/control').default
+    const Value = require('../compiler/instruction/value').default
     
     // FUNCIONES NATIVAS
-    const Print = require('../compiler/instruction/functions/builtin/print/index').default
+    const Evaluate = require('../compiler/instruction/functions/builtin/evaluate').default
+    const Print = require('../compiler/instruction/functions/builtin/print').default
 
     // AGREGAR TOKEN
     const addToken = (yylloc, name) => {
@@ -45,6 +48,7 @@
 "int"                       return addToken(yylloc, 'intType')
 "true"                      return addToken(yylloc, 'trBool')
 "false"                     return addToken(yylloc, 'flBool')
+"void"                      return addToken(yylloc, 'voidType')
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* OPERADORES */
@@ -74,6 +78,8 @@
 "!"                         return addToken(yylloc, 'not')
 "||"                        return addToken(yylloc, 'or')
 
+"&"                        return addToken(yylloc, 'concat')
+
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* SIMBOLOS */
 ","                         return addToken(yylloc, 'comma')
@@ -89,6 +95,7 @@
 /* PALABRAS RESERVADAS */
 'print'                     return addToken(yylloc, 'printRw')
 'printLn'                   return addToken(yylloc, 'printLnRw')
+'eval'                      return addToken(yylloc, 'evalRw')
 
 'else'                      return addToken(yylloc, 'elseRw')
 'if'                        return addToken(yylloc, 'ifRw')
@@ -150,8 +157,8 @@ NULLCHAR "\\0"
 %left 'questionMark'
 %left 'and' 'or'
 %left 'minor' 'lessOrEquals' 'major' 'moreOrEquals' 'equalsEquals' 'nonEquals'
-%left 'plus' 'minus'
-%left 'times' 'division' 'module' 'power'
+%left 'plus' 'concat' 'minus'
+%left 'times' 'division' 'module' 'power' 
 %right 'not'
 %left UMIN
 %left UNOT
@@ -187,6 +194,12 @@ BLOCKCONTENT : openBracket INSTRUCTIONS closeBracket {
         $$ = $2;
     };
 
+INLINEBLOCKCONTENT : BLOCKCONTENT {
+        $$ = $1;
+    } | INLINEINSTRUCTION {
+        $$ = [$1];
+    };
+
 INSTRUCTIONS : INSTRUCTIONS INSTRUCTION {
         $$ = $1;
         $$.push($2);
@@ -198,9 +211,25 @@ INSTRUCTION : DECLARATION semicolom {
         $$ = $1;
     } | ASSIGNMENT semicolom {
         $$ = $1;
-    } | METHODS semicolom {
+    } | METHOD semicolom {
+        $$ = $1;
+    } | FUNCTIONCALL semicolom {
         $$ = $1;
     } | CONTROLSEQ {
+        $$ = $1;
+    } | SWITCHSEQ {
+        $$ = $1;
+    } | LOOPESCAPE {
+        $$ = $1;
+    } | FUNCTION {
+        $$ = $1;
+    };
+
+INLINEINSTRUCTION : ASSIGNMENT semicolom {
+        $$ = $1;
+    } | FUNCTIONCALL semicolom {
+        $$ = $1;
+    } | METHOD semicolom {
         $$ = $1;
     } | SWITCHSEQ {
         $$ = $1;
@@ -265,6 +294,9 @@ EXPRESSIONS : EXPRESSIONS plus EXPRESSIONS {
     } | EXPRESSIONS power EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.POWER });
+    } | EXPRESSIONS concat EXPRESSIONS {
+        $$ = new Expression(getToken(@1), {
+            left: $1, right: $3, operator: Operator.CONCAT });
     } | EXPRESSIONS times EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator: Operator.TIMES });
@@ -327,13 +359,55 @@ VARVALUE : decimal {
         $$ = new Value(getToken(@1), { value: $1, type: DataType.BOOLEAN })
     } | nullType {
         $$ = new Value(getToken(@1), { value: $1, type: DataType.NULL })
+    } | FUNCTIONCALL {
+        $$ = $1;
+    };
+
+/*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+/* METODOS */
+PARAMSLIST : PARAMSLIST comma PARAMVAR {
+        $$ = $1;
+        $$.push($3);
+    } | PARAMVAR {
+        $$ = [$1];
+    };
+
+PARAMVAR : TYPE id {
+        $$ = { type: $1, id: $2 };
+    } | TYPE id openSquareBracket closeSquareBracket {
+        $$ = { type: DataType.ARRAY, id: $2, generic: $1 };
+    };
+
+FUNCTIONPARAMS : openParenthesis PARAMSLIST closeParenthesis {
+        $$ = $2;
+    } | openParenthesis closeParenthesis {
+        $$ = [];
+    }; 
+
+FUNCTION : TYPE id FUNCTIONPARAMS BLOCKCONTENT {
+        $$ = new FunctionBlock(getToken(@1), { 
+            id: $2, type: $1, params: $3, content: $4 });
+    } | TYPE id openSquareBracket closeSquareBracket FUNCTIONPARAMS BLOCKCONTENT {
+        $$ = new FunctionBlock(getToken(@1), { 
+            id: $2, type: DataType.ARRAY, generic: $1 , params: $5, content: $6 });
+    } | voidType id FUNCTIONPARAMS BLOCKCONTENT {
+        $$ = new FunctionBlock(getToken(@1), { 
+            id: $2, type: DataType.VOID, params: $3, content: $4 });
+    };
+
+FUNCTIONCALL : id openParenthesis EXPLIST closeParenthesis {
+        $$ = new FunctionCall(getToken(@1), { params: $3, id: $1 })
+    } | id openParenthesis closeParenthesis {
+        $$ = new FunctionCall(getToken(@1), { params: [], id: $1 })
     };
     
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* BUILT-IN FUNCTIONS */
-METHODS : PRINT {
+METHOD : PRINT {
         $$ = $1;
     } | PRINTLN {
+        $$ = $1;
+    } | EVAL {
         $$ = $1;
     };
 
@@ -345,31 +419,40 @@ PRINTLN : printLnRw openParenthesis EXPLIST closeParenthesis {
         $$ = new Print(getToken(@1), { params: $3, breakLine: true });
     };
 
+EVAL : evalRw openParenthesis EXPRESSIONS closeParenthesis {
+        $$ = new Evaluate(getToken(@1), { params: [$3] });
+    };
+
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* SENTENCIAS DE CONTROL */
-CONTROLSEQ : ifRw openParenthesis EXPRESSIONS closeParenthesis BLOCKCONTENT {
+CONTROLSEQ : IFSEQUENCE {
         $$ = new Condition(getToken(@1), { 
-            valid: { exp: $3, body: $5 }
+            valid: { exp: $1.exp, body: $1.body }
         })
-    } | ifRw openParenthesis EXPRESSIONS closeParenthesis BLOCKCONTENT
-    elseRw BLOCKCONTENT {
+    } | IFSEQUENCE ELSESEQUENCE {
         $$ = new Condition(getToken(@1), { 
-            valid: { exp: $3, body: $5 },
-            inValid: { exp: $3, body: $7 }
+            valid: { exp: $1.exp, body: $1.body },
+            inValid: { exp: $1.exp, body: $2.body }
         })
-    } | ifRw openParenthesis EXPRESSIONS closeParenthesis BLOCKCONTENT
-    CONTROLSEQELIFS {
+    } | IFSEQUENCE CONTROLSEQELIFS {
         $$ = new Condition(getToken(@1), { 
-            valid: { exp: $3, body: $5 },
-            fallback: $6
+            valid: { exp: $1.exp, body: $1.body },
+            fallback: $2
         })
-    } | ifRw openParenthesis EXPRESSIONS closeParenthesis BLOCKCONTENT
-    CONTROLSEQELIFS elseRw BLOCKCONTENT {
+    } | IFSEQUENCE CONTROLSEQELIFS ELSESEQUENCE {
         $$ = new Condition(getToken(@1), { 
-            inValid: { exp: $3, body: $8 },
-            valid: { exp: $3, body: $5 },
-            fallback: $6
+            inValid: { exp: $1.exp, body: $3.body },
+            valid: { exp: $1.exp, body: $1.body },
+            fallback: $2
         })
+    };
+
+IFSEQUENCE : ifRw openParenthesis EXPRESSIONS closeParenthesis INLINEBLOCKCONTENT {
+        $$ = { exp: $3, body: $5 }
+    };
+
+ELSESEQUENCE : elseRw INLINEBLOCKCONTENT {
+        $$ = { exp: $1, body: $2 }
     };
 
 CONTROLSEQELIFS : CONTROLSEQELIFS CONTROLSEQELIF {
@@ -380,7 +463,7 @@ CONTROLSEQELIFS : CONTROLSEQELIFS CONTROLSEQELIF {
     };
 
 CONTROLSEQELIF : elseRw ifRw 
-    openParenthesis EXPRESSIONS closeParenthesis BLOCKCONTENT {
+    openParenthesis EXPRESSIONS closeParenthesis INLINEBLOCKCONTENT {
         $$ = { exp: $4, body: $6 };
     };
 
@@ -413,11 +496,11 @@ SWITCHSEQCONTENT : caseRw EXPRESSIONS colom INSTRUCTIONS {
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* CICLOS */
 LOOPESCAPE : breakRw semicolom {
-        $$ = new ReturnValue(getToken(@1), { type: 'break' })
+        $$ = new ReturnValue(getToken(@1), { type: 'Break' })
     }
     | continueRw semicolom {
-        $$ = new ReturnValue(getToken(@1), { type: 'continue' })
+        $$ = new ReturnValue(getToken(@1), { type: 'Continue' })
     }
     | returnRw EXPRESSIONS semicolom {
-        $$ = new ReturnValue(getToken(@1), { content: $2, type: 'return'  });
+        $$ = new ReturnValue(getToken(@1), { content: $2, type: 'Return'  });
     };

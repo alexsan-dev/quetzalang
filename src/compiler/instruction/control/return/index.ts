@@ -6,8 +6,8 @@ import Value from "../../value";
 
 class ReturnValue extends Instruction {
   // CONSTRUCTOR
-  constructor(public token: TokenInfo, public props: { content?: Expression, type: 'return' | 'continue' | 'break' }) {
-    super(token, "Return");
+  constructor(public token: TokenInfo, public props: { content?: Expression, type: 'Return' | 'Continue' | 'Break' }) {
+    super(token, props.type);
   }
 
   // COMPILAR
@@ -30,24 +30,17 @@ class ReturnValue extends Instruction {
 
     // ASIGNAR RETORNO A FUNCION
     if (scope) {
-      if (this.props.type === 'return') {
+      if (this.props.type === 'Return') {
         const value = this.props.content?.getValue(scope);
-        const primitiveValue = value.getValue(scope)
         const valueType = value.getType(scope)
 
-        // EVALUAR Y GUARDAR
-        const newValue = new Value(this.token, {
-          value: primitiveValue as string,
-          type: valueType,
-        });
-
         // AGREGAR VARIABLE RERTURN
-        scope.addVar("return", valueType, newValue);
+        scope.addVar("return", valueType, value);
       }
 
       // EJECUTAR RETURN
       const returnFunction = scope.getFunction(this.props.type);
-      if (returnFunction) returnFunction.getValue();
+      if (returnFunction) returnFunction.getValue(scope);
     }
   }
 }

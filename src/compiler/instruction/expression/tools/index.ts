@@ -14,21 +14,22 @@ import Value from '../../value'
 const operateValues = (
 	scope: Scope,
 	token: TokenInfo,
-	left: Value,
 	operator: Operator,
+	left?: Value,
 	right?: Value,
-	condition?: Value
-): Value | undefined => {
+	condition?: Value,
+	onlyTypes?: boolean
+): Value | undefined | DataType => {
 	// PROPIEDADES DE EXP IZQUIERDA
-	const lValue: DataValue | undefined = left.getValue(scope) ?? undefined
-	const lType: DataType | undefined = left.getType(scope)
+	const lValue: DataValue | undefined = onlyTypes ? undefined : (left?.getValue(scope) ?? undefined)
+	const lType: DataType | undefined = left?.getType(scope)
 
 	// PROPIEDADES DE EXP DERECHA
-	const rValue: DataValue | undefined = right?.getValue(scope) ?? undefined
+	const rValue: DataValue | undefined = onlyTypes ? undefined : (right?.getValue(scope) ?? undefined)
 	const rType: DataType | undefined = right?.getType(scope)
 
 	// PROPIEDADES DE CONDICION
-	const conditionValue: DataValue | undefined = condition?.getValue(scope)
+	const conditionValue: DataValue | undefined = onlyTypes ? undefined : condition?.getValue(scope)
 
 	// RESULTADOS
 	let value: DataValue | undefined
@@ -42,23 +43,23 @@ const operateValues = (
 				case DataType.INTEGER:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (lValue as number) + (rValue as number)
+							if (!onlyTypes) value = (lValue as number) + (rValue as number)
 							type = DataType.INTEGER
 							break
 						case DataType.DOUBLE:
-							value = (lValue as number) + (rValue as number)
+							if (!onlyTypes) value = (lValue as number) + (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.BOOLEAN:
-							value = (lValue as number) + (rValue ? 1 : 0)
+							if (!onlyTypes) value = (lValue as number) + (rValue ? 1 : 0)
 							type = DataType.INTEGER
 							break
 						case DataType.CHARACTER:
-							value = (lValue as number) + (rValue as string).charCodeAt(0)
+							if (!onlyTypes) value = (lValue as number) + (rValue as string).charCodeAt(0)
 							type = DataType.INTEGER
 							break
 						case DataType.STRING:
-							value = (lValue as string) + (rValue as string)
+							if (!onlyTypes) value = (lValue as string) + (rValue as string)
 							type = DataType.STRING
 							break
 						default:
@@ -68,23 +69,23 @@ const operateValues = (
 				case DataType.DOUBLE:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (lValue as number) + (rValue as number)
+							if (!onlyTypes) value = (lValue as number) + (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.DOUBLE:
-							value = (lValue as number) + (rValue as number)
+							if (!onlyTypes) value = (lValue as number) + (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.BOOLEAN:
-							value = (lValue as number) + (rValue ? 1 : 0)
+							if (!onlyTypes) value = (lValue as number) + (rValue ? 1 : 0)
 							type = DataType.DOUBLE
 							break
 						case DataType.CHARACTER:
-							value = (lValue as number) + (rValue as string).charCodeAt(0)
+							if (!onlyTypes) value = (lValue as number) + (rValue as string).charCodeAt(0)
 							type = DataType.DOUBLE
 							break
 						case DataType.STRING:
-							value = (lValue as string) + (rValue as string)
+							if (!onlyTypes) value = (lValue as string) + (rValue as string)
 							type = DataType.STRING
 							break
 						default:
@@ -94,15 +95,15 @@ const operateValues = (
 				case DataType.BOOLEAN:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (rValue ? 1 : 0) + (rValue as number)
+							if (!onlyTypes) value = (rValue ? 1 : 0) + (rValue as number)
 							type = DataType.INTEGER
 							break
 						case DataType.DOUBLE:
-							value = (rValue ? 1 : 0) + (rValue as number)
+							if (!onlyTypes) value = (rValue ? 1 : 0) + (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.STRING:
-							value = lValue ? 'true' : 'false' + (rValue as string)
+							if (!onlyTypes) value = lValue ? 'true' : 'false' + (rValue as string)
 							type = DataType.STRING
 							break
 						default:
@@ -112,15 +113,15 @@ const operateValues = (
 				case DataType.CHARACTER:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (lValue as string).charCodeAt(0) + (rValue as number)
+							if (!onlyTypes) value = (lValue as string).charCodeAt(0) + (rValue as number)
 							type = DataType.INTEGER
 							break
 						case DataType.DOUBLE:
-							value = (lValue as string).charCodeAt(0) + (rValue as number)
+							if (!onlyTypes) value = (lValue as string).charCodeAt(0) + (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.STRING:
-							value = (lValue as string) + (rValue as string)
+							if (!onlyTypes) value = (lValue as string) + (rValue as string)
 							type = DataType.STRING
 							break
 						default:
@@ -128,7 +129,7 @@ const operateValues = (
 					}
 					break
 				case DataType.STRING:
-					value = (lValue as string) + (rValue as string)
+					if (!onlyTypes) value = (lValue as string) + (rValue as string)
 					type = DataType.STRING
 					break
 				default:
@@ -140,19 +141,19 @@ const operateValues = (
 				case DataType.INTEGER:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (lValue as number) - (rValue as number)
+							if (!onlyTypes) value = (lValue as number) - (rValue as number)
 							type = DataType.INTEGER
 							break
 						case DataType.DOUBLE:
-							value = (lValue as number) - (rValue as number)
+							if (!onlyTypes) value = (lValue as number) - (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.BOOLEAN:
-							value = (lValue as number) - (rValue ? 1 : 0)
+							if (!onlyTypes) value = (lValue as number) - (rValue ? 1 : 0)
 							type = DataType.INTEGER
 							break
 						case DataType.CHARACTER:
-							value = (lValue as number) - (rValue as string).charCodeAt(0)
+							if (!onlyTypes) value = (lValue as number) - (rValue as string).charCodeAt(0)
 							type = DataType.INTEGER
 							break
 						default:
@@ -162,19 +163,19 @@ const operateValues = (
 				case DataType.DOUBLE:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (lValue as number) - (rValue as number)
+							if (!onlyTypes) value = (lValue as number) - (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.DOUBLE:
-							value = (lValue as number) - (rValue as number)
+							if (!onlyTypes) value = (lValue as number) - (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.BOOLEAN:
-							value = (lValue as number) - (rValue ? 1 : 0)
+							if (!onlyTypes) value = (lValue as number) - (rValue ? 1 : 0)
 							type = DataType.DOUBLE
 							break
 						case DataType.CHARACTER:
-							value = (lValue as number) - (rValue as string).charCodeAt(0)
+							if (!onlyTypes) value = (lValue as number) - (rValue as string).charCodeAt(0)
 							type = DataType.DOUBLE
 							break
 						default:
@@ -184,11 +185,11 @@ const operateValues = (
 				case DataType.BOOLEAN:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (rValue ? 1 : 0) - (rValue as number)
+							if (!onlyTypes) value = (rValue ? 1 : 0) - (rValue as number)
 							type = DataType.INTEGER
 							break
 						case DataType.DOUBLE:
-							value = (rValue ? 1 : 0) - (rValue as number)
+							if (!onlyTypes) value = (rValue ? 1 : 0) - (rValue as number)
 							type = DataType.DOUBLE
 							break
 						default:
@@ -198,11 +199,11 @@ const operateValues = (
 				case DataType.CHARACTER:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (lValue as string).charCodeAt(0) - (rValue as number)
+							if (!onlyTypes) value = (lValue as string).charCodeAt(0) - (rValue as number)
 							type = DataType.INTEGER
 							break
 						case DataType.DOUBLE:
-							value = (lValue as string).charCodeAt(0) - (rValue as number)
+							if (!onlyTypes) value = (lValue as string).charCodeAt(0) - (rValue as number)
 							type = DataType.DOUBLE
 							break
 						default:
@@ -218,15 +219,15 @@ const operateValues = (
 				case DataType.INTEGER:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (lValue as number) * (rValue as number)
+							if (!onlyTypes) value = (lValue as number) * (rValue as number)
 							type = DataType.INTEGER
 							break
 						case DataType.DOUBLE:
-							value = (lValue as number) * (rValue as number)
+							if (!onlyTypes) value = (lValue as number) * (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.CHARACTER:
-							value = (lValue as number) * (rValue as string).charCodeAt(0)
+							if (!onlyTypes) value = (lValue as number) * (rValue as string).charCodeAt(0)
 							type = DataType.INTEGER
 							break
 						default:
@@ -236,15 +237,15 @@ const operateValues = (
 				case DataType.DOUBLE:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (lValue as number) * (rValue as number)
+							if (!onlyTypes) value = (lValue as number) * (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.DOUBLE:
-							value = (lValue as number) * (rValue as number)
+							if (!onlyTypes) value = (lValue as number) * (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.CHARACTER:
-							value = (lValue as number) * (rValue as string).charCodeAt(0)
+							if (!onlyTypes) value = (lValue as number) * (rValue as string).charCodeAt(0)
 							type = DataType.DOUBLE
 							break
 						default:
@@ -254,11 +255,11 @@ const operateValues = (
 				case DataType.CHARACTER:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (lValue as string).charCodeAt(0) * (rValue as number)
+							if (!onlyTypes) value = (lValue as string).charCodeAt(0) * (rValue as number)
 							type = DataType.INTEGER
 							break
 						case DataType.DOUBLE:
-							value = (lValue as string).charCodeAt(0) * (rValue as number)
+							if (!onlyTypes) value = (lValue as string).charCodeAt(0) * (rValue as number)
 							type = DataType.DOUBLE
 							break
 						default:
@@ -275,15 +276,15 @@ const operateValues = (
 					case DataType.INTEGER:
 						switch (rType) {
 							case DataType.INTEGER:
-								value = (lValue as number) / (rValue as number)
+								if (!onlyTypes) value = (lValue as number) / (rValue as number)
 								type = DataType.DOUBLE
 								break
 							case DataType.DOUBLE:
-								value = (lValue as number) / (rValue as number)
+								if (!onlyTypes) value = (lValue as number) / (rValue as number)
 								type = DataType.DOUBLE
 								break
 							case DataType.CHARACTER:
-								value = (lValue as number) / (rValue as string).charCodeAt(0)
+								if (!onlyTypes) value = (lValue as number) / (rValue as string).charCodeAt(0)
 								type = DataType.DOUBLE
 								break
 							default:
@@ -293,15 +294,15 @@ const operateValues = (
 					case DataType.DOUBLE:
 						switch (rType) {
 							case DataType.INTEGER:
-								value = (lValue as number) / (rValue as number)
+								if (!onlyTypes) value = (lValue as number) / (rValue as number)
 								type = DataType.DOUBLE
 								break
 							case DataType.DOUBLE:
-								value = (lValue as number) / (rValue as number)
+								if (!onlyTypes) value = (lValue as number) / (rValue as number)
 								type = DataType.DOUBLE
 								break
 							case DataType.CHARACTER:
-								value = (lValue as number) / (rValue as string).charCodeAt(0)
+								if (!onlyTypes) value = (lValue as number) / (rValue as string).charCodeAt(0)
 								type = DataType.DOUBLE
 								break
 							default:
@@ -311,11 +312,11 @@ const operateValues = (
 					case DataType.CHARACTER:
 						switch (rType) {
 							case DataType.INTEGER:
-								value = (lValue as string).charCodeAt(0) / (rValue as number)
+								if (!onlyTypes) value = (lValue as string).charCodeAt(0) / (rValue as number)
 								type = DataType.INTEGER
 								break
 							case DataType.DOUBLE:
-								value = (lValue as string).charCodeAt(0) / (rValue as number)
+								if (!onlyTypes) value = (lValue as string).charCodeAt(0) / (rValue as number)
 								type = DataType.DOUBLE
 								break
 							default:
@@ -331,11 +332,11 @@ const operateValues = (
 				case DataType.INTEGER:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = Math.pow(lValue as number, rValue as number)
+							if (!onlyTypes) value = Math.pow(lValue as number, rValue as number)
 							type = DataType.INTEGER
 							break
 						case DataType.DOUBLE:
-							value = Math.pow(lValue as number, rValue as number)
+							if (!onlyTypes) value = Math.pow(lValue as number, rValue as number)
 							type = DataType.DOUBLE
 							break
 						default:
@@ -345,17 +346,26 @@ const operateValues = (
 				case DataType.DOUBLE:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = Math.pow(lValue as number, rValue as number)
+							if (!onlyTypes) value = Math.pow(lValue as number, rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.DOUBLE:
-							value = Math.pow(lValue as number, rValue as number)
+							if (!onlyTypes) value = Math.pow(lValue as number, rValue as number)
 							type = DataType.DOUBLE
 							break
 						default:
 							break
 					}
 					break
+				case DataType.STRING:
+					switch (rType) {
+						case DataType.INTEGER:
+							if (!onlyTypes) value = (lValue as string).repeat(rValue as number)
+							type = DataType.STRING
+							break
+						default:
+							break
+					}
 				default:
 					break
 			}
@@ -365,11 +375,11 @@ const operateValues = (
 				case DataType.INTEGER:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (lValue as number) % (rValue as number)
+							if (!onlyTypes) value = (lValue as number) % (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.DOUBLE:
-							value = (lValue as number) % (rValue as number)
+							if (!onlyTypes) value = (lValue as number) % (rValue as number)
 							type = DataType.DOUBLE
 							break
 						default:
@@ -379,11 +389,11 @@ const operateValues = (
 				case DataType.DOUBLE:
 					switch (rType) {
 						case DataType.INTEGER:
-							value = (lValue as number) % (rValue as number)
+							if (!onlyTypes) value = (lValue as number) % (rValue as number)
 							type = DataType.DOUBLE
 							break
 						case DataType.DOUBLE:
-							value = (lValue as number) % (rValue as number)
+							if (!onlyTypes) value = (lValue as number) % (rValue as number)
 							type = DataType.DOUBLE
 							break
 						default:
@@ -394,14 +404,16 @@ const operateValues = (
 					break
 			}
 			break
+
+		// OPERACIONES GENEERALES
 		case Operator.NEGATION:
 			switch (lType) {
 				case DataType.INTEGER:
-					value = (lValue as number) * -1
+					if (!onlyTypes) value = (lValue as number) * -1
 					type = DataType.INTEGER
 					break
 				case DataType.DOUBLE:
-					value = (lValue as number) * -1
+					if (!onlyTypes) value = (lValue as number) * -1
 					type = DataType.DOUBLE
 					break
 				default:
@@ -411,54 +423,65 @@ const operateValues = (
 		case Operator.NOT:
 			switch (lType) {
 				case DataType.BOOLEAN:
-					value = !(lValue as boolean);
+					if (!onlyTypes) value = !(lValue as boolean);
 					type = DataType.BOOLEAN;
 					break;
 				default:
 					break;
 			}
 			break;
+		case Operator.CONCAT:
+			switch (lType) {
+				case DataType.STRING:
+					if (!onlyTypes) value = (lValue as string) + (rValue as string);
+					type = DataType.STRING;
+					break;
+					break
+				default:
+					break
+			}
+			break
 
 		// OPERADORES BOOLEANOS
 		case Operator.OR:
-			value = (lValue as boolean) || (rValue as boolean)
+			if (!onlyTypes) value = (lValue as boolean) || (rValue as boolean)
 			type = DataType.BOOLEAN
 			break
 		case Operator.AND:
-			value = (lValue as boolean) && (rValue as boolean)
+			if (!onlyTypes) value = (lValue as boolean) && (rValue as boolean)
 			type = DataType.BOOLEAN
 			break
 		case Operator.TERNARY:
 			if (conditionValue && conditionValue !== undefined) {
-				value = lValue
+				if (!onlyTypes) value = lValue
 				type = lType
 			} else {
-				value = rValue
+				if (!onlyTypes) value = rValue
 				type = rType
 			}
 			break
 		case Operator.EQUALSEQUALS:
-			value = lValue === rValue
+			if (!onlyTypes) value = lValue === rValue
 			type = DataType.BOOLEAN
 			break
 		case Operator.NONEQUALS:
-			value = lValue !== rValue
+			if (!onlyTypes) value = lValue !== rValue
 			type = DataType.BOOLEAN
 			break
 		case Operator.MOREOREQUALS:
-			value = (lValue as number) >= (rValue as number)
+			if (!onlyTypes) value = (lValue as number) >= (rValue as number)
 			type = DataType.BOOLEAN
 			break
 		case Operator.LESSOREQUALS:
-			value = (lValue as number) <= (rValue as number)
+			if (!onlyTypes) value = (lValue as number) <= (rValue as number)
 			type = DataType.BOOLEAN
 			break
 		case Operator.MAJOR:
-			value = (lValue as number) > (rValue as number)
+			if (!onlyTypes) value = (lValue as number) > (rValue as number)
 			type = DataType.BOOLEAN
 			break
 		case Operator.MINOR:
-			value = (lValue as number) < (rValue as number)
+			if (!onlyTypes) value = (lValue as number) < (rValue as number)
 			type = DataType.BOOLEAN
 			break
 		default:
@@ -466,11 +489,20 @@ const operateValues = (
 	}
 
 	// RETORNO
-	if (value !== undefined && type !== undefined)
-		return new Value(token, { value, type })
-	else {
+	if (type !== undefined) {
+		if (onlyTypes) return type
+		else {
+			if (value !== undefined) return new Value(token, { value, type })
+			else {
+				addError(token, `No es posible operar la expresion ${lType} ${operator} ${rType}.`)
+				return new Value(token, { value: null, type: DataType.NULL })
+			}
+		}
+	} else {
 		addError(token, `No es posible operar la expresion ${lType} ${operator} ${rType}.`)
-		return new Value(token, { value: null, type: DataType.NULL })
+		if (onlyTypes) return DataType.NULL
+		else
+			return new Value(token, { value: null, type: DataType.NULL })
 	}
 }
 

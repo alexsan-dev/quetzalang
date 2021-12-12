@@ -1,4 +1,4 @@
-import { TokenInfo } from "../../../utils/types";
+import DataType, { TokenInfo } from "../../../utils/types";
 import FunctionBlock from "../../functions";
 import Scope from "../../../runtime/scope";
 import Expression from "../../expression";
@@ -29,14 +29,14 @@ class Switch extends Instruction {
   // AGREGAR FUNCION DE SALIDA
   private addControlFunction(
     env: Scope,
-    name: "return" | "break" | "continue"
+    name: "Return" | "Break" | "Continue"
   ) {
     env.addFunction(
       name,
-      "void",
+      DataType.VOID,
       new FunctionBlock(this.token, {
         id: name,
-        type: "void",
+        type: DataType.VOID,
         content: [
           {
             token: this.token,
@@ -56,8 +56,8 @@ class Switch extends Instruction {
   public execute(scope: Scope): void {
     // AGREGAR ENTORNO LOCAL
     const localScope = new Scope("Switch", "switch", scope);
-    this.addControlFunction(localScope, "break");
-    this.addControlFunction(localScope, "return");
+    this.addControlFunction(localScope, "Break");
+    this.addControlFunction(localScope, "Return");
     this.isOnBreak = false;
 
     // EVALUAR CASES

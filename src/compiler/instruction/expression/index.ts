@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 // TIPOS
-import { Operator, TokenInfo } from '../../utils/types'
+import DataType, { Operator, TokenInfo } from '../../utils/types'
 import Scope from '../../runtime/scope'
 import Instruction from '../abstract'
 import operateValues from './tools'
@@ -25,12 +25,8 @@ class Expression extends Instruction {
     this.childToken = token
   }
 
-  // COMPILAR VALORES
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public execute(_scope?: Scope): void { }
-
-  // OBTENER VALOR REAL
-  public getValue(scope: Scope): Value {
+  // EVALUAR EXPRESION
+  public evaluateExp(scope: Scope, onlyTypes: boolean): DataType | Value {
     // OBTENER RESULTADOS ANTERIORES
     const left: Value | undefined = this.props.left?.getValue(scope)
     const right: Value | undefined = this.props.right?.getValue(scope)
@@ -39,21 +35,33 @@ class Expression extends Instruction {
     // OPERAR
     if (left) {
       if (this.props.operator) {
-        const result: Value | undefined = operateValues(
+        const result: Value | undefined | DataType = operateValues(
           scope,
           this.childToken,
-          left,
           this.props.operator,
+          left,
           right,
           condition,
+          onlyTypes,
         )
+
         if (result) return result
-      } else {
-        return left
-      }
-    } else if (this.props.value) {
-      return this.props.value
-    }
+      } else return onlyTypes ? left.getType(scope) : left
+    } else if (this.props.value)
+      return onlyTypes ? this.props.value.getType(scope) : this.props.value
+  }
+
+  // COMPILAR VALORES
+  public execute(_scope?: Scope): void {}
+
+  // OBTENER TIPO
+  public getType(scope: Scope): DataType {
+    return this.evaluateExp(scope, true) as DataType
+  }
+
+  // OBTENER VALOR REAL
+  public getValue(scope: Scope): Value {
+    return this.evaluateExp(scope, false) as Value
   }
 }
 

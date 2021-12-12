@@ -1,6 +1,5 @@
 // TOOLS
 import DataType, { TokenInfo } from '../../utils/types'
-import { addError } from '../../utils/tools'
 import Scope from '../../runtime/scope'
 
 // VALORES
@@ -18,7 +17,7 @@ class FunctionBlock extends Instruction {
     public token: TokenInfo,
     public props: {
       id: string
-      type: DataType | 'void'
+      type: DataType
       content: Instruction[]
       params: { type: DataType; id: string }[]
     },
@@ -26,11 +25,11 @@ class FunctionBlock extends Instruction {
     super(token, 'Function')
     this.scope = {} as Scope
     this.functionValue = undefined
+    this.isOnBreak = false
   }
 
-
   // OBTENER TIPO DE FUNCION
-  public getType(): DataType | 'void' {
+  public getType(): DataType {
     return this.props.type
   }
 
@@ -39,12 +38,13 @@ class FunctionBlock extends Instruction {
     this.scope = new Scope('Function', this.props.id, scope)
     this.isOnBreak = false
     this.functionValue = undefined
+
     this.scope.addFunction(
-      'return',
-      'void',
+      'Return',
+      DataType.VOID,
       new FunctionBlock(this.token, {
-        id: 'return',
-        type: 'void',
+        id: 'Return',
+        type: DataType.VOID,
         content: [
           {
             token: this.token,
@@ -61,35 +61,25 @@ class FunctionBlock extends Instruction {
   }
 
   // COMPILAR FUNCION
-  public getValue(): Value | undefined {
+  public getValue(scope: Scope): Value | undefined {
     // COMPILAR CONTENIDO
     for (
       let instructionIndex = 0, length = this.props.content.length;
       instructionIndex < length;
       instructionIndex++
     ) {
-      if (this.scope) {
+      if (scope) {
         if (!this.isOnBreak)
-          this.props.content[instructionIndex].execute(this.scope)
+          this.props.content[instructionIndex].execute(scope)
         else break
       }
     }
 
     // OBTENER VALOR DE RETORNO
-    if (this.props.type !== 'void') {
-      const functionType = this.functionValue?.getType(this.scope)
-      if (this.props.type === functionType) {
-        addError(
-          this.token,
-          `La funcion retorna un ${functionType} pero se esperaba un ${this.props.type
-          }`,
-        )
-      } else {
-        if (this.scope && 'getVar' in this.scope)
-          this.functionValue = this.scope?.getVar('return')
-      }
+    if (this.props.type !== DataType.VOID) {
+      if (scope && 'getVar' in scope)
+        this.functionValue = scope.getVar('return')
     } else this.functionValue = undefined
-
 
     // VALOR
     return this.functionValue

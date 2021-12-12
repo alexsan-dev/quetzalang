@@ -26,7 +26,7 @@ class Scope {
   private functions: {
     [id: string]: {
       value: FunctionBlock | undefined
-      type: DataType | 'void'
+      type: DataType
     }
   }
 
@@ -59,7 +59,12 @@ class Scope {
   public addVar(id: string, type: DataType, value?: Value): void {
     // NO EXISTE
     if (!this.vars[id]) {
-      this.vars[id] = { value, type }
+      this.vars[id] = {
+        value: new Value(value.token, {
+          value: value.getValue(this),
+          type: value.getType(this)
+        }), type
+      }
     } else
       addError(
         this.getVar(id)?.token || ({} as TokenInfo),
@@ -72,7 +77,7 @@ class Scope {
     if (this.getVar(id) !== undefined) {
       // BUSCAR
       if (this.vars[id] !== undefined)
-        this.vars[id] = { value: newValue, type: this.vars[id].type }
+        this.vars[id] = { value: new Value(newValue.token, newValue.props), type: this.vars[id].type }
       else this.prevScope?.setVar(id, newValue)
     } else
       addError(
@@ -104,7 +109,7 @@ class Scope {
   // AGREGAR FUNCION
   public addFunction(
     id: string,
-    type: DataType | 'void',
+    type: DataType,
     value: FunctionBlock,
   ): void {
     // NO EXISTE

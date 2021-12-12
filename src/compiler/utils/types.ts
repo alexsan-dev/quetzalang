@@ -1,6 +1,7 @@
 // TIPOS DE DATOS
 enum DataType {
   ID = 'ID',
+  VOID = 'VOID',
   NULL = 'NULL',
   INTEGER = 'INT',
   ARRAY = 'ARRAY',
@@ -8,7 +9,7 @@ enum DataType {
   STRING = 'STRING',
   DOUBLE = 'DOUBLE',
   BOOLEAN = 'BOOLEAN',
-  CHARACTER = 'CHARACTER',
+  CHARACTER = 'CHARACTER'
 }
 
 // DATOS PRIMITIVOS
@@ -34,6 +35,7 @@ export enum Operator {
   NOT = '!',
   NONEQUALS = '!=',
   AND = '&&',
+  CONCAT = '&',
   OR = '||',
 }
 

@@ -9,7 +9,6 @@ import FunctionBlock from '..'
 class FunctionCall extends Instruction {
   // GLOBALES
   private functionValue: DataValue | undefined
-  private refType: DataType
 
   // CONSTRUCTOR
   constructor(
@@ -22,7 +21,6 @@ class FunctionCall extends Instruction {
     private builtIn: boolean = false
   ) {
     super(token, 'FunctionCall')
-    this.refType = DataType.ID
   }
 
   // OBTENER VALOR
@@ -32,8 +30,10 @@ class FunctionCall extends Instruction {
   }
 
   // OBTENER TIPO
-  public getType(): DataType | undefined {
-    return this.refType
+  public getType(scope: Scope): DataType {
+    // BUSCAR FUNCION
+    const functionBlock: FunctionBlock | undefined = scope.getFunction(this.props.id)
+    return functionBlock?.getType()
   }
 
   // ES FUNCION NATIVA
@@ -72,15 +72,13 @@ class FunctionCall extends Instruction {
               functionScope.addVar(functionBlock.props.params[index].id, value.type, value.value)
             } else {
               addError(this.token, `Se esperaba un ${functionBlock.props.params[index].type
-                } en el parametro ${index + 1} en la function.`)
+                } en el parametro ${index + 1} en la funcion ${this.props.id}.`)
             }
           })
 
-          const functionValue = functionBlock.getValue()
-          if (functionValue) {
-            this.functionValue = functionValue?.getValue(scope)
-            this.refType = functionValue?.getType(scope)
-          }
+          const functionValue = functionBlock.getValue(functionScope)
+          if (functionValue)
+            this.functionValue = functionValue?.getValue(functionScope)
         } else
           addError(this.token, `Se esperaban ${functionBlock.props.params.length} parametros pero se obtuvieron ${this.props.params.length} en la funcion ${this.props.id}`)
       }
