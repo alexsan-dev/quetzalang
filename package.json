@@ -7,6 +7,7 @@
     "start": "concurrently --kill-others \"npm run serve\" \"npm run dev\"",
     "serve": "browser-sync start --server --files \"./scripts\" \"./styles\" \"index.html\"",
     "dev": "onchange 'src/**/*.ts' 'src/grammar/index.jison' -- npm run build",
+    "prestart": "npm run build",
     "build": "webpack",
     "prebuild": "jison src/grammar/index.jison -o src/grammar/index.js -m amd"
   },
