@@ -1,15 +1,13 @@
 import DataType, { TokenInfo } from '../../../utils/types'
 import ExpAssignment from '../../assignment/expression'
+import { getBuiltInMethod } from '../../value/tools'
 import { addError } from '../../../utils/tools'
 import CharValue from '../../value/character'
-import StringValue from '../../value/string'
 import FunctionBlock from '../../functions'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
 import Instruction from '../../abstract'
 import Value from '../../value'
-import IdValue from '../../value/id'
-import { getBuiltInMethod } from '../../value/tools'
 
 class ForInLoop {
   private isOnLoopContinue = false
