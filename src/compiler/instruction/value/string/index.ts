@@ -54,6 +54,21 @@ class StringValue extends Value {
   public characterOfPosition(index: number): string {
     return this.value.toString().charAt(index)
   }
+
+  // OBTENER SUB CADENA
+  public subString(start: number, end?: number): string {
+    return this.value.toString().substring(start, end)
+  }
+
+  // OBTENER EN MAYUSCULAS
+  public toUppercase(): string {
+    return this.value.toString().toUpperCase()
+  }
+
+  // OBTENER CARACTER
+  public toLowercase(): string {
+    return this.value.toString().toLowerCase()
+  }
 }
 
 export default StringValue

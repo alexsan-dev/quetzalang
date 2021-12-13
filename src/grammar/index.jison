@@ -23,6 +23,12 @@
     // FUNCIONES NATIVAS
     const Evaluate = require('../compiler/instruction/functions/builtin/evaluate').default
     const Print = require('../compiler/instruction/functions/builtin/print').default
+    const Log10 = require('../compiler/instruction/functions/builtin/log10').default
+    const Sqrt = require('../compiler/instruction/functions/builtin/sqrt').default
+    const Cos = require('../compiler/instruction/functions/builtin/cos').default
+    const Pow = require('../compiler/instruction/functions/builtin/pow').default
+    const Sin = require('../compiler/instruction/functions/builtin/sin').default
+    const Tan = require('../compiler/instruction/functions/builtin/tan').default
 
     // VALORES PRIMITIVOS
     const BooleanValue = require("../compiler/instruction/value/boolean").default
@@ -106,6 +112,12 @@
 'print'                     return addToken(yylloc, 'printRw')
 'printLn'                   return addToken(yylloc, 'printLnRw')
 'eval'                      return addToken(yylloc, 'evalRw')
+'cos'                       return addToken(yylloc, 'cosRw')
+'log10'                     return addToken(yylloc, 'log10Rw')
+'pow'                       return addToken(yylloc, 'powRw')
+'sin'                       return addToken(yylloc, 'sinRw')
+'sqrt'                      return addToken(yylloc, 'sqrtRw')
+'tan'                       return addToken(yylloc, 'tanRw')
 
 'else'                      return addToken(yylloc, 'elseRw')
 'if'                        return addToken(yylloc, 'ifRw')
@@ -380,6 +392,8 @@ VARVALUE : decimal {
         $$ = null
     } | FUNCTIONCALL {
         $$ = $1;
+    } | METHOD {
+        $$ = $1;
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -428,6 +442,18 @@ METHOD : PRINT {
         $$ = $1;
     } | EVAL {
         $$ = $1;
+    } | COS {
+        $$ = $1;
+    } | LOG {
+        $$ = $1;
+    } | POW {
+        $$ = $1;
+    } | SIN {
+        $$ = $1;
+    } | SQRT {
+        $$ = $1;
+    } | TAN {
+        $$ = $1;
     };
 
 PRINT : printRw openParenthesis EXPLIST closeParenthesis {
@@ -440,6 +466,30 @@ PRINTLN : printLnRw openParenthesis EXPLIST closeParenthesis {
 
 EVAL : evalRw openParenthesis EXPRESSIONS closeParenthesis {
         $$ = new Evaluate(getToken(@1), { params: [$3] });
+    };
+
+COS : cosRw openParenthesis EXPRESSIONS closeParenthesis {
+        $$ = new Cos(getToken(@1), { params: [$3] });
+    };
+
+LOG : log10Rw openParenthesis EXPRESSIONS closeParenthesis {
+        $$ = new Log10(getToken(@1), { params: [$3] });
+    };
+
+POW : powRw openParenthesis EXPLIST closeParenthesis {
+        $$ = new Pow(getToken(@1), { params: $3 });
+    };
+
+SIN : sinRw openParenthesis EXPRESSIONS closeParenthesis {
+        $$ = new Sin(getToken(@1), { params: [$3] });
+    };
+
+SQRT : sqrtRw openParenthesis EXPRESSIONS closeParenthesis {
+        $$ = new Sqrt(getToken(@1), { params: [$3] });
+    };
+
+TAN : tanRw openParenthesis EXPRESSIONS closeParenthesis {
+        $$ = new Tan(getToken(@1), { params: [$3] });
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/

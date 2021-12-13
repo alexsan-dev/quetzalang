@@ -1,4 +1,4 @@
-import { TokenInfo } from '../../../../utils/types'
+import DataType, { TokenInfo } from '../../../../utils/types'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
 import FunctionCall from '../../call'
@@ -12,10 +12,15 @@ class Print extends FunctionCall {
       params: Expression[]
       breakLine: boolean
       id: string
-    }
+    },
   ) {
     super(token, { ...props, id: 'Print' }, true)
     this.props.id = 'Print'
+  }
+
+  // OBTENER TIPO
+  public getType(_scope: Scope): DataType {
+    return DataType.VOID
   }
 
   // COMPILAR
