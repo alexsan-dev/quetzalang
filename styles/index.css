@@ -28,7 +28,8 @@ main {
   padding-top: 15px;
 }
 
-#toolbar button {
+#toolbar button,
+#toolbar label {
   appearance: none;
   outline: none;
   border: none;
@@ -45,11 +46,13 @@ main {
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-#toolbar button:hover {
+#toolbar button:hover,
+#toolbar label:hover {
   transform: scale(1.1);
 }
 
-#toolbar button:first-child {
+#toolbar button:first-child,
+#toolbar label:first-child {
   background: #2196f3;
 }
 

@@ -25,6 +25,10 @@
       <div id="toolbar">
         <button id="runtimeBtn"><i data-feather="skip-forward"></i></button>
         <button id="compileBtn"><i data-feather="save"></i></button>
+        <label for="uploadInput" id="uploadBtn"
+          ><i data-feather="upload-cloud"></i
+        ></label>
+        <input type="file" id="uploadInput" style="display: none" />
         <button id="shareBtn"><i data-feather="share-2"></i></button>
         <button id="compileBtn"><i data-feather="globe"></i></button>
         <button id="cleanBtn"><i data-feather="x-circle"></i></button>
@@ -69,6 +73,7 @@
       editor.setTheme('ace/theme/monokai')
       editor.setFontSize(18)
 
+      // CODIGO INICIAL
       if (initialValue) editor.setValue(initialValue, -1)
 
       // CURSOR

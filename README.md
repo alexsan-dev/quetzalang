@@ -41,3 +41,4 @@ npm start
 | Ctr+M   | Ocultar consola  |
 | Ctr+S   | Guardar codigo   |
 | Ctr+U   | Compartir codigo |
+| Ctr+O   | Abrir archivo    |

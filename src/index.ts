@@ -41,6 +41,21 @@ const runCode = () => {
   if (!expandedConsole) collapseConsole()
 }
 
+// ABRIR ARCHIVO
+const openFile = (ev: Event) => {
+  const { files } = ev.target as HTMLInputElement
+  const fileReader = new FileReader()
+
+  // LEER
+  fileReader.onload = () => {
+    const code: string = fileReader.result as string
+    // @ts-ignore
+    editor.setValue(code, -1)
+  }
+
+  fileReader.readAsText(files[0])
+}
+
 // LIMPIAR CONSOLA
 const cleanConsole = () => {
   // TEXTAREA
@@ -95,14 +110,17 @@ const saveCode = () => {
 // EVENTOS
 const setEvents = () => {
   const collapseBtn = document.getElementById('collapseBtn')
+  const uploadInput = document.getElementById('uploadInput')
   const terminalBtn = document.getElementById('terminalBtn')
   const compileBtn = document.getElementById('runtimeBtn')
+  const uploadBtn = document.getElementById('uploadBtn')
   const shareBtn = document.getElementById('shareBtn')
   const cleanBtn = document.getElementById('cleanBtn')
   const saveBtn = document.getElementById('saveBtn')
 
   collapseBtn?.addEventListener('click', collapseConsole)
   terminalBtn?.addEventListener('click', collapseConsole)
+  uploadInput?.addEventListener('change', openFile)
   cleanBtn?.addEventListener('click', cleanConsole)
   shareBtn?.addEventListener('click', shareCode)
   compileBtn?.addEventListener('click', runCode)
@@ -127,6 +145,9 @@ const setEvents = () => {
         isCtrl = true
       } else if (ev.key === 'u') {
         shareCode()
+        isCtrl = true
+      } else if (ev.key === 'o') {
+        uploadBtn?.click()
         isCtrl = true
       }
 
