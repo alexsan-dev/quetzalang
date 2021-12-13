@@ -1,8 +1,8 @@
 %{
     // TOOLS
     const symbols = require('../compiler/lexical/symbols').default
-    const errors = require('../compiler/lexical/error').default
     const Operator = require('../compiler/utils/types').Operator
+    const errors = require('../compiler/lexical/error').default
     const DataType = require('../compiler/utils/types').default
     const getToken = require('../compiler/utils/tools').default
 
@@ -13,14 +13,24 @@
     const FunctionCall = require('../compiler/instruction/functions/call').default
     const ReturnValue = require('../compiler/instruction/control/return').default
     const FunctionBlock = require('../compiler/instruction/functions').default
+    const ForInLoop = require('../compiler/instruction/cycle/forIn').default
     const Expression = require('../compiler/instruction/expression').default
     const Switch = require('../compiler/instruction/control/switch').default
+    const ForLoop = require('../compiler/instruction/cycle/forLoop').default
+    const CycleControl = require('../compiler/instruction/cycle').default
     const Condition = require('../compiler/instruction/control').default
-    const Value = require('../compiler/instruction/value').default
     
     // FUNCIONES NATIVAS
     const Evaluate = require('../compiler/instruction/functions/builtin/evaluate').default
     const Print = require('../compiler/instruction/functions/builtin/print').default
+
+    // VALORES PRIMITIVOS
+    const BooleanValue = require("../compiler/instruction/value/boolean").default
+    const CharValue = require("../compiler/instruction/value/character").default
+    const StringValue = require("../compiler/instruction/value/string").default
+    const DoubleValue = require("../compiler/instruction/value/double").default
+    const IntValue = require("../compiler/instruction/value/int").default
+    const IdValue = require("../compiler/instruction/value/id").default
 
     // AGREGAR TOKEN
     const addToken = (yylloc, name) => {
@@ -78,7 +88,7 @@
 "!"                         return addToken(yylloc, 'not')
 "||"                        return addToken(yylloc, 'or')
 
-"&"                        return addToken(yylloc, 'concat')
+"&"                         return addToken(yylloc, 'concat')
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* SIMBOLOS */
@@ -104,6 +114,11 @@
 'switch'                    return addToken(yylloc, 'switchRw')
 'break'                     return addToken(yylloc, 'breakRw')
 'case'                      return addToken(yylloc, 'caseRw')
+
+'while'                     return addToken(yylloc, 'whileRw')
+'for'                       return addToken(yylloc, 'forRw')
+'do'                        return addToken(yylloc, 'doRw')
+'in'                        return addToken(yylloc, 'inRw')
 
 'continue'                  return addToken(yylloc, 'continueRw')
 'return'                    return addToken(yylloc, 'returnRw')
@@ -223,6 +238,8 @@ INSTRUCTION : DECLARATION semicolom {
         $$ = $1;
     } | FUNCTION {
         $$ = $1;
+    } | LOOPSEQ {
+        $$ = $1;    
     };
 
 INLINEINSTRUCTION : ASSIGNMENT semicolom {
@@ -235,6 +252,8 @@ INLINEINSTRUCTION : ASSIGNMENT semicolom {
         $$ = $1;
     } | LOOPESCAPE {
         $$ = $1;
+    } | LOOPSEQ {
+        $$ = $1;    
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -344,21 +363,21 @@ EXPLIST : EXPLIST comma EXPRESSIONS {
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* VALORES DE VARIABLES */
 VARVALUE : decimal {
-        $$ = new Value(getToken(@1), { value: $1, type: DataType.DOUBLE })
+        $$ = new DoubleValue(getToken(@1), $1)
     } | text {
-        $$ = new Value(getToken(@1), { value: $1, type: DataType.STRING })
+        $$ = new StringValue(getToken(@1), $1)
     } | id {
-        $$ = new Value(getToken(@1), { value: $1, type: DataType.ID })
+        $$ = new IdValue(getToken(@1), $1)
     } | integer {
-        $$ = new Value(getToken(@1), { value: $1, type: DataType.INTEGER })
+        $$ = new IntValue(getToken(@1), $1)
     } | character {
-        $$ = new Value(getToken(@1), { value: $1, type: DataType.CHARACTER })
+        $$ = new CharValue(getToken(@1), $1)
     } | trBool {
-        $$ = new Value(getToken(@1), { value: $1, type: DataType.BOOLEAN })
+        $$ = new BooleanValue(getToken(@1), $1)
     } | flBool {
-        $$ = new Value(getToken(@1), { value: $1, type: DataType.BOOLEAN })
+        $$ = new BooleanValue(getToken(@1), $1)
     } | nullType {
-        $$ = new Value(getToken(@1), { value: $1, type: DataType.NULL })
+        $$ = null
     } | FUNCTIONCALL {
         $$ = $1;
     };
@@ -495,12 +514,42 @@ SWITCHSEQCONTENT : caseRw EXPRESSIONS colom INSTRUCTIONS {
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* CICLOS */
+LOOPSEQ : WHILESEQ | DOWHILESEQ | FORINSEQ | FORSEQ;
+
+WHILESEQ : whileRw openParenthesis EXPRESSIONS closeParenthesis INLINEBLOCKCONTENT {
+        $$ = new CycleControl(getToken(@1), { 
+            condition: $3, body: $5 
+         })
+    };
+
+FORINSEQ : forRw id inRw VARVALUE INLINEBLOCKCONTENT {
+        $$ = new ForInLoop(getToken(@1),  {
+            iterVariable: $2, iterReference: $4, body: $5
+        })
+    };
+
+DOWHILESEQ : doRw INLINEBLOCKCONTENT 
+    whileRw openParenthesis EXPRESSIONS closeParenthesis semicolom {
+        $$ = new CycleControl(getToken(@1), { 
+            condition: $5, body: $2, isDoLoop: true
+         })
+    };
+
+FORSEQ : forRw openParenthesis FORSEQPARAMS closeParenthesis INLINEBLOCKCONTENT {
+        $$ = new ForLoop(getToken(@1), { ...$3, body: $5 })
+    };
+
+FORSEQPARAMS : DECLARATION semicolom EXPRESSIONS semicolom ASSIGNMENT {
+        $$ = { withDeclarations: true, 
+        assignments: [$1], condition: $3, modifiers: $5 }
+    } | ASSIGNMENTS semicolom EXPRESSIONS semicolom ASSIGNMENT {
+        $$ = { assignments: $1, condition: $3, modifiers: $5 }
+    };
+
 LOOPESCAPE : breakRw semicolom {
         $$ = new ReturnValue(getToken(@1), { type: 'Break' })
-    }
-    | continueRw semicolom {
+    } | continueRw semicolom {
         $$ = new ReturnValue(getToken(@1), { type: 'Continue' })
-    }
-    | returnRw EXPRESSIONS semicolom {
+    } | returnRw EXPRESSIONS semicolom {
         $$ = new ReturnValue(getToken(@1), { content: $2, type: 'Return'  });
     };

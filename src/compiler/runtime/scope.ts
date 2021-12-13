@@ -1,4 +1,5 @@
 // TIPOS
+import { getValueByType } from '../instruction/value/tools'
 import DataType, { TokenInfo } from '../utils/types'
 import { addError } from '../utils/tools'
 
@@ -60,10 +61,8 @@ class Scope {
     // NO EXISTE
     if (!this.vars[id]) {
       this.vars[id] = {
-        value: new Value(value.token, {
-          value: value.getValue(this),
-          type: value.getType(this)
-        }), type
+        value: getValueByType(value.token, type, value.getValue(this)),
+        type,
       }
     } else
       addError(
@@ -77,7 +76,14 @@ class Scope {
     if (this.getVar(id) !== undefined) {
       // BUSCAR
       if (this.vars[id] !== undefined)
-        this.vars[id] = { value: new Value(newValue.token, newValue.props), type: this.vars[id].type }
+        this.vars[id] = {
+          value: getValueByType(
+            newValue.token,
+            this.vars[id].type,
+            newValue.getValue(this),
+          ),
+          type: this.vars[id].type,
+        }
       else this.prevScope?.setVar(id, newValue)
     } else
       addError(
@@ -99,7 +105,7 @@ class Scope {
   // OBTENER FUNCION
   public getFunction(id: string): FunctionBlock | undefined {
     if (id in this.functions) {
-      return this.functions[id]?.value;
+      return this.functions[id]?.value
     } else {
       if (this.prevScope) return this.prevScope.getFunction(id)
       else return undefined
@@ -107,11 +113,7 @@ class Scope {
   }
 
   // AGREGAR FUNCION
-  public addFunction(
-    id: string,
-    type: DataType,
-    value: FunctionBlock,
-  ): void {
+  public addFunction(id: string, type: DataType, value: FunctionBlock): void {
     // NO EXISTE
     if (this.functions[id] === undefined) {
       this.functions[id] = { value, type }

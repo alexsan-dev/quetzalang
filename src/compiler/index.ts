@@ -8,14 +8,14 @@ const compile = (instructions: Instruction[]) => {
   const globalEnv = new Scope('Global', 'Global')
 
   // PRIMER CICLO PARA ASIGNAR FUNCIONES Y VARIABLES
-  instructions.forEach((instruction: Instruction) => {
+  instructions?.forEach((instruction: Instruction) => {
     // GUARDAR VARIABLES Y FUNCIONES
     if (instruction.name === 'Function' || instruction.name === 'Declaration')
       instruction.execute(globalEnv)
   })
 
   // SEGUNDO PARA CORRER PROGRAMA
-  instructions.forEach((instruction: Instruction) => {
+  instructions?.forEach((instruction: Instruction) => {
     if (instruction.name !== 'Declaration' && instruction.name !== 'Function') {
       instruction.execute(globalEnv)
     }
