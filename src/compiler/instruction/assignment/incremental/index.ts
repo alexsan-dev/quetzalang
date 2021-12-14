@@ -38,7 +38,7 @@ class IncrementalAssignment extends Assignment {
     const refVar = scope.getVar(this.id ?? '')
 
     if (refVar)
-      new IntValue(
+      return new IntValue(
         this.token,
         (refVar?.getValue(scope) as number) +
           (this.props.operator === Operator.PLUSPLUS ? 1 : -1),

@@ -75,7 +75,7 @@ class Scope {
   public setVar(id: string, newValue: Value): void {
     if (this.getVar(id) !== undefined) {
       // BUSCAR
-      if (this.vars[id] !== undefined)
+      if (this.vars[id] !== undefined) {
         this.vars[id] = {
           value: getValueByType(
             newValue.token,
@@ -84,7 +84,7 @@ class Scope {
           ),
           type: this.vars[id].type,
         }
-      else this.prevScope?.setVar(id, newValue)
+      } else this.prevScope?.setVar(id, newValue)
     } else
       addError(
         this.getVar(id)?.token || ({} as TokenInfo),

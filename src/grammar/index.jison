@@ -197,8 +197,8 @@ NULLCHAR "\\0"
 %left 'plus' 'concat' 'minus'
 %left 'times' 'division' 'module' 'power' 
 %right 'not'
-%left UMIN
-%left UNOT
+%right UMIN
+%right UNOT
 %nonassoc 'comma' 'openParenthesis' 'closeParenthesis' 'dot' 'semicolom'
 
 %start START
