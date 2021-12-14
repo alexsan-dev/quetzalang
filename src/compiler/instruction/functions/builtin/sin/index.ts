@@ -1,7 +1,9 @@
 import DataType, { DataValue, TokenInfo } from '../../../../utils/types'
+import { getValueByType } from '../../../value/tools'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
 import FunctionCall from '../../call'
+import Value from '../../../value'
 
 class Sin extends FunctionCall {
   // CONSTRUCTOR
@@ -19,6 +21,16 @@ class Sin extends FunctionCall {
   // OBTENER TIPO
   public getType(_scope: Scope): DataType {
     return DataType.DOUBLE
+  }
+
+  // OBTENERR TIPO GENERICO
+  public getGenType(scope: Scope): DataType {
+    return this.getType(scope)
+  }
+
+  // OBTENER VALOR REAL
+  public getScopedValue(scope: Scope): Value {
+    return getValueByType(this.token, this.getType(scope), this.getValue(scope))
   }
 
   // OBTENER VALOR

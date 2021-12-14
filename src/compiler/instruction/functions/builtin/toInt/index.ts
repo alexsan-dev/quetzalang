@@ -5,7 +5,7 @@ import Expression from '../../../expression'
 import FunctionCall from '../../call'
 import Value from '../../../value'
 
-class Sqrt extends FunctionCall {
+class ToInt extends FunctionCall {
   // CONSTRUCTOR
   constructor(
     public token: TokenInfo,
@@ -14,35 +14,35 @@ class Sqrt extends FunctionCall {
       id: string
     },
   ) {
-    super(token, { ...props, id: 'Sqrt' }, true)
-    this.props.id = 'Sqrt'
-  }
-
-  // OBTENER TIPO
-  public getType(_scope: Scope): DataType {
-    return DataType.DOUBLE
+    super(token, { ...props, id: 'ToInt' }, true)
+    this.props.id = 'ToInt'
   }
 
   // OBTENER VALOR REAL
   public getScopedValue(scope: Scope): Value {
-    return getValueByType(this.token, this.getType(scope), this.getValue(scope))
+    return getValueByType(this.token, DataType.INTEGER, this.getValue(scope))
   }
 
   // OBTENER VALOR
   public getValue(scope: Scope): DataValue {
-    // OBTENER VALORES
-    return Math.sqrt(
-      (this.props.params[0]?.getValue(scope)?.getValue(scope) as number) ?? 0,
-    )
+    // PARAMETRO
+    const paramValue = this.props.params[0].getValue(scope)
+    const paramScopedValue = paramValue.getValue(scope)
+    return parseInt(paramScopedValue?.toString() ?? '0', 10)
   }
 
-  // OBTENERR TIPO GENERICO
+  // OBTENER TIPO
+  public getType(_scope: Scope): DataType {
+    return DataType.INTEGER
+  }
+
+  // OBTENER TIPO
   public getGenType(scope: Scope): DataType {
     return this.getType(scope)
   }
 
   // COMPILAR
-  public execute(scope: Scope): void {}
+  public execute(_scope: Scope): void {}
 }
 
-export default Sqrt
+export default ToInt

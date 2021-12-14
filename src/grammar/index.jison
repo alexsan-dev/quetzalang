@@ -29,9 +29,14 @@
     const Expression = require('../compiler/instruction/expression').default
     
     // FUNCIONES NATIVAS
+    const ToDouble = require('../compiler/instruction/functions/builtin/toDouble').default
     const Evaluate = require('../compiler/instruction/functions/builtin/evaluate').default
+    const ToString = require('../compiler/instruction/functions/builtin/toString').default
+    const TypeParse = require('../compiler/instruction/functions/builtin/parse').default
+    const TypeOf = require('../compiler/instruction/functions/builtin/typeof').default
     const Print = require('../compiler/instruction/functions/builtin/print').default
     const Log10 = require('../compiler/instruction/functions/builtin/log10').default
+    const ToInt = require('../compiler/instruction/functions/builtin/toInt').default
     const Sqrt = require('../compiler/instruction/functions/builtin/sqrt').default
     const Cos = require('../compiler/instruction/functions/builtin/cos').default
     const Pow = require('../compiler/instruction/functions/builtin/pow').default
@@ -128,6 +133,10 @@
 'sin'                       return addToken(yylloc, 'sinRw')
 'sqrt'                      return addToken(yylloc, 'sqrtRw')
 'tan'                       return addToken(yylloc, 'tanRw')
+'parse'                     return addToken(yylloc, 'parseRw')
+'toDouble'                  return addToken(yylloc, 'toDoubleRw')
+'toInt'                     return addToken(yylloc, 'toIntRw')
+'typeof'                    return addToken(yylloc, 'typeOfRw')
 
 'else'                      return addToken(yylloc, 'elseRw')
 'if'                        return addToken(yylloc, 'ifRw')
@@ -474,6 +483,16 @@ METHOD : PRINT {
         $$ = $1;
     } | TAN {
         $$ = $1;
+    } | PARSE {
+        $$ = $1;
+    } | TODOUBLE {
+        $$ = $1;
+    } | TOINT {
+        $$ = $1;
+    } | TOSTRING {
+        $$ = $1;
+    } | TYPEOF {
+        $$ = $1;
     };
 
 PRINT : printRw openParenthesis EXPLIST closeParenthesis {
@@ -510,6 +529,26 @@ SQRT : sqrtRw openParenthesis EXPRESSIONS closeParenthesis {
 
 TAN : tanRw openParenthesis EXPRESSIONS closeParenthesis {
         $$ = new Tan(getToken(@1), { params: [$3] });
+    };
+
+PARSE : TYPE dot parseRw openParenthesis EXPRESSIONS closeParenthesis {
+        $$ = new TypeParse(getToken(@1), { params: [$5], type: $1 })
+    };
+
+TODOUBLE : toDoubleRw openParenthesis EXPRESSIONS closeParenthesis {
+        $$ = new ToDouble(getToken(@1), { params: [$3] })
+    };
+
+TOINT : toIntRw openParenthesis EXPRESSIONS closeParenthesis  {
+        $$ = new ToInt(getToken(@1), { params: [$3] })
+    };
+
+TOSTRING : strType openParenthesis EXPRESSIONS closeParenthesis  {
+        $$ = new ToString(getToken(@1), { params: [$3] })
+    };
+
+TYPEOF : typeOfRw openParenthesis EXPRESSIONS closeParenthesis  {
+        $$ = new TypeOf(getToken(@1), { params: [$3] })
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/

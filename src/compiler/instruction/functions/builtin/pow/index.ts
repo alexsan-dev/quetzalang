@@ -1,7 +1,9 @@
 import DataType, { DataValue, TokenInfo } from '../../../../utils/types'
+import { getValueByType } from '../../../value/tools'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
 import FunctionCall from '../../call'
+import Value from '../../../value'
 
 class Pow extends FunctionCall {
   // CONSTRUCTOR
@@ -23,6 +25,16 @@ class Pow extends FunctionCall {
       (this.props.params[0]?.getValue(scope)?.getValue(scope) as number) ?? 0,
       (this.props.params[1]?.getValue(scope)?.getValue(scope) as number) ?? 1,
     )
+  }
+
+  // OBTENER VALOR REAL
+  public getScopedValue(scope: Scope): Value {
+    return getValueByType(this.token, this.getType(scope), this.getValue(scope))
+  }
+
+  // OBTENERR TIPO GENERICO
+  public getGenType(scope: Scope): DataType {
+    return this.getType(scope)
   }
 
   // OBTENER TIPO

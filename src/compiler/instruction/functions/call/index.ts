@@ -8,7 +8,7 @@ import FunctionBlock from '..'
 
 class FunctionCall extends Instruction {
   // GLOBALES
-  private functionValue: DataValue | undefined
+  private functionValue: Value
 
   // CONSTRUCTOR
   constructor(
@@ -18,21 +18,35 @@ class FunctionCall extends Instruction {
       id: string
       generic?: DataType
     },
-    private builtIn: boolean = false
+    private builtIn: boolean = false,
   ) {
     super(token, 'FunctionCall')
+  }
+
+  // OBTENERR VALOR REAL
+  public getScopedValue(scope: Scope): Value {
+    this.execute(scope)
+    return this.functionValue
   }
 
   // OBTENER VALOR
   public getValue(scope: Scope): DataValue | undefined {
     this.execute(scope)
-    return this.functionValue
+    return this.functionValue.getValue(scope)
+  }
+
+  // OBTENER TIPO GENERICO
+  public getGenType(scope: Scope): DataType {
+    this.execute(scope)
+    return this.functionValue.getGenType(scope)
   }
 
   // OBTENER TIPO
   public getType(scope: Scope): DataType {
     // BUSCAR FUNCION
-    const functionBlock: FunctionBlock | undefined = scope.getFunction(this.props.id)
+    const functionBlock: FunctionBlock | undefined = scope.getFunction(
+      this.props.id,
+    )
     return functionBlock?.getType()
   }
 
@@ -44,7 +58,9 @@ class FunctionCall extends Instruction {
   // COMPILAR
   public execute(scope: Scope): void {
     // BUSCAR FUNCION
-    const functionBlock: FunctionBlock | undefined = scope.getFunction(this.props.id)
+    const functionBlock: FunctionBlock | undefined = scope.getFunction(
+      this.props.id,
+    )
 
     // EJECUTAR
     if (functionBlock) {
@@ -53,15 +69,14 @@ class FunctionCall extends Instruction {
       const functionScope: Scope | undefined = functionBlock.getScope()
 
       if (functionScope) {
-        const values: { value: Value; type: DataType }[] = this.props.params.map(
-          (exp: Expression) => {
+        const values: { value: Value; type: DataType }[] =
+          this.props.params.map((exp: Expression) => {
             const expValue = exp.getValue(scope)
             return {
               value: expValue,
               type: expValue?.getType(scope),
             }
-          }
-        ) as { value: Value; type: DataType }[]
+          }) as { value: Value; type: DataType }[]
 
         // VERIFICAR CANTIDAD DE PARAMETRO
         if (functionBlock.props.params.length === this.props.params.length) {
@@ -69,21 +84,29 @@ class FunctionCall extends Instruction {
           values.forEach((value, index: number) => {
             if (value.type === functionBlock.props.params[index].type) {
               // ASIGNAR VARIABLE A ENTORNO DE FUNCION
-              functionScope.addVar(functionBlock.props.params[index].id, value.type, value.value)
+              functionScope.addVar(
+                functionBlock.props.params[index].id,
+                value.type,
+                value.value,
+              )
             } else {
-              addError(this.token, `Se esperaba un ${functionBlock.props.params[index].type
-                } en el parametro ${index + 1} en la funcion ${this.props.id}.`)
+              addError(
+                this.token,
+                `Se esperaba un ${
+                  functionBlock.props.params[index].type
+                } en el parametro ${index + 1} de la funcion ${this.props.id}.`,
+              )
             }
           })
 
-          const functionValue = functionBlock.getValue(functionScope)
-          if (functionValue)
-            this.functionValue = functionValue?.getValue(functionScope)
+          this.functionValue = functionBlock.getValue(functionScope)
         } else
-          addError(this.token, `Se esperaban ${functionBlock.props.params.length} parametros pero se obtuvieron ${this.props.params.length} en la funcion ${this.props.id}`)
+          addError(
+            this.token,
+            `Se esperaban ${functionBlock.props.params.length} parametros pero se obtuvieron ${this.props.params.length} en la funcion ${this.props.id}`,
+          )
       }
-    } else
-      addError(this.token, `La funcion ${this.props.id} no existe.`)
+    } else addError(this.token, `La funcion ${this.props.id} no existe.`)
   }
 }
 
