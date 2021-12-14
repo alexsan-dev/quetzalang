@@ -1,5 +1,6 @@
 import FunctionBlock from './instruction/functions'
 import Instruction from './instruction/abstract'
+import { addError } from './utils/tools'
 import Scope from './runtime/scope'
 
 // COMPILAR APLICACION
@@ -14,12 +15,16 @@ const compile = (instructions: Instruction[]) => {
       instruction.execute(globalEnv)
   })
 
+  // BUSCAR METODO MAIN
+  const mainMethod: FunctionBlock | undefined = instructions.find(
+    (instruction) =>
+      instruction.name === 'Function' &&
+      (instruction as FunctionBlock).getId() === 'main',
+  ) as FunctionBlock
+
   // SEGUNDO PARA CORRER PROGRAMA
-  instructions?.forEach((instruction: Instruction) => {
-    if (instruction.name !== 'Declaration' && instruction.name !== 'Function') {
-      instruction.execute(globalEnv)
-    }
-  })
+  if (mainMethod) mainMethod.getValue(globalEnv)
+  else addError({ line: 0, col: 0 }, `No existe el metodo main.`)
 }
 
 export default compile

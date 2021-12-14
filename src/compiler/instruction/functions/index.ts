@@ -60,6 +60,11 @@ class FunctionBlock extends Instruction {
     )
   }
 
+  // OBTENER NOMBRE DE FUNCION
+  public getId() {
+    return this.props.id
+  }
+
   // COMPILAR FUNCION
   public getValue(scope: Scope): Value | undefined {
     // COMPILAR CONTENIDO
@@ -69,8 +74,7 @@ class FunctionBlock extends Instruction {
       instructionIndex++
     ) {
       if (scope) {
-        if (!this.isOnBreak)
-          this.props.content[instructionIndex].execute(scope)
+        if (!this.isOnBreak) this.props.content[instructionIndex].execute(scope)
         else break
       }
     }

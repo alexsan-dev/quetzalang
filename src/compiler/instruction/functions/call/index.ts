@@ -32,13 +32,13 @@ class FunctionCall extends Instruction {
   // OBTENER VALOR
   public getValue(scope: Scope): DataValue | undefined {
     this.execute(scope)
-    return this.functionValue.getValue(scope)
+    return this.functionValue?.getValue(scope)
   }
 
   // OBTENER TIPO GENERICO
   public getGenType(scope: Scope): DataType {
     this.execute(scope)
-    return this.functionValue.getGenType(scope)
+    return this.functionValue?.getGenType(scope)
   }
 
   // OBTENER TIPO
