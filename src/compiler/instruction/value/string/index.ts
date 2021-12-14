@@ -1,6 +1,6 @@
 import DataType, { DataValue, TokenInfo } from '../../../utils/types'
-import { getInstructions } from '../../../../index'
 import getStringBind, { BINDREGEX } from '../tools'
+import { getInstructions } from '../../../../index'
 import FunctionCall from '../../functions/call'
 import Scope from '../../../runtime/scope'
 import Instruction from '../../abstract'
@@ -20,6 +20,7 @@ class StringValue extends Value {
     return DataType.STRING
   }
 
+  // OBTENER TIPO GENERICO
   public getGenType(): DataType {
     return this.getType()
   }
@@ -50,9 +51,17 @@ class StringValue extends Value {
     return this.value.toString().length
   }
 
+  public length_type(): DataType {
+    return DataType.INTEGER
+  }
+
   // OBTENER CARACTER
   public characterOfPosition(index: number): string {
     return this.value.toString().charAt(index)
+  }
+
+  public characterOfPosition_type(): DataType {
+    return DataType.CHARACTER
   }
 
   // OBTENER SUB CADENA
@@ -60,14 +69,26 @@ class StringValue extends Value {
     return this.value.toString().substring(start, end)
   }
 
+  public subString_type(): DataType {
+    return DataType.STRING
+  }
+
   // OBTENER EN MAYUSCULAS
   public toUppercase(): string {
     return this.value.toString().toUpperCase()
   }
 
+  public toUppercase_type(): DataType {
+    return DataType.STRING
+  }
+
   // OBTENER CARACTER
   public toLowercase(): string {
     return this.value.toString().toLowerCase()
+  }
+
+  public toLowercase_type(): DataType {
+    return DataType.STRING
   }
 }
 

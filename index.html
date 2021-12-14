@@ -57,6 +57,7 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/mode-java.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/theme-monokai.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/ext-language_tools.min.js"></script>
     <script>
       // VALORES INICIALES
       const urlParams = new URLSearchParams(window.location.search)
@@ -67,6 +68,7 @@
       const editor = ace.edit('editor', {
         wrap: true,
         autoScrollEditorIntoView: true,
+        enableLiveAutocompletion: true,
       })
       const JavaMode = ace.require('ace/mode/java').Mode
       editor.session.setMode(new JavaMode())

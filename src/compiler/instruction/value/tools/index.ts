@@ -81,11 +81,46 @@ export const getBuiltInMethod = (
   value: Value,
   params: DataValue[],
 ): DataValue | undefined => {
+  const scopedVal = getScopedValue(scope, value)
+  if (scopedVal)
+    if (methodName in scopedVal) return scopedVal[methodName](...params)
+}
+
+/**
+ * Obtener tipo de metodo
+ * @param scope
+ * @param methodName
+ * @param value
+ * @returns
+ */
+export const getBuiltInMethodType = (
+  scope: Scope,
+  methodName: string,
+  value: Value,
+): DataType => {
+  const scopedVal = getScopedValue(scope, value)
+  if (scopedVal)
+    if (`${methodName}_type` in scopedVal)
+      return scopedVal[`${methodName}_type`]()
+}
+
+/**
+ * Obtener variable si es ID
+ * @param scope
+ * @param value
+ * @returns
+ */
+export const getScopedValue = (
+  scope: Scope,
+  value: Value,
+): Value | undefined => {
   // ES UN ID
-  if ('getScopedValue' in value) {
-    return (value as IdValue).getScopedValue(scope)[methodName](...params)
-  } else {
-    if (methodName in value) return value[methodName](...params)
+  if (value) {
+    if ('getScopedValue' in value) {
+      return (value as IdValue).getScopedValue(scope)
+    } else {
+      return value
+    }
   }
 }
 

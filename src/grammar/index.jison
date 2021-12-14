@@ -6,19 +6,27 @@
     const DataType = require('../compiler/utils/types').default
     const getToken = require('../compiler/utils/tools').default
 
-    // INSTRUCCIONES
+    // ASIGNACIONES
     const IncrementalAssignment = require('../compiler/instruction/assignment/incremental').default
     const ExpAssignment = require('../compiler/instruction/assignment/expression').default
     const Declaration = require('../compiler/instruction/assignment/declaration').default
+
+    // FUNCIONES
     const FunctionCall = require('../compiler/instruction/functions/call').default
-    const ReturnValue = require('../compiler/instruction/control/return').default
     const FunctionBlock = require('../compiler/instruction/functions').default
-    const ForInLoop = require('../compiler/instruction/cycle/forIn').default
-    const Expression = require('../compiler/instruction/expression').default
+
+    // SENTENCIAS DE CONTROL
+    const ReturnValue = require('../compiler/instruction/control/return').default
     const Switch = require('../compiler/instruction/control/switch').default
+    const Condition = require('../compiler/instruction/control').default
+
+    // CICLOS
+    const ForInLoop = require('../compiler/instruction/cycle/forIn').default
     const ForLoop = require('../compiler/instruction/cycle/forLoop').default
     const CycleControl = require('../compiler/instruction/cycle').default
-    const Condition = require('../compiler/instruction/control').default
+    
+    // EXPRESSIONES
+    const Expression = require('../compiler/instruction/expression').default
     
     // FUNCIONES NATIVAS
     const Evaluate = require('../compiler/instruction/functions/builtin/evaluate').default
@@ -35,6 +43,7 @@
     const CharValue = require("../compiler/instruction/value/character").default
     const StringValue = require("../compiler/instruction/value/string").default
     const DoubleValue = require("../compiler/instruction/value/double").default
+    const ValueMethod = require('../compiler/instruction/value/method').default
     const IntValue = require("../compiler/instruction/value/int").default
     const IdValue = require("../compiler/instruction/value/id").default
 
@@ -59,7 +68,7 @@
 "char"                      return addToken(yylloc, 'charType')
 "boolean"                   return addToken(yylloc, 'boolType')
 "null"                      return addToken(yylloc, 'nullType')
-"string"                    return addToken(yylloc, 'strType')
+"String"                    return addToken(yylloc, 'strType')
 "double"                    return addToken(yylloc, 'dblType')
 "int"                       return addToken(yylloc, 'intType')
 "true"                      return addToken(yylloc, 'trBool')
@@ -98,6 +107,7 @@
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* SIMBOLOS */
+"."                         return addToken(yylloc, 'dot')
 ","                         return addToken(yylloc, 'comma')
 ";"                         return addToken(yylloc, 'semicolom')
 "{"                         return addToken(yylloc, 'openBracket')
@@ -189,7 +199,7 @@ NULLCHAR "\\0"
 %right 'not'
 %left UMIN
 %left UNOT
-%nonassoc 'comma' 'openParenthesis' 'closeParenthesis'
+%nonassoc 'comma' 'openParenthesis' 'closeParenthesis' 'dot' 'semicolom'
 
 %start START
 
@@ -346,10 +356,10 @@ EXPRESSIONS : EXPRESSIONS plus EXPRESSIONS {
     } | EXPRESSIONS or EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $1, right: $3, operator:Operator.OR });
-    } | not EXPRESSIONS {
+    } | not EXPRESSIONS %prec UNOT {
         $$ = new Expression(getToken(@1), {
             left: $2, operator: Operator.NOT });
-    } | minus EXPRESSIONS {
+    } | minus EXPRESSIONS %prec UMIN {
         $$ = new Expression(getToken(@1), {
             left: $2, operator: Operator.NEGATION });
     } | openParenthesis EXPRESSIONS closeParenthesis {
@@ -392,6 +402,8 @@ VARVALUE : decimal {
         $$ = null
     } | FUNCTIONCALL {
         $$ = $1;
+    } | METHODCALL {
+        $$ = $1;
     } | METHOD {
         $$ = $1;
     };
@@ -432,6 +444,14 @@ FUNCTIONCALL : id openParenthesis EXPLIST closeParenthesis {
         $$ = new FunctionCall(getToken(@1), { params: $3, id: $1 })
     } | id openParenthesis closeParenthesis {
         $$ = new FunctionCall(getToken(@1), { params: [], id: $1 })
+    };
+
+METHODCALL : VARVALUE dot id openParenthesis EXPLIST closeParenthesis {
+        $$ = new ValueMethod(getToken(@1), { 
+            value: $1, methodName: $3, params: $5 })
+    } | VARVALUE dot id openParenthesis closeParenthesis {
+        $$ = new ValueMethod(getToken(@1), { 
+            value: $1, methodName: $3, params: [] })
     };
     
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
