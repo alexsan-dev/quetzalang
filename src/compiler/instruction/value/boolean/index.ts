@@ -20,8 +20,12 @@ class BooleanValue extends Value {
   }
 
   // OBTENER VALOR CAST
-  public getValue(): DataValue | undefined {
-    return Boolean(this.value)
+  public getValue(): DataValue {
+    return this.value === 'false'
+      ? false
+      : this.value === '0'
+      ? false
+      : Boolean(this.value)
   }
 }
 

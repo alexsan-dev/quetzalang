@@ -36,7 +36,11 @@ class TypeParse extends FunctionCall {
         // OBTENER VALORES
         const tmpParam = paramScopedValue.toString().toLowerCase()
         return Boolean(
-          tmpParam === 'false' ? false : tmpParam === '0' ? false : true,
+          tmpParam === 'false'
+            ? false
+            : tmpParam === '0'
+            ? false
+            : paramScopedValue,
         )
       } else if (this.props.type === DataType.DOUBLE) {
         return parseFloat(paramScopedValue?.toString() ?? '0')
