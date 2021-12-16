@@ -145,16 +145,23 @@ export const inferTypeValue = (value: DataValue): DataType => {
         (val) => typeof val === typeof (value as DataValue[])[0],
       )
     )
+      // RETORNAR ARREGLO DE UN TIPO DE DATO
       return {
         type: DataTypeEnum.ARRAY,
         gen: inferTypeValue((value as DataValue[])[0]),
       }
     else return { type: DataTypeEnum.ARRAY, gen: { type: DataTypeEnum.STRUCT } }
   } else {
+    // VALORES COMO STRINGS
     if (typeof value === 'string') {
+      // SI SOLO TIENE UN CARCATER DEVOLVER TIPO DE DATO CARACTER
       if (value.length === 1) return { type: DataTypeEnum.CHARACTER }
+      // SINO ES UN STRING
       else return { type: DataTypeEnum.STRING }
-    } else if (typeof value === 'number') return { type: DataTypeEnum.DOUBLE }
+    }
+    // ES UN NUMERO (TOMAR TODOS COMO DOUBLES)
+    else if (typeof value === 'number') return { type: DataTypeEnum.DOUBLE }
+    // ES UN BOOL
     else if (typeof value === 'boolean') return { type: DataTypeEnum.BOOLEAN }
     else return { type: DataTypeEnum.NULL }
   }

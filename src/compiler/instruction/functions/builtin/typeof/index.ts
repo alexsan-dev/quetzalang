@@ -35,7 +35,6 @@ class TypeOf extends FunctionCall {
   public getValue(scope: Scope): DataValue {
     // PARAMETRO
     const paramValue = this.props.params[0].getValue(scope)
-    console.log(paramValue.getType(scope))
     return paramValue.getType(scope).type
   }
 

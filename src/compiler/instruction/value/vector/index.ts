@@ -33,11 +33,12 @@ class VectorValue extends Value {
 
   // OBTENER LONGITUD
   public length(): DataValue {
+    console.log(this.value)
     return (this.defValues ?? this.expValue)?.length ?? 0
   }
 
-  public length_type(): DataTypeEnum {
-    return DataTypeEnum.INTEGER
+  public length_type(): DataType {
+    return { type: DataTypeEnum.INTEGER }
   }
 
   // AGREGAR VALOR
@@ -45,8 +46,8 @@ class VectorValue extends Value {
     console.log('ay', this.value)
   }
 
-  public push_type(): DataTypeEnum {
-    return DataTypeEnum.VOID
+  public push_type(): DataType {
+    return { type: DataTypeEnum.VOID }
   }
 
   // OBTENER ULTIMO VALOR
@@ -54,10 +55,10 @@ class VectorValue extends Value {
     console.log('ay')
   }
 
-  public pop_type(scope: Scope): DataTypeEnum {
+  public pop_type(scope: Scope): DataType {
     return this.defValues
-      ? inferTypeValue(this.defValues).type
-      : this.expValue[0]?.getType(scope).type
+      ? inferTypeValue(this.defValues)
+      : this.expValue[0]?.getType(scope)
   }
 
   // OBTENER VALOR CAST
