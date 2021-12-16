@@ -1,5 +1,5 @@
 // TIPOS
-import DataType, { DataTypeEnum, TokenInfo } from '../../utils/types'
+import DataType, { DataTypeEnum, DataValue, TokenInfo } from '../../utils/types'
 import { addError } from '../../utils/tools'
 import Scope from '../../runtime/scope'
 import Instruction from '../abstract'
@@ -30,8 +30,27 @@ class Assignment extends Instruction {
           valueType.type === DataTypeEnum.DOUBLE)
 
       if (expectedType.type === valueType.type || typeException) {
-        if (isNew) scope.addVar(this.id, expectedType, value)
-        else scope.setVar(this.id, value)
+        // VALIDAR PARA ARREGLOS
+        if (valueType.type === DataTypeEnum.ARRAY) {
+          // OBTENER VALORES PRIMITIVOS
+          const values: { value: DataValue; type: DataType }[] = (
+            value.getValue(scope) as DataValue[]
+          )
+            .map((value: DataValue) => ({ value, type: valueType.gen }))
+            .filter(Boolean) as { value: DataValue; type: DataType }[]
+
+          if (values.every((val) => val.type === values[0].type)) {
+            if (isNew) scope.addVar(this.id, expectedType, value)
+            else scope.setVar(this.id, value)
+          } else
+            addError(
+              this.token,
+              `La lista de valores debe ser del mismo tipo para el arrreglo ${this.id}.`,
+            )
+        } else {
+          if (isNew) scope.addVar(this.id, expectedType, value)
+          else scope.setVar(this.id, value)
+        }
       } else {
         if (expectedType)
           addError(

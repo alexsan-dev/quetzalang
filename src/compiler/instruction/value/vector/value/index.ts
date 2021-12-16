@@ -37,17 +37,17 @@ class VectorPositionValue extends Value {
     // VALIDAR INDEX
     if (indexValue?.getType(scope).type === DataTypeEnum.INTEGER) {
       // VALIDAR VARIABLE
+      const indexPrimitive = indexValue.getValue(scope) as number
+
       if (this.props.value.getType(scope).type === DataTypeEnum.ARRAY) {
         const array: DataValue[] = this.props.value?.getValue(
           scope,
         ) as DataValue[]
-        if (array) return array[indexValue.getValue(scope) as number]
+        if (array) return array[indexPrimitive]
       } else
         addError(
           this.token,
-          `No fue posible acceder a la posicion ${indexValue.getValue(
-            scope,
-          )} del arreglo.`,
+          `No fue posible acceder a la posicion ${indexPrimitive} del arreglo.`,
         )
     } else
       addError(

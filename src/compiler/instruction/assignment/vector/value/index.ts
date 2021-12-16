@@ -1,5 +1,5 @@
 import { addError } from '../../../../utils/tools'
-import ArrayValue from '../../../value/vector'
+import VectorValue from '../../../value/vector'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
 import IdValue from '../../../value/id'
@@ -54,7 +54,7 @@ class VectorPositionAssignment extends Assignment {
 
       if (index >= 0 && index < temporal.length) {
         const newValueType = this.props.exp.getType(scope)
-        if (newValueType.type === expectedType.type) {
+        if (JSON.stringify(newValueType) === JSON.stringify(expectedType.gen)) {
           // ASIGNAR NUEVO VALOR
           const newValue = this.props.exp?.getValue(scope).getValue(scope)
           temporal[index] = newValue
@@ -62,15 +62,14 @@ class VectorPositionAssignment extends Assignment {
           // GUARDAR
           scope.setVar(
             this.props.id.getId() as string,
-            new ArrayValue(this.token, {
-              value: temporal,
-              type: expectedType,
-            }),
+            new VectorValue(this.token, [], temporal),
           )
         } else
           addError(
             this.token,
-            `No se puede asignar el tipo ${newValueType.type} a ${expectedType.type}.`,
+            `No se puede asignar el tipo ${JSON.stringify(
+              newValueType,
+            )} a ${JSON.stringify(expectedType.gen)}.`,
           )
       } else
         addError(

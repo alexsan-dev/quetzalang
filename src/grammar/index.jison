@@ -47,6 +47,7 @@
 
     // VALORES PRIMITIVOS
     const VectorPositionValue = require('../compiler/instruction/value/vector/value').default
+    const VectorValue = require('../compiler/instruction/value/vector').default
     const BooleanValue = require("../compiler/instruction/value/boolean").default
     const CharValue = require("../compiler/instruction/value/character").default
     const StringValue = require("../compiler/instruction/value/string").default
@@ -280,9 +281,9 @@ INSTRUCTION : DECLARATION semicolom {
 
 INLINEINSTRUCTION : ASSIGNMENT semicolom {
         $$ = $1;
-    } | FUNCTIONCALL semicolom {
-        $$ = $1;
     } | METHOD semicolom {
+        $$ = $1;
+    } | FUNCTIONCALL semicolom {
         $$ = $1;
     } | SWITCHSEQ {
         $$ = $1;
@@ -313,8 +314,6 @@ ASSIGNMENT : id {
         $$ = new ExpAssignment(getToken(@1), { id: $1, exp: $3 });
     } | INCREMENTALASSIGNMENT {
         $$ = $1;
-    } | NEWVECTORASSIGNMENT {
-        $$ = $1;
     } | VECTORVALUEASSIGNMENT {
         $$ = $1;
     };
@@ -325,10 +324,6 @@ INCREMENTALASSIGNMENT : id plusPlus {
     } | id minusMinus {
         $$ = new IncrementalAssignment(getToken(@1), { 
             id: $1, operator: Operator.MINUSMINUS })
-    };
-
-NEWVECTORASSIGNMENT : id equals openSquareBracket EXPLIST closeSquareBracket {
-        $$ = new VectorAssignment(getToken(@1), { id: $1, defValues: $4 });
     };
 
 VECTORVALUEASSIGNMENT : id openSquareBracket EXPRESSIONS closeSquareBracket equals EXPRESSIONS {
@@ -425,6 +420,8 @@ VARVALUE : decimal {
         $$ = new BooleanValue(getToken(@1), $1)
     } | flBool {
         $$ = new BooleanValue(getToken(@1), $1)
+    } | openSquareBracket EXPLIST closeSquareBracket {
+        $$ = new VectorValue(getToken(@1), $2)
     } | nullType {
         $$ = null
     } | VALUEMETHOD {
@@ -441,10 +438,7 @@ VALUEMETHOD : FUNCTIONCALL {
         $$ = $1;
     };
 
-VECTORVALUE : id openSquareBracket EXPRESSIONS closeSquareBracket {
-        $$ = new VectorPositionValue(getToken(@1), { 
-            value: new IdValue(getToken(@1), $1), index: $3 });
-    } | VALUEMETHOD openSquareBracket EXPRESSIONS closeSquareBracket {
+VECTORVALUE : VARVALUE openSquareBracket EXPRESSIONS closeSquareBracket {
         $$ = new VectorPositionValue(getToken(@1), { value: $1, index: $3 })
     };
 

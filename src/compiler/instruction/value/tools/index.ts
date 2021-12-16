@@ -1,17 +1,17 @@
+import Scope from '../../../runtime/scope'
+import BooleanValue from '../boolean'
+import CharValue from '../character'
+import StringValue from '../string'
+import DoubleValue from '../double'
+import VectorValue from '../vector'
+import IntValue from '../int'
+import IdValue from '../id'
+import Value from '..'
 import DataType, {
   DataTypeEnum,
   DataValue,
   TokenInfo,
 } from '../../../utils/types'
-import Scope from '../../../runtime/scope'
-import BooleanValue from '../boolean'
-import CharValue from '../character'
-import DoubleValue from '../double'
-import StringValue from '../string'
-import IntValue from '../int'
-import IdValue from '../id'
-import Value from '..'
-import ArrayValue from '../vector'
 
 export const BINDREGEX = /[.+]?\$(?:\(([^\n\r]+)\)|([^\)\n\r\s]+))/gm
 
@@ -68,7 +68,8 @@ export const getValueByType = (
       value = new CharValue(token, rValue)
       break
     case DataTypeEnum.ARRAY:
-      value = new ArrayValue(token, { value: rValue, type: rType.gen })
+      if ('map' in (rValue as DataValue[]))
+        value = new VectorValue(token, [], rValue as DataValue[])
     default:
       break
   }
@@ -108,7 +109,7 @@ export const getBuiltInMethodType = (
   const scopedVal = getScopedValue(scope, value)
   if (scopedVal)
     if (`${methodName}_type` in scopedVal)
-      return scopedVal[`${methodName}_type`]() as DataType
+      return scopedVal[`${methodName}_type`](scope) as DataType
 }
 
 /**
@@ -128,6 +129,34 @@ export const getScopedValue = (
     } else {
       return value
     }
+  }
+}
+
+/**
+ * Obtner tipo de valor primitivo
+ * @param value
+ * @returns
+ */
+export const inferTypeValue = (value: DataValue): DataType => {
+  if (typeof value === 'object' && 'map' in (value as DataValue[])) {
+    // VERIFICAR SI TODOS LOS TIPOS SON IGUALES
+    if (
+      (value as DataValue[]).every(
+        (val) => typeof val === typeof (value as DataValue[])[0],
+      )
+    )
+      return {
+        type: DataTypeEnum.ARRAY,
+        gen: inferTypeValue((value as DataValue[])[0]),
+      }
+    else return { type: DataTypeEnum.ARRAY, gen: { type: DataTypeEnum.STRUCT } }
+  } else {
+    if (typeof value === 'string') {
+      if (value.length === 1) return { type: DataTypeEnum.CHARACTER }
+      else return { type: DataTypeEnum.STRING }
+    } else if (typeof value === 'number') return { type: DataTypeEnum.DOUBLE }
+    else if (typeof value === 'boolean') return { type: DataTypeEnum.BOOLEAN }
+    else return { type: DataTypeEnum.NULL }
   }
 }
 

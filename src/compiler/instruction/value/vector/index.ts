@@ -1,33 +1,39 @@
+import Scope from '../../../runtime/scope'
+import Expression from '../../expression'
+import Value from '..'
 import DataType, {
   DataTypeEnum,
   DataValue,
   TokenInfo,
 } from '../../../utils/types'
-import Value from '..'
+import { inferTypeValue } from '../tools'
 
 class VectorValue extends Value {
   // CONSTRUCTOR
   constructor(
     token: TokenInfo,
-    public props: {
-      value: DataValue
-      type: DataType
-    },
+    public expValue: Expression[],
+    public defValues?: DataValue[],
   ) {
-    super(token, props.value)
+    super(token, [])
   }
 
   // COMPILAR UN VALOR SIEMPRE DEVOLVERA TRUE
   public execute(): void {}
 
   // OBTENER TIPO DE RESULTADO
-  public getType(): DataType {
-    return { type: DataTypeEnum.ARRAY, gen: this.props.type }
+  public getType(scope: Scope): DataType {
+    return {
+      type: DataTypeEnum.ARRAY,
+      gen: this.defValues
+        ? inferTypeValue(this.defValues)
+        : this.expValue[0]?.getType(scope),
+    }
   }
 
   // OBTENER LONGITUD
   public length(): DataValue {
-    return (this.props.value as DataValue[])?.length ?? 0
+    return (this.defValues ?? this.expValue)?.length ?? 0
   }
 
   public length_type(): DataTypeEnum {
@@ -36,8 +42,7 @@ class VectorValue extends Value {
 
   // AGREGAR VALOR
   public push(newVal: DataValue): void {
-    // @ts-ignore
-    this.props.value?.push(newVal)
+    console.log('ay', this.value)
   }
 
   public push_type(): DataTypeEnum {
@@ -45,18 +50,23 @@ class VectorValue extends Value {
   }
 
   // OBTENER ULTIMO VALOR
-  public pop(): DataValue {
-    // @ts-ignore
-    return this.props.value.pop()
+  public pop(): void {
+    console.log('ay')
   }
 
-  public pop_type(): DataTypeEnum {
-    return this.props.type.type
+  public pop_type(scope: Scope): DataTypeEnum {
+    return this.defValues
+      ? inferTypeValue(this.defValues).type
+      : this.expValue[0]?.getType(scope).type
   }
 
   // OBTENER VALOR CAST
-  public getValue(): DataValue {
-    return this.props.value
+  public getValue(scope: Scope): DataValue[] {
+    const refValues =
+      this.defValues ??
+      this.expValue.map((exp) => exp.getValue(scope).getValue(scope))
+    this.value = refValues
+    return refValues
   }
 }
 

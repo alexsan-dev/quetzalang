@@ -5,8 +5,8 @@ import DataType, {
   TokenInfo,
 } from '../../../utils/types'
 import { addError } from '../../../utils/tools'
-import Scope from '../../../runtime/scope'
 import ArrayValue from '../../value/vector'
+import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
 import Value from '../../value'
 import Assignment from '../'
@@ -52,11 +52,10 @@ class VectorAssignment extends Assignment {
       // VERIFICAR TIPO
       if (values.every((value) => value.type.type === values[0].type.type)) {
         if (JSON.stringify(values[0].type) === JSON.stringify(type.gen)) {
-          const validValues: DataValue[] = values.map((value) => value.value)
-          const newValue: Value = new ArrayValue(this.token, {
-            value: validValues,
-            type,
-          })
+          const newValue: Value = new ArrayValue(
+            this.token,
+            this.props.defValues,
+          )
 
           return newValue
         } else
@@ -67,10 +66,7 @@ class VectorAssignment extends Assignment {
       } else
         addError(this.token, 'La lista de valores debe ser del mismo tipo.')
     } else {
-      return new ArrayValue(this.token, {
-        value: [],
-        type,
-      })
+      return new ArrayValue(this.token, [])
     }
   }
 }

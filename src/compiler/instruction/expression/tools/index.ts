@@ -10,9 +10,9 @@ import { addError } from '../../../utils/tools'
 import BooleanValue from '../../value/boolean'
 import CharValue from '../../value/character'
 import DoubleValue from '../../value/double'
+import VectorValue from '../../value/vector'
 import StringValue from '../../value/string'
 import Scope from '../../../runtime/scope'
-import ArrayValue from '../../value/vector'
 import IntValue from '../../value/int'
 import Value from '../../value'
 
@@ -789,7 +789,7 @@ export const defaultValues = (token: TokenInfo, type: DataType): Value => {
     case DataTypeEnum.NULL:
       return null
     case DataTypeEnum.ARRAY:
-      return new ArrayValue(token, { value: [], type: type.gen })
+      return new VectorValue(token, [])
     default:
       return new StringValue(token, '')
   }
