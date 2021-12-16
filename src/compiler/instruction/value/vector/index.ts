@@ -23,12 +23,13 @@ class VectorValue extends Value {
 
   // OBTENER TIPO DE RESULTADO
   public getType(scope: Scope): DataType {
-    return {
+    const valType = {
       type: DataTypeEnum.ARRAY,
       gen: this.defValues
-        ? inferTypeValue(this.defValues)
+        ? inferTypeValue(this.defValues).gen
         : this.expValue[0]?.getType(scope),
     }
+    return valType
   }
 
   // OBTENER LONGITUD

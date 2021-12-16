@@ -35,13 +35,13 @@ const operateValues = (
   // PROPIEDADES DE EXP IZQUIERDA
   const lValue: DataValue | undefined = onlyTypes
     ? undefined
-    : left?.getValue(scope) ?? undefined
+    : left?.getValue(scope)
   const lType: DataType | undefined = left?.getType(scope)
 
   // PROPIEDADES DE EXP DERECHA
   const rValue: DataValue | undefined = onlyTypes
     ? undefined
-    : right?.getValue(scope) ?? undefined
+    : right?.getValue(scope)
   const rType: DataType | undefined = right?.getType(scope)
 
   // PROPIEDADES DE CONDICION
@@ -675,7 +675,6 @@ const operateValues = (
             )
           type = DataTypeEnum.STRING
           break
-          break
         default:
           break
       }
@@ -761,7 +760,7 @@ const operateValues = (
   } else {
     addError(
       token,
-      `No es posible operar la expresion ${lType} ${operator} ${rType}.`,
+      `No es posible operar la expresion ${lType?.type} ${operator} ${rType?.type}.`,
     )
     if (onlyTypes) return { type: DataTypeEnum.NULL }
     else return null

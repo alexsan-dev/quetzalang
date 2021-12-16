@@ -683,7 +683,6 @@ parse: function parse(input) {
     const IncrementalAssignment = require('../compiler/instruction/assignment/incremental').default
     const ExpAssignment = require('../compiler/instruction/assignment/expression').default
     const Declaration = require('../compiler/instruction/assignment/declaration').default
-    const VectorAssignment = require('../compiler/instruction/assignment/vector').default
 
     // FUNCIONES
     const FunctionCall = require('../compiler/instruction/functions/call').default

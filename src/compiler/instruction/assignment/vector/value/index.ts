@@ -54,7 +54,7 @@ class VectorPositionAssignment extends Assignment {
 
       if (index >= 0 && index < temporal.length) {
         const newValueType = this.props.exp.getType(scope)
-        if (JSON.stringify(newValueType) === JSON.stringify(expectedType.gen)) {
+        if (newValueType.type === expectedType.type) {
           // ASIGNAR NUEVO VALOR
           const newValue = this.props.exp?.getValue(scope).getValue(scope)
           temporal[index] = newValue
@@ -67,9 +67,7 @@ class VectorPositionAssignment extends Assignment {
         } else
           addError(
             this.token,
-            `No se puede asignar el tipo ${JSON.stringify(
-              newValueType,
-            )} a ${JSON.stringify(expectedType.gen)}.`,
+            `No se puede asignar el tipo ${newValueType.type} a ${expectedType.type}.`,
           )
       } else
         addError(
