@@ -1,4 +1,4 @@
-import DataType, { Operator, TokenInfo } from '../../../utils/types'
+import { DataTypeEnum, Operator, TokenInfo } from '../../../utils/types'
 import { addError } from '../../../utils/tools'
 import Scope from '../../../runtime/scope'
 import IntValue from '../../value/int'
@@ -22,13 +22,16 @@ class IncrementalAssignment extends Assignment {
     const refType = refVar.getType(scope)
 
     if (refVar) {
-      if (refType === DataType.INTEGER || refType === DataType.DOUBLE) {
+      if (
+        refType.type === DataTypeEnum.INTEGER ||
+        refType.type === DataTypeEnum.DOUBLE
+      ) {
         // VERIFICAR TIPO
         super.setValue(scope, refType, this.getValue(scope), false)
       } else
         addError(
           this.token,
-          `La variable ${this.id} debe ser del tipo ${DataType.INTEGER} | ${DataType.DOUBLE}`,
+          `La variable ${this.id} debe ser del tipo ${DataTypeEnum.INTEGER} | ${DataTypeEnum.DOUBLE}`,
         )
     } else addError(this.token, `La variable ${this.id} no existe.`)
   }

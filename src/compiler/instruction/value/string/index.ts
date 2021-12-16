@@ -1,4 +1,8 @@
-import DataType, { DataValue, TokenInfo } from '../../../utils/types'
+import DataType, {
+  DataTypeEnum,
+  DataValue,
+  TokenInfo,
+} from '../../../utils/types'
 import getStringBind, { BINDREGEX } from '../tools'
 import { getInstructions } from '../../../../index'
 import FunctionCall from '../../functions/call'
@@ -17,12 +21,7 @@ class StringValue extends Value {
 
   // OBTENER TIPO DE RESULTADO
   public getType(): DataType {
-    return DataType.STRING
-  }
-
-  // OBTENER TIPO GENERICO
-  public getGenType(): DataType {
-    return this.getType()
+    return { type: DataTypeEnum.STRING }
   }
 
   // OBTENER VALOR CAST
@@ -52,7 +51,7 @@ class StringValue extends Value {
   }
 
   public length_type(): DataType {
-    return DataType.INTEGER
+    return { type: DataTypeEnum.INTEGER }
   }
 
   // OBTENER CARACTER
@@ -61,7 +60,7 @@ class StringValue extends Value {
   }
 
   public characterOfPosition_type(): DataType {
-    return DataType.CHARACTER
+    return { type: DataTypeEnum.CHARACTER }
   }
 
   // OBTENER SUB CADENA
@@ -70,7 +69,7 @@ class StringValue extends Value {
   }
 
   public subString_type(): DataType {
-    return DataType.STRING
+    return { type: DataTypeEnum.STRING }
   }
 
   // OBTENER EN MAYUSCULAS
@@ -79,7 +78,7 @@ class StringValue extends Value {
   }
 
   public toUppercase_type(): DataType {
-    return DataType.STRING
+    return { type: DataTypeEnum.STRING }
   }
 
   // OBTENER CARACTER
@@ -88,7 +87,7 @@ class StringValue extends Value {
   }
 
   public toLowercase_type(): DataType {
-    return DataType.STRING
+    return { type: DataTypeEnum.STRING }
   }
 }
 

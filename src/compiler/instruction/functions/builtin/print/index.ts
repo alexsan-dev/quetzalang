@@ -1,4 +1,4 @@
-import DataType, { TokenInfo } from '../../../../utils/types'
+import DataType, { DataTypeEnum, TokenInfo } from '../../../../utils/types'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
 import FunctionCall from '../../call'
@@ -20,7 +20,7 @@ class Print extends FunctionCall {
 
   // OBTENER TIPO
   public getType(_scope: Scope): DataType {
-    return DataType.VOID
+    return { type: DataTypeEnum.VOID }
   }
 
   // COMPILAR
@@ -29,6 +29,7 @@ class Print extends FunctionCall {
     this.props.params.forEach((exp) => {
       const expValue = exp.getValue(scope)
       logs.push(expValue?.getValue(scope))
+
       if (this.props.params.length > 1) logs.push(' ')
       if (this.props.breakLine) logs.push('\n')
     })

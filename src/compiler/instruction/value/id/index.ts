@@ -11,6 +11,11 @@ class IdValue extends Value {
   // COMPILAR UN VALOR SIEMPRE DEVOLVERA TRUE
   public execute(): void {}
 
+  // OBTENER NOMBRE DE ID
+  public getId(): DataValue {
+    return this.value
+  }
+
   // OBTENER VARIABLE DE ID
   public getScopedValue(scope: Scope): Value {
     const scopedValue = scope.getVar((this.value as string) ?? '')
@@ -20,10 +25,6 @@ class IdValue extends Value {
   // OBTENER TIPO DE RESULTADO
   public getType(scope: Scope): DataType {
     return this.getScopedValue(scope)?.getType(scope)
-  }
-
-  public getGenType(scope: Scope): DataType {
-    return this.getScopedValue(scope)?.getGenType(scope)
   }
 
   // OBTENER VALOR CAST

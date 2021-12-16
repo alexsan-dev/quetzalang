@@ -1,4 +1,5 @@
-import DataType, { TokenInfo } from '../../../utils/types'
+import DataType, { DataTypeEnum, TokenInfo } from '../../../utils/types'
+import VectorPositionValue from '../../value/vector/value'
 import ExpAssignment from '../../assignment/expression'
 import { getBuiltInMethod } from '../../value/tools'
 import { addError } from '../../../utils/tools'
@@ -7,6 +8,7 @@ import FunctionBlock from '../../functions'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
 import Instruction from '../../abstract'
+import IntValue from '../../value/int'
 import Value from '../../value'
 
 class ForInLoop {
@@ -30,10 +32,10 @@ class ForInLoop {
   ) {
     scope.addFunction(
       name,
-      DataType.VOID,
+      { type: DataTypeEnum.VOID },
       new FunctionBlock(this.token, {
         id: name,
-        type: DataType.VOID,
+        type: { type: DataTypeEnum.VOID },
         content: [
           {
             token: this.token,
@@ -54,9 +56,11 @@ class ForInLoop {
   public execute(scope: Scope): void {
     // ASIGNAR VARIABLES DE INICIO
     const refType: DataType = this.props.iterReference.getType(scope)
-    if (refType === DataType.STRING || refType === DataType.ARRAY) {
+    if (
+      refType.type === DataTypeEnum.STRING ||
+      refType.type === DataTypeEnum.ARRAY
+    ) {
       let globalIndex: number = 0
-
       const containerScope: Scope = new Scope('Loop', 'for-in-container', scope)
 
       // AGREGAR FUNCIONES DE SALIDA
@@ -71,7 +75,7 @@ class ForInLoop {
           id: this.props.iterVariable,
           exp: new Expression(this.token, {
             value:
-              refType === DataType.STRING
+              refType.type === DataTypeEnum.STRING
                 ? new CharValue(
                     this.token,
                     getBuiltInMethod(
@@ -81,16 +85,21 @@ class ForInLoop {
                       [globalIndex],
                     ) ?? '',
                   )
-                : null, // TODO: Agregar arreglos
+                : new VectorPositionValue(this.token, {
+                    index: new Expression(this.token, {
+                      value: new IntValue(this.token, globalIndex),
+                    }),
+                    value: this.props.iterReference,
+                  }),
           }),
         })
 
         // ASIGNAR A ENTORNO
         newAssignment.execute(
           localScope,
-          refType === DataType.STRING
-            ? DataType.CHARACTER
-            : this.props.iterReference.getGenType(localScope),
+          refType.type === DataTypeEnum.STRING
+            ? { type: DataTypeEnum.CHARACTER }
+            : this.props.iterReference.getType(localScope).gen,
         )
       }
 

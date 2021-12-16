@@ -1,4 +1,8 @@
-import DataType, { DataValue, TokenInfo } from '../../../../utils/types'
+import DataType, {
+  DataTypeEnum,
+  DataValue,
+  TokenInfo,
+} from '../../../../utils/types'
 import { getValueByType } from '../../../value/tools'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
@@ -31,14 +35,9 @@ class Log10 extends FunctionCall {
     )
   }
 
-  // OBTENERR TIPO GENERICO
-  public getGenType(scope: Scope): DataType {
-    return this.getType(scope)
-  }
-
   // OBTENER TIPO
   public getType(_scope: Scope): DataType {
-    return DataType.DOUBLE
+    return { type: DataTypeEnum.DOUBLE }
   }
 
   // COMPILAR

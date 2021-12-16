@@ -1,4 +1,8 @@
-import DataType, { DataValue, TokenInfo } from '../../../utils/types'
+import DataType, {
+  DataTypeEnum,
+  DataValue,
+  TokenInfo,
+} from '../../../utils/types'
 import Scope from '../../../runtime/scope'
 import BooleanValue from '../boolean'
 import CharValue from '../character'
@@ -7,6 +11,7 @@ import StringValue from '../string'
 import IntValue from '../int'
 import IdValue from '../id'
 import Value from '..'
+import ArrayValue from '../vector'
 
 export const BINDREGEX = /[.+]?\$(?:\(([^\n\r]+)\)|([^\)\n\r\s]+))/gm
 
@@ -46,22 +51,24 @@ export const getValueByType = (
   rValue: DataValue,
 ): Value => {
   let value: Value | null = null
-  switch (rType) {
-    case DataType.INTEGER:
+  switch (rType.type) {
+    case DataTypeEnum.INTEGER:
       value = new IntValue(token, rValue)
       break
-    case DataType.DOUBLE:
+    case DataTypeEnum.DOUBLE:
       value = new DoubleValue(token, rValue)
       break
-    case DataType.STRING:
+    case DataTypeEnum.STRING:
       value = new StringValue(token, rValue)
       break
-    case DataType.BOOLEAN:
+    case DataTypeEnum.BOOLEAN:
       value = new BooleanValue(token, rValue)
       break
-    case DataType.CHARACTER:
+    case DataTypeEnum.CHARACTER:
       value = new CharValue(token, rValue)
       break
+    case DataTypeEnum.ARRAY:
+      value = new ArrayValue(token, { value: rValue, type: rType.gen })
     default:
       break
   }
@@ -101,7 +108,7 @@ export const getBuiltInMethodType = (
   const scopedVal = getScopedValue(scope, value)
   if (scopedVal)
     if (`${methodName}_type` in scopedVal)
-      return scopedVal[`${methodName}_type`]()
+      return scopedVal[`${methodName}_type`]() as DataType
 }
 
 /**

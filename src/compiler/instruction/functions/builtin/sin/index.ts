@@ -1,4 +1,8 @@
-import DataType, { DataValue, TokenInfo } from '../../../../utils/types'
+import DataType, {
+  DataTypeEnum,
+  DataValue,
+  TokenInfo,
+} from '../../../../utils/types'
 import { getValueByType } from '../../../value/tools'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
@@ -20,12 +24,7 @@ class Sin extends FunctionCall {
 
   // OBTENER TIPO
   public getType(_scope: Scope): DataType {
-    return DataType.DOUBLE
-  }
-
-  // OBTENERR TIPO GENERICO
-  public getGenType(scope: Scope): DataType {
-    return this.getType(scope)
+    return { type: DataTypeEnum.DOUBLE }
   }
 
   // OBTENER VALOR REAL

@@ -1,4 +1,4 @@
-import DataType, { TokenInfo } from '../../utils/types'
+import { DataTypeEnum, TokenInfo } from '../../utils/types'
 import FunctionBlock from '../functions'
 import Scope from '../../runtime/scope'
 import Expression from '../expression'
@@ -40,10 +40,10 @@ class CycleControl extends Instruction {
     const that = this
     scope.addFunction(
       name,
-      DataType.VOID,
+      { type: DataTypeEnum.VOID },
       new FunctionBlock(this.token, {
         id: name,
-        type: DataType.VOID,
+        type: { type: DataTypeEnum.VOID },
         content: [
           {
             token: this.token,

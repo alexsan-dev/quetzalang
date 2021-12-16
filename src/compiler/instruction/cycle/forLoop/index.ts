@@ -1,4 +1,4 @@
-import DataType, { TokenInfo } from '../../../utils/types'
+import { DataTypeEnum, TokenInfo } from '../../../utils/types'
 import Declaration from '../../assignment/declaration'
 import FunctionBlock from '../../functions'
 import Scope from '../../../runtime/scope'
@@ -32,10 +32,10 @@ class ForLoop extends CycleControl {
   ) {
     scope.addFunction(
       name,
-      DataType.VOID,
+      { type: DataTypeEnum.VOID },
       new FunctionBlock(this.token, {
         id: name,
-        type: DataType.VOID,
+        type: { type: DataTypeEnum.VOID },
         content: [
           {
             token: this.token,

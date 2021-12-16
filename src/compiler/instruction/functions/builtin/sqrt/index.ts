@@ -1,4 +1,8 @@
-import DataType, { DataValue, TokenInfo } from '../../../../utils/types'
+import DataType, {
+  DataTypeEnum,
+  DataValue,
+  TokenInfo,
+} from '../../../../utils/types'
 import { getValueByType } from '../../../value/tools'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
@@ -20,7 +24,7 @@ class Sqrt extends FunctionCall {
 
   // OBTENER TIPO
   public getType(_scope: Scope): DataType {
-    return DataType.DOUBLE
+    return { type: DataTypeEnum.DOUBLE }
   }
 
   // OBTENER VALOR REAL
@@ -34,11 +38,6 @@ class Sqrt extends FunctionCall {
     return Math.sqrt(
       (this.props.params[0]?.getValue(scope)?.getValue(scope) as number) ?? 0,
     )
-  }
-
-  // OBTENERR TIPO GENERICO
-  public getGenType(scope: Scope): DataType {
-    return this.getType(scope)
   }
 
   // COMPILAR

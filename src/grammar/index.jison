@@ -1,15 +1,17 @@
 %{
     // TOOLS
+    const DataType = require('../compiler/utils/types').DataTypeEnum
     const symbols = require('../compiler/lexical/symbols').default
     const Operator = require('../compiler/utils/types').Operator
     const errors = require('../compiler/lexical/error').default
-    const DataType = require('../compiler/utils/types').default
     const getToken = require('../compiler/utils/tools').default
 
     // ASIGNACIONES
+    const VectorPositionAssignment = require('../compiler/instruction/assignment/vector/value').default
     const IncrementalAssignment = require('../compiler/instruction/assignment/incremental').default
     const ExpAssignment = require('../compiler/instruction/assignment/expression').default
     const Declaration = require('../compiler/instruction/assignment/declaration').default
+    const VectorAssignment = require('../compiler/instruction/assignment/vector').default
 
     // FUNCIONES
     const FunctionCall = require('../compiler/instruction/functions/call').default
@@ -44,6 +46,7 @@
     const Tan = require('../compiler/instruction/functions/builtin/tan').default
 
     // VALORES PRIMITIVOS
+    const VectorPositionValue = require('../compiler/instruction/value/vector/value').default
     const BooleanValue = require("../compiler/instruction/value/boolean").default
     const CharValue = require("../compiler/instruction/value/character").default
     const StringValue = require("../compiler/instruction/value/string").default
@@ -223,15 +226,17 @@ START : INSTRUCTIONS EOF {
 /* GLOBALES */
 TYPE :
     intType {
-        $$ = DataType.INTEGER;
+        $$ = { type: DataType.INTEGER }
     } | dblType  {
-        $$ = DataType.DOUBLE;
+        $$ = { type: DataType.DOUBLE }
     } | boolType {
-        $$ = DataType.BOOLEAN;
+        $$ = { type: DataType.BOOLEAN }
     } | charType {
-        $$ = DataType.CHARACTER;
+        $$ = { type: DataType.CHARACTER }
     } | strType  {
-        $$ = DataType.STRING;
+        $$ = { type: DataType.STRING }
+    } | TYPE openSquareBracket closeSquareBracket {
+        $$ = { type: DataType.ARRAY, gen: $1 }
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -308,6 +313,10 @@ ASSIGNMENT : id {
         $$ = new ExpAssignment(getToken(@1), { id: $1, exp: $3 });
     } | INCREMENTALASSIGNMENT {
         $$ = $1;
+    } | NEWVECTORASSIGNMENT {
+        $$ = $1;
+    } | VECTORVALUEASSIGNMENT {
+        $$ = $1;
     };
 
 INCREMENTALASSIGNMENT : id plusPlus {
@@ -316,6 +325,15 @@ INCREMENTALASSIGNMENT : id plusPlus {
     } | id minusMinus {
         $$ = new IncrementalAssignment(getToken(@1), { 
             id: $1, operator: Operator.MINUSMINUS })
+    };
+
+NEWVECTORASSIGNMENT : id equals openSquareBracket EXPLIST closeSquareBracket {
+        $$ = new VectorAssignment(getToken(@1), { id: $1, defValues: $4 });
+    };
+
+VECTORVALUEASSIGNMENT : id openSquareBracket EXPRESSIONS closeSquareBracket equals EXPRESSIONS {
+        $$ = new VectorPositionAssignment(getToken(@1), { 
+            index: $3, exp: $6, id: new IdValue(getToken(@1), $1) });
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -409,12 +427,25 @@ VARVALUE : decimal {
         $$ = new BooleanValue(getToken(@1), $1)
     } | nullType {
         $$ = null
-    } | FUNCTIONCALL {
+    } | VALUEMETHOD {
         $$ = $1;
+    } | VECTORVALUE {
+        $$ = $1;
+    };
+
+VALUEMETHOD : FUNCTIONCALL {
+        $$ = $1
     } | METHODCALL {
         $$ = $1;
     } | METHOD {
         $$ = $1;
+    };
+
+VECTORVALUE : id openSquareBracket EXPRESSIONS closeSquareBracket {
+        $$ = new VectorPositionValue(getToken(@1), { 
+            value: new IdValue(getToken(@1), $1), index: $3 });
+    } | VALUEMETHOD openSquareBracket EXPRESSIONS closeSquareBracket {
+        $$ = new VectorPositionValue(getToken(@1), { value: $1, index: $3 })
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -428,8 +459,6 @@ PARAMSLIST : PARAMSLIST comma PARAMVAR {
 
 PARAMVAR : TYPE id {
         $$ = { type: $1, id: $2 };
-    } | TYPE id openSquareBracket closeSquareBracket {
-        $$ = { type: DataType.ARRAY, id: $2, generic: $1 };
     };
 
 FUNCTIONPARAMS : openParenthesis PARAMSLIST closeParenthesis {
@@ -441,9 +470,6 @@ FUNCTIONPARAMS : openParenthesis PARAMSLIST closeParenthesis {
 FUNCTION : TYPE id FUNCTIONPARAMS BLOCKCONTENT {
         $$ = new FunctionBlock(getToken(@1), { 
             id: $2, type: $1, params: $3, content: $4 });
-    } | TYPE id openSquareBracket closeSquareBracket FUNCTIONPARAMS BLOCKCONTENT {
-        $$ = new FunctionBlock(getToken(@1), { 
-            id: $2, type: DataType.ARRAY, generic: $1 , params: $5, content: $6 });
     } | voidType id FUNCTIONPARAMS BLOCKCONTENT {
         $$ = new FunctionBlock(getToken(@1), { 
             id: $2, type: DataType.VOID, params: $3, content: $4 });

@@ -1,4 +1,8 @@
-import DataType, { DataValue, TokenInfo } from '../../../../utils/types'
+import DataType, {
+  DataTypeEnum,
+  DataValue,
+  TokenInfo,
+} from '../../../../utils/types'
 import { getValueByType } from '../../../value/tools'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
@@ -20,7 +24,11 @@ class ToInt extends FunctionCall {
 
   // OBTENER VALOR REAL
   public getScopedValue(scope: Scope): Value {
-    return getValueByType(this.token, DataType.INTEGER, this.getValue(scope))
+    return getValueByType(
+      this.token,
+      { type: DataTypeEnum.INTEGER },
+      this.getValue(scope),
+    )
   }
 
   // OBTENER VALOR
@@ -33,12 +41,7 @@ class ToInt extends FunctionCall {
 
   // OBTENER TIPO
   public getType(_scope: Scope): DataType {
-    return DataType.INTEGER
-  }
-
-  // OBTENER TIPO
-  public getGenType(scope: Scope): DataType {
-    return this.getType(scope)
+    return { type: DataTypeEnum.INTEGER }
   }
 
   // COMPILAR

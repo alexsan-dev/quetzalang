@@ -16,7 +16,7 @@ const compile = (instructions: Instruction[]) => {
   })
 
   // BUSCAR METODO MAIN
-  const mainMethod: FunctionBlock | undefined = instructions.find(
+  const mainMethod: FunctionBlock | undefined = instructions?.find(
     (instruction) =>
       instruction.name === 'Function' &&
       (instruction as FunctionBlock).getId() === 'main',

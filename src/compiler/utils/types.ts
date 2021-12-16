@@ -1,5 +1,5 @@
 // TIPOS DE DATOS
-enum DataType {
+export enum DataTypeEnum {
   ID = 'ID',
   VOID = 'VOID',
   NULL = 'NULL',
@@ -9,11 +9,16 @@ enum DataType {
   STRING = 'STRING',
   DOUBLE = 'DOUBLE',
   BOOLEAN = 'BOOLEAN',
-  CHARACTER = 'CHARACTER'
+  CHARACTER = 'CHARACTER',
+}
+
+interface DataType {
+  type: DataTypeEnum
+  gen?: DataType
 }
 
 // DATOS PRIMITIVOS
-export type DataValue = string | number | boolean | null
+export type DataValue = string | number | boolean | null | DataValue[]
 
 // OPERADORES
 export enum Operator {

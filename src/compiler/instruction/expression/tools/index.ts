@@ -1,5 +1,10 @@
 /* eslint-disable indent */
-import DataType, { DataValue, Operator, TokenInfo } from '../../../utils/types'
+import DataType, {
+  DataTypeEnum,
+  DataValue,
+  Operator,
+  TokenInfo,
+} from '../../../utils/types'
 import { getValueByType } from '../../value/tools'
 import { addError } from '../../../utils/tools'
 import BooleanValue from '../../value/boolean'
@@ -7,6 +12,7 @@ import CharValue from '../../value/character'
 import DoubleValue from '../../value/double'
 import StringValue from '../../value/string'
 import Scope from '../../../runtime/scope'
+import ArrayValue from '../../value/vector'
 import IntValue from '../../value/int'
 import Value from '../../value'
 
@@ -45,294 +51,294 @@ const operateValues = (
 
   // RESULTADOS
   let value: Value | undefined
-  let type: DataType | undefined
+  let type: DataTypeEnum | undefined
 
   // OPERAR
   switch (operator) {
     //  OPERADORES ARITMETICOS
     case Operator.PLUS:
-      switch (lType) {
-        case DataType.INTEGER:
-          switch (rType) {
-            case DataType.INTEGER:
+      switch (lType?.type) {
+        case DataTypeEnum.INTEGER:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (lValue as number) + (rValue as number),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) + (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.BOOLEAN:
+            case DataTypeEnum.BOOLEAN:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (lValue as number) + (rValue ? 1 : 0),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
-            case DataType.CHARACTER:
+            case DataTypeEnum.CHARACTER:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (lValue as number) + (rValue as string).charCodeAt(0),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
-            case DataType.STRING:
+            case DataTypeEnum.STRING:
               if (!onlyTypes)
                 value = new StringValue(
                   token,
                   (lValue as string) + (rValue as string),
                 )
-              type = DataType.STRING
+              type = DataTypeEnum.STRING
               break
             default:
               break
           }
           break
-        case DataType.DOUBLE:
-          switch (rType) {
-            case DataType.INTEGER:
+        case DataTypeEnum.DOUBLE:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) + (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) + (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.BOOLEAN:
+            case DataTypeEnum.BOOLEAN:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) + (rValue ? 1 : 0),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.CHARACTER:
+            case DataTypeEnum.CHARACTER:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) + (rValue as string).charCodeAt(0),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.STRING:
+            case DataTypeEnum.STRING:
               if (!onlyTypes)
                 value = new StringValue(
                   token,
                   (lValue as string) + (rValue as string),
                 )
-              type = DataType.STRING
+              type = DataTypeEnum.STRING
               break
             default:
               break
           }
           break
-        case DataType.BOOLEAN:
-          switch (rType) {
-            case DataType.INTEGER:
+        case DataTypeEnum.BOOLEAN:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (rValue ? 1 : 0) + (rValue as number),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (rValue ? 1 : 0) + (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.STRING:
+            case DataTypeEnum.STRING:
               if (!onlyTypes)
                 value = new StringValue(
                   token,
                   lValue ? 'true' : 'false' + (rValue as string),
                 )
-              type = DataType.STRING
+              type = DataTypeEnum.STRING
               break
             default:
               break
           }
           break
-        case DataType.CHARACTER:
-          switch (rType) {
-            case DataType.INTEGER:
+        case DataTypeEnum.CHARACTER:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (lValue as string).charCodeAt(0) + (rValue as number),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as string).charCodeAt(0) + (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.STRING:
+            case DataTypeEnum.STRING:
               if (!onlyTypes)
                 value = new StringValue(
                   token,
                   (lValue as string) + (rValue as string),
                 )
-              type = DataType.STRING
+              type = DataTypeEnum.STRING
               break
             default:
               break
           }
           break
-        case DataType.STRING:
+        case DataTypeEnum.STRING:
           if (!onlyTypes)
             value = new StringValue(
               token,
               (lValue as string) + (rValue as string),
             )
-          type = DataType.STRING
+          type = DataTypeEnum.STRING
           break
         default:
           break
       }
       break
     case Operator.MINUS:
-      switch (lType) {
-        case DataType.INTEGER:
-          switch (rType) {
-            case DataType.INTEGER:
+      switch (lType?.type) {
+        case DataTypeEnum.INTEGER:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (lValue as number) - (rValue as number),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) - (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.BOOLEAN:
+            case DataTypeEnum.BOOLEAN:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (lValue as number) - (rValue ? 1 : 0),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
-            case DataType.CHARACTER:
+            case DataTypeEnum.CHARACTER:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (lValue as number) - (rValue as string).charCodeAt(0),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
             default:
               break
           }
           break
-        case DataType.DOUBLE:
-          switch (rType) {
-            case DataType.INTEGER:
+        case DataTypeEnum.DOUBLE:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) - (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) - (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.BOOLEAN:
+            case DataTypeEnum.BOOLEAN:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) - (rValue ? 1 : 0),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.CHARACTER:
+            case DataTypeEnum.CHARACTER:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) - (rValue as string).charCodeAt(0),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
             default:
               break
           }
           break
-        case DataType.BOOLEAN:
-          switch (rType) {
-            case DataType.INTEGER:
+        case DataTypeEnum.BOOLEAN:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (rValue ? 1 : 0) - (rValue as number),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (rValue ? 1 : 0) - (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
             default:
               break
           }
           break
-        case DataType.CHARACTER:
-          switch (rType) {
-            case DataType.INTEGER:
+        case DataTypeEnum.CHARACTER:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (lValue as string).charCodeAt(0) - (rValue as number),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as string).charCodeAt(0) - (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
             default:
               break
@@ -343,84 +349,84 @@ const operateValues = (
       }
       break
     case Operator.TIMES:
-      switch (lType) {
-        case DataType.INTEGER:
-          switch (rType) {
-            case DataType.INTEGER:
+      switch (lType?.type) {
+        case DataTypeEnum.INTEGER:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (lValue as number) * (rValue as number),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) * (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.CHARACTER:
+            case DataTypeEnum.CHARACTER:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (lValue as number) * (rValue as string).charCodeAt(0),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
             default:
               break
           }
           break
-        case DataType.DOUBLE:
-          switch (rType) {
-            case DataType.INTEGER:
+        case DataTypeEnum.DOUBLE:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) * (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) * (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.CHARACTER:
+            case DataTypeEnum.CHARACTER:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) * (rValue as string).charCodeAt(0),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
             default:
               break
           }
           break
-        case DataType.CHARACTER:
-          switch (rType) {
-            case DataType.INTEGER:
+        case DataTypeEnum.CHARACTER:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   (lValue as string).charCodeAt(0) * (rValue as number),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as string).charCodeAt(0) * (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
             default:
               break
@@ -432,84 +438,84 @@ const operateValues = (
       break
     case Operator.DIVISION:
       if ((rValue as number) !== 0)
-        switch (lType) {
-          case DataType.INTEGER:
-            switch (rType) {
-              case DataType.INTEGER:
+        switch (lType?.type) {
+          case DataTypeEnum.INTEGER:
+            switch (rType?.type) {
+              case DataTypeEnum.INTEGER:
                 if (!onlyTypes)
                   value = new DoubleValue(
                     token,
                     (lValue as number) / (rValue as number),
                   )
-                type = DataType.DOUBLE
+                type = DataTypeEnum.DOUBLE
                 break
-              case DataType.DOUBLE:
+              case DataTypeEnum.DOUBLE:
                 if (!onlyTypes)
                   value = new DoubleValue(
                     token,
                     (lValue as number) / (rValue as number),
                   )
-                type = DataType.DOUBLE
+                type = DataTypeEnum.DOUBLE
                 break
-              case DataType.CHARACTER:
+              case DataTypeEnum.CHARACTER:
                 if (!onlyTypes)
                   value = new DoubleValue(
                     token,
                     (lValue as number) / (rValue as string).charCodeAt(0),
                   )
-                type = DataType.DOUBLE
+                type = DataTypeEnum.DOUBLE
                 break
               default:
                 break
             }
             break
-          case DataType.DOUBLE:
-            switch (rType) {
-              case DataType.INTEGER:
+          case DataTypeEnum.DOUBLE:
+            switch (rType?.type) {
+              case DataTypeEnum.INTEGER:
                 if (!onlyTypes)
                   value = new DoubleValue(
                     token,
                     (lValue as number) / (rValue as number),
                   )
-                type = DataType.DOUBLE
+                type = DataTypeEnum.DOUBLE
                 break
-              case DataType.DOUBLE:
+              case DataTypeEnum.DOUBLE:
                 if (!onlyTypes)
                   value = new DoubleValue(
                     token,
                     (lValue as number) / (rValue as number),
                   )
-                type = DataType.DOUBLE
+                type = DataTypeEnum.DOUBLE
                 break
-              case DataType.CHARACTER:
+              case DataTypeEnum.CHARACTER:
                 if (!onlyTypes)
                   value = new DoubleValue(
                     token,
                     (lValue as number) / (rValue as string).charCodeAt(0),
                   )
-                type = DataType.DOUBLE
+                type = DataTypeEnum.DOUBLE
                 break
               default:
                 break
             }
             break
-          case DataType.CHARACTER:
-            switch (rType) {
-              case DataType.INTEGER:
+          case DataTypeEnum.CHARACTER:
+            switch (rType?.type) {
+              case DataTypeEnum.INTEGER:
                 if (!onlyTypes)
                   value = new IntValue(
                     token,
                     (lValue as string).charCodeAt(0) / (rValue as number),
                   )
-                type = DataType.INTEGER
+                type = DataTypeEnum.INTEGER
                 break
-              case DataType.DOUBLE:
+              case DataTypeEnum.DOUBLE:
                 if (!onlyTypes)
                   value = new DoubleValue(
                     token,
                     (lValue as string).charCodeAt(0) / (rValue as number),
                   )
-                type = DataType.DOUBLE
+                type = DataTypeEnum.DOUBLE
                 break
               default:
                 break
@@ -520,60 +526,60 @@ const operateValues = (
         }
       break
     case Operator.POWER:
-      switch (lType) {
-        case DataType.INTEGER:
-          switch (rType) {
-            case DataType.INTEGER:
+      switch (lType?.type) {
+        case DataTypeEnum.INTEGER:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new IntValue(
                   token,
                   Math.pow(lValue as number, rValue as number),
                 )
-              type = DataType.INTEGER
+              type = DataTypeEnum.INTEGER
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   Math.pow(lValue as number, rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
             default:
               break
           }
           break
-        case DataType.DOUBLE:
-          switch (rType) {
-            case DataType.INTEGER:
+        case DataTypeEnum.DOUBLE:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   Math.pow(lValue as number, rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   Math.pow(lValue as number, rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
             default:
               break
           }
           break
-        case DataType.STRING:
-          switch (rType) {
-            case DataType.INTEGER:
+        case DataTypeEnum.STRING:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new StringValue(
                   token,
                   (lValue as string).repeat(rValue as number),
                 )
-              type = DataType.STRING
+              type = DataTypeEnum.STRING
               break
             default:
               break
@@ -583,46 +589,46 @@ const operateValues = (
       }
       break
     case Operator.MODULE:
-      switch (lType) {
-        case DataType.INTEGER:
-          switch (rType) {
-            case DataType.INTEGER:
+      switch (lType?.type) {
+        case DataTypeEnum.INTEGER:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) % (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) % (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
             default:
               break
           }
           break
-        case DataType.DOUBLE:
-          switch (rType) {
-            case DataType.INTEGER:
+        case DataTypeEnum.DOUBLE:
+          switch (rType?.type) {
+            case DataTypeEnum.INTEGER:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) % (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
-            case DataType.DOUBLE:
+            case DataTypeEnum.DOUBLE:
               if (!onlyTypes)
                 value = new DoubleValue(
                   token,
                   (lValue as number) % (rValue as number),
                 )
-              type = DataType.DOUBLE
+              type = DataTypeEnum.DOUBLE
               break
             default:
               break
@@ -635,39 +641,39 @@ const operateValues = (
 
     // OPERACIONES GENEERALES
     case Operator.NEGATION:
-      switch (lType) {
-        case DataType.INTEGER:
+      switch (lType?.type) {
+        case DataTypeEnum.INTEGER:
           if (!onlyTypes) value = new IntValue(token, (lValue as number) * -1)
-          type = DataType.INTEGER
+          type = DataTypeEnum.INTEGER
           break
-        case DataType.DOUBLE:
+        case DataTypeEnum.DOUBLE:
           if (!onlyTypes)
             value = new DoubleValue(token, (lValue as number) * -1)
-          type = DataType.DOUBLE
+          type = DataTypeEnum.DOUBLE
           break
         default:
           break
       }
       break
     case Operator.NOT:
-      switch (lType) {
-        case DataType.BOOLEAN:
+      switch (lType?.type) {
+        case DataTypeEnum.BOOLEAN:
           if (!onlyTypes) value = new BooleanValue(token, !(lValue as boolean))
-          type = DataType.BOOLEAN
+          type = DataTypeEnum.BOOLEAN
           break
         default:
           break
       }
       break
     case Operator.CONCAT:
-      switch (lType) {
-        case DataType.STRING:
+      switch (lType?.type) {
+        case DataTypeEnum.STRING:
           if (!onlyTypes)
             value = new StringValue(
               token,
               (lValue as string) + (rValue as string),
             )
-          type = DataType.STRING
+          type = DataTypeEnum.STRING
           break
           break
         default:
@@ -682,7 +688,7 @@ const operateValues = (
           token,
           (lValue as boolean) || (rValue as boolean),
         )
-      type = DataType.BOOLEAN
+      type = DataTypeEnum.BOOLEAN
       break
     case Operator.AND:
       if (!onlyTypes)
@@ -690,24 +696,24 @@ const operateValues = (
           token,
           (lValue as boolean) && (rValue as boolean),
         )
-      type = DataType.BOOLEAN
+      type = DataTypeEnum.BOOLEAN
       break
     case Operator.TERNARY:
       if (conditionValue && conditionValue !== undefined) {
         if (!onlyTypes) value = getValueByType(token, lType, lValue)
-        type = lType
+        type = lType?.type
       } else {
         if (!onlyTypes) value = getValueByType(token, rType, rValue)
-        type = rType
+        type = rType?.type
       }
       break
     case Operator.EQUALSEQUALS:
       if (!onlyTypes) value = new BooleanValue(token, lValue === rValue)
-      type = DataType.BOOLEAN
+      type = DataTypeEnum.BOOLEAN
       break
     case Operator.NONEQUALS:
       if (!onlyTypes) value = new BooleanValue(token, lValue !== rValue)
-      type = DataType.BOOLEAN
+      type = DataTypeEnum.BOOLEAN
       break
     case Operator.MOREOREQUALS:
       if (!onlyTypes)
@@ -715,7 +721,7 @@ const operateValues = (
           token,
           (lValue as number) >= (rValue as number),
         )
-      type = DataType.BOOLEAN
+      type = DataTypeEnum.BOOLEAN
       break
     case Operator.LESSOREQUALS:
       if (!onlyTypes)
@@ -723,17 +729,17 @@ const operateValues = (
           token,
           (lValue as number) <= (rValue as number),
         )
-      type = DataType.BOOLEAN
+      type = DataTypeEnum.BOOLEAN
       break
     case Operator.MAJOR:
       if (!onlyTypes)
         value = new BooleanValue(token, (lValue as number) > (rValue as number))
-      type = DataType.BOOLEAN
+      type = DataTypeEnum.BOOLEAN
       break
     case Operator.MINOR:
       if (!onlyTypes)
         value = new BooleanValue(token, (lValue as number) < (rValue as number))
-      type = DataType.BOOLEAN
+      type = DataTypeEnum.BOOLEAN
       break
     default:
       break
@@ -741,7 +747,7 @@ const operateValues = (
 
   // RETORNO
   if (type !== undefined) {
-    if (onlyTypes) return type
+    if (onlyTypes) return { type }
     else {
       if (value !== undefined) return value
       else {
@@ -757,7 +763,7 @@ const operateValues = (
       token,
       `No es posible operar la expresion ${lType} ${operator} ${rType}.`,
     )
-    if (onlyTypes) return DataType.NULL
+    if (onlyTypes) return { type: DataTypeEnum.NULL }
     else return null
   }
 }
@@ -769,19 +775,21 @@ const operateValues = (
  * @returns
  */
 export const defaultValues = (token: TokenInfo, type: DataType): Value => {
-  switch (type) {
-    case DataType.INTEGER:
+  switch (type.type) {
+    case DataTypeEnum.INTEGER:
       return new IntValue(token, 0)
-    case DataType.DOUBLE:
+    case DataTypeEnum.DOUBLE:
       return new DoubleValue(token, 0.0)
-    case DataType.STRING:
+    case DataTypeEnum.STRING:
       return new StringValue(token, '')
-    case DataType.BOOLEAN:
+    case DataTypeEnum.BOOLEAN:
       return new BooleanValue(token, true)
-    case DataType.CHARACTER:
+    case DataTypeEnum.CHARACTER:
       return new CharValue(token, '0')
-    case DataType.NULL:
+    case DataTypeEnum.NULL:
       return null
+    case DataTypeEnum.ARRAY:
+      return new ArrayValue(token, { value: [], type: type.gen })
     default:
       return new StringValue(token, '')
   }

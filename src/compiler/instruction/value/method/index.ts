@@ -31,11 +31,6 @@ class ValueMethod extends Value {
     return getBuiltInMethodType(scope, this.props.methodName, this.props.value)
   }
 
-  // OBTENER TIPO GENERICO
-  public getGenType(scope: Scope): DataType {
-    return this.getType(scope)
-  }
-
   // OBTENER VALOR
   public getValue(scope: Scope): DataValue {
     const primitiveValues = this.props.params.map((val) =>
@@ -49,7 +44,7 @@ class ValueMethod extends Value {
     )
   }
 
-  public execute(_scope: Scope, _type?: string): void {}
+  public execute(_scope: Scope, _type?: DataType): void {}
 }
 
 export default ValueMethod

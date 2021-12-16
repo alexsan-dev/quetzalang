@@ -1,5 +1,5 @@
 // TOOLS
-import DataType, { TokenInfo } from '../../utils/types'
+import DataType, { DataTypeEnum, TokenInfo } from '../../utils/types'
 import Scope from '../../runtime/scope'
 
 // VALORES
@@ -23,8 +23,8 @@ class FunctionBlock extends Instruction {
     },
   ) {
     super(token, 'Function')
-    this.scope = {} as Scope
     this.functionValue = undefined
+    this.scope = undefined
     this.isOnBreak = false
   }
 
@@ -36,15 +36,15 @@ class FunctionBlock extends Instruction {
   // ASIGNAR ENTORNO
   public setScope(scope: Scope): void {
     this.scope = new Scope('Function', this.props.id, scope)
-    this.isOnBreak = false
     this.functionValue = undefined
+    this.isOnBreak = false
 
     this.scope.addFunction(
       'Return',
-      DataType.VOID,
+      { type: DataTypeEnum.VOID },
       new FunctionBlock(this.token, {
         id: 'Return',
-        type: DataType.VOID,
+        type: { type: DataTypeEnum.VOID },
         content: [
           {
             token: this.token,
@@ -67,22 +67,26 @@ class FunctionBlock extends Instruction {
 
   // COMPILAR FUNCION
   public getValue(scope: Scope): Value | undefined {
+    // ASIGNAR SCOPE
+    if (!this.scope) this.setScope(scope)
+
     // COMPILAR CONTENIDO
     for (
       let instructionIndex = 0, length = this.props.content.length;
       instructionIndex < length;
       instructionIndex++
     ) {
-      if (scope) {
-        if (!this.isOnBreak) this.props.content[instructionIndex].execute(scope)
+      if (this.scope) {
+        if (!this.isOnBreak)
+          this.props.content[instructionIndex].execute(this.scope)
         else break
       }
     }
 
     // OBTENER VALOR DE RETORNO
-    if (this.props.type !== DataType.VOID) {
-      if (scope && 'getVar' in scope)
-        this.functionValue = scope.getVar('return')
+    if (this.props.type.type !== DataTypeEnum.VOID) {
+      if (this.scope && 'getVar' in this.scope)
+        this.functionValue = this.scope.getVar('return')
     } else this.functionValue = undefined
 
     // VALOR

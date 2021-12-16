@@ -4,15 +4,12 @@ import Instruction from '../abstract'
 
 abstract class Value extends Instruction {
   // CONSTRUCTOR
-  constructor(public token: TokenInfo, public value: DataValue) {
+  constructor(public token: TokenInfo, public value: DataValue | DataValue[]) {
     super(token, 'Value')
   }
 
   // OBTENER TIPO DE RESULTADO
   public abstract getType(scope: Scope): DataType
-
-  // OBTENER TIPO GENERICO DE RESULTADO
-  public abstract getGenType(scope: Scope): DataType
 
   // OBTENER VALOR CAST
   public abstract getValue(scope: Scope): DataValue | undefined

@@ -1,5 +1,5 @@
 // TIPOS
-import DataType, { TokenInfo } from '../../utils/types'
+import DataType, { DataTypeEnum, TokenInfo } from '../../utils/types'
 import { addError } from '../../utils/tools'
 import Scope from '../../runtime/scope'
 import Instruction from '../abstract'
@@ -24,17 +24,19 @@ class Assignment extends Instruction {
       const valueType = value.getType(scope)
 
       const typeException =
-        (expectedType === DataType.DOUBLE && valueType === DataType.INTEGER) ||
-        (expectedType === DataType.INTEGER && valueType === DataType.DOUBLE)
+        (expectedType.type === DataTypeEnum.DOUBLE &&
+          valueType.type === DataTypeEnum.INTEGER) ||
+        (expectedType.type === DataTypeEnum.INTEGER &&
+          valueType.type === DataTypeEnum.DOUBLE)
 
-      if (expectedType === valueType || typeException) {
+      if (expectedType.type === valueType.type || typeException) {
         if (isNew) scope.addVar(this.id, expectedType, value)
         else scope.setVar(this.id, value)
       } else {
         if (expectedType)
           addError(
             this.token,
-            `No se puede asignar el tipo ${valueType} a ${expectedType}.`,
+            `No se puede asignar el tipo ${valueType.type} a ${expectedType.type}.`,
           )
         else
           addError(

@@ -1,4 +1,8 @@
-import DataType, { DataValue, TokenInfo } from '../../../utils/types'
+import DataType, {
+  DataTypeEnum,
+  DataValue,
+  TokenInfo,
+} from '../../../utils/types'
 import Value from '..'
 
 class DoubleValue extends Value {
@@ -12,11 +16,7 @@ class DoubleValue extends Value {
 
   // OBTENER TIPO DE RESULTADO
   public getType(): DataType {
-    return DataType.DOUBLE
-  }
-
-  public getGenType(): DataType {
-    return this.getType()
+    return { type: DataTypeEnum.DOUBLE }
   }
 
   // OBTENER VALOR CAST

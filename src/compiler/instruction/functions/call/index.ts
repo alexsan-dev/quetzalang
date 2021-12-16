@@ -1,4 +1,5 @@
 import DataType, { DataValue, TokenInfo } from '../../../utils/types'
+import { getValueByType } from '../../value/tools'
 import { addError } from '../../../utils/tools'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
@@ -7,9 +8,6 @@ import Value from '../../value'
 import FunctionBlock from '..'
 
 class FunctionCall extends Instruction {
-  // GLOBALES
-  private functionValue: Value
-
   // CONSTRUCTOR
   constructor(
     token: TokenInfo,
@@ -25,20 +23,16 @@ class FunctionCall extends Instruction {
 
   // OBTENERR VALOR REAL
   public getScopedValue(scope: Scope): Value {
-    this.execute(scope)
-    return this.functionValue
+    return getValueByType(
+      this.token,
+      this.getType(scope),
+      this.getExecuteValue(scope),
+    )
   }
 
   // OBTENER VALOR
   public getValue(scope: Scope): DataValue | undefined {
-    this.execute(scope)
-    return this.functionValue?.getValue(scope)
-  }
-
-  // OBTENER TIPO GENERICO
-  public getGenType(scope: Scope): DataType {
-    this.execute(scope)
-    return this.functionValue?.getGenType(scope)
+    return this.getExecuteValue(scope)
   }
 
   // OBTENER TIPO
@@ -57,6 +51,11 @@ class FunctionCall extends Instruction {
 
   // COMPILAR
   public execute(scope: Scope): void {
+    this.getExecuteValue(scope)
+  }
+
+  // COMPILAR Y OBTENER VALOR
+  public getExecuteValue(scope: Scope): DataValue | undefined {
     // BUSCAR FUNCION
     const functionBlock: FunctionBlock | undefined = scope.getFunction(
       this.props.id,
@@ -99,7 +98,7 @@ class FunctionCall extends Instruction {
             }
           })
 
-          this.functionValue = functionBlock.getValue(functionScope)
+          return functionBlock.getValue(functionScope).getValue(functionScope)
         } else
           addError(
             this.token,
