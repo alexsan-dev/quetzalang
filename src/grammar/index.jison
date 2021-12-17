@@ -46,6 +46,7 @@
 
     // VALORES PRIMITIVOS
     const VectorPositionValue = require('../compiler/instruction/value/vector/value').default
+    const VectorRangeValue = require('../compiler/instruction/value/vector/range').default
     const BooleanValue = require("../compiler/instruction/value/boolean").default
     const CharValue = require("../compiler/instruction/value/character").default
     const VectorValue = require('../compiler/instruction/value/vector').default
@@ -134,6 +135,7 @@
 'log10'                     return addToken(yylloc, 'log10Rw')
 'print'                     return addToken(yylloc, 'printRw')
 'toInt'                     return addToken(yylloc, 'toIntRw')
+'begin'                     return addToken(yylloc, 'beginRw')
 'sqrt'                      return addToken(yylloc, 'sqrtRw')
 'eval'                      return addToken(yylloc, 'evalRw')
 'push'                      return addToken(yylloc, 'pushRw')
@@ -141,6 +143,7 @@
 'pow'                       return addToken(yylloc, 'powRw')
 'sin'                       return addToken(yylloc, 'sinRw')
 'tan'                       return addToken(yylloc, 'tanRw')
+'end'                       return addToken(yylloc, 'endRw')
 
 'else'                      return addToken(yylloc, 'elseRw')
 'if'                        return addToken(yylloc, 'ifRw')
@@ -204,6 +207,7 @@ NULLCHAR "\\0"
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* PRESEDENCIA */
+%left 'id' 'openSquareBracket' 'closeSquareBracket'
 %left 'questionMark'
 %left 'and' 'or'
 %left 'minor' 'lessOrEquals' 'major' 'moreOrEquals' 'equalsEquals' 'nonEquals'
@@ -425,6 +429,8 @@ VARVALUE : decimal {
         $$ = new BooleanValue(getToken(@1), $1)
     } | openSquareBracket EXPLIST closeSquareBracket {
         $$ = new VectorValue(getToken(@1), $2)
+    } | ARRAYRANGE {
+        $$ = $1
     } | VALUEMETHOD {
         $$ = $1
     } | VECTORVALUE {
@@ -488,6 +494,20 @@ METHODCALL : VARVALUE dot id openParenthesis EXPLIST closeParenthesis {
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* METODOS DE ARRAY */
+ARRAYRANGE : VARVALUE openSquareBracket 
+    ARRAYRANGEPOSITION colom ARRAYRANGEPOSITION closeSquareBracket {
+        $$ = new VectorRangeValue(getToken(@1), { 
+            value: $1, start: $3, end: $5 })
+    };
+
+ARRAYRANGEPOSITION : beginRw {
+        $$ = $1
+    } | endRw {
+        $$ = $1
+    } | EXPRESSIONS {
+        $$ = $1
+    };
+
 ARRAYVOIDMETHOD : id dot ARRAYVOIDMETHODNAME openParenthesis EXPLIST closeParenthesis {
         $$ = new ValueMethod(getToken(@1), { 
             value: new IdValue(getToken(@1), $1), methodName: $3, params: $5 })
