@@ -46,9 +46,9 @@
 
     // VALORES PRIMITIVOS
     const VectorPositionValue = require('../compiler/instruction/value/vector/value').default
-    const VectorValue = require('../compiler/instruction/value/vector').default
     const BooleanValue = require("../compiler/instruction/value/boolean").default
     const CharValue = require("../compiler/instruction/value/character").default
+    const VectorValue = require('../compiler/instruction/value/vector').default
     const StringValue = require("../compiler/instruction/value/string").default
     const DoubleValue = require("../compiler/instruction/value/double").default
     const ValueMethod = require('../compiler/instruction/value/method').default
@@ -76,12 +76,12 @@
 "char"                      return addToken(yylloc, 'charType')
 "boolean"                   return addToken(yylloc, 'boolType')
 "null"                      return addToken(yylloc, 'nullType')
+"void"                      return addToken(yylloc, 'voidType')
 "String"                    return addToken(yylloc, 'strType')
 "double"                    return addToken(yylloc, 'dblType')
 "int"                       return addToken(yylloc, 'intType')
 "true"                      return addToken(yylloc, 'trBool')
 "false"                     return addToken(yylloc, 'flBool')
-"void"                      return addToken(yylloc, 'voidType')
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* OPERADORES */
@@ -127,19 +127,20 @@
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* PALABRAS RESERVADAS */
-'print'                     return addToken(yylloc, 'printRw')
+'toDouble'                  return addToken(yylloc, 'toDoubleRw')
 'printLn'                   return addToken(yylloc, 'printLnRw')
-'eval'                      return addToken(yylloc, 'evalRw')
-'cos'                       return addToken(yylloc, 'cosRw')
+'typeof'                    return addToken(yylloc, 'typeOfRw')
+'parse'                     return addToken(yylloc, 'parseRw')
 'log10'                     return addToken(yylloc, 'log10Rw')
+'print'                     return addToken(yylloc, 'printRw')
+'toInt'                     return addToken(yylloc, 'toIntRw')
+'sqrt'                      return addToken(yylloc, 'sqrtRw')
+'eval'                      return addToken(yylloc, 'evalRw')
+'push'                      return addToken(yylloc, 'pushRw')
+'cos'                       return addToken(yylloc, 'cosRw')
 'pow'                       return addToken(yylloc, 'powRw')
 'sin'                       return addToken(yylloc, 'sinRw')
-'sqrt'                      return addToken(yylloc, 'sqrtRw')
 'tan'                       return addToken(yylloc, 'tanRw')
-'parse'                     return addToken(yylloc, 'parseRw')
-'toDouble'                  return addToken(yylloc, 'toDoubleRw')
-'toInt'                     return addToken(yylloc, 'toIntRw')
-'typeof'                    return addToken(yylloc, 'typeOfRw')
 
 'else'                      return addToken(yylloc, 'elseRw')
 'if'                        return addToken(yylloc, 'ifRw')
@@ -211,7 +212,7 @@ NULLCHAR "\\0"
 %right 'not'
 %right UMIN
 %right UNOT
-%nonassoc 'comma' 'openParenthesis' 'closeParenthesis' 'dot' 'semicolom'
+%nonassoc 'dot' 'comma' 'openParenthesis' 'closeParenthesis' 'semicolom'
 
 %start START
 
@@ -219,13 +220,12 @@ NULLCHAR "\\0"
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* INICIO */
 START : INSTRUCTIONS EOF {
-        return $1;
+        return $1
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* GLOBALES */
-TYPE :
-    intType {
+TYPE : intType {
         $$ = { type: DataType.INTEGER }
     } | dblType  {
         $$ = { type: DataType.DOUBLE }
@@ -242,79 +242,83 @@ TYPE :
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* INSTRUCCIONES */
 BLOCKCONTENT : openBracket INSTRUCTIONS closeBracket {
-        $$ = $2;
+        $$ = $2
     };
 
 INLINEBLOCKCONTENT : BLOCKCONTENT {
-        $$ = $1;
+        $$ = $1
     } | INLINEINSTRUCTION {
-        $$ = [$1];
+        $$ = [$1]
     };
 
 INSTRUCTIONS : INSTRUCTIONS INSTRUCTION {
-        $$ = $1;
-        $$.push($2);
+        $$ = $1
+        $$.push($2)
     } | INSTRUCTION {
-        $$ = [$1];
+        $$ = [$1]
     };
 
-INSTRUCTION : DECLARATION semicolom {
+INSTRUCTION : FUNCTIONCALL semicolom {
+        $$ = $1
+    } | METHOD semicolom {
+        $$ = $1
+    } | ARRAYVOIDMETHOD semicolom {
+        $$ = $1;
+    } | DECLARATION semicolom {
+        $$ = $1
+    } | ASSIGNMENT semicolom {
+        $$ = $1
+    } | CONTROLSEQ {
+        $$ = $1
+    } | SWITCHSEQ {
+        $$ = $1
+    } | LOOPESCAPE {
+        $$ = $1
+    } | FUNCTION {
+        $$ = $1
+    } | LOOPSEQ {
+        $$ = $1    
+    };
+
+INLINEINSTRUCTION : FUNCTIONCALL semicolom {
+        $$ = $1
+    } | METHOD semicolom {
+        $$ = $1
+    } | ARRAYVOIDMETHOD semicolom {
         $$ = $1;
     } | ASSIGNMENT semicolom {
-        $$ = $1;
-    } | METHOD semicolom {
-        $$ = $1;
-    } | FUNCTIONCALL semicolom {
-        $$ = $1;
-    } | CONTROLSEQ {
-        $$ = $1;
+        $$ = $1
     } | SWITCHSEQ {
-        $$ = $1;
+        $$ = $1
     } | LOOPESCAPE {
-        $$ = $1;
-    } | FUNCTION {
-        $$ = $1;
+        $$ = $1
     } | LOOPSEQ {
-        $$ = $1;    
-    };
-
-INLINEINSTRUCTION : ASSIGNMENT semicolom {
-        $$ = $1;
-    } | METHOD semicolom {
-        $$ = $1;
-    } | FUNCTIONCALL semicolom {
-        $$ = $1;
-    } | SWITCHSEQ {
-        $$ = $1;
-    } | LOOPESCAPE {
-        $$ = $1;
-    } | LOOPSEQ {
-        $$ = $1;    
+        $$ = $1 
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* DECLARACION DE VARIABLES */
 DECLARATION : TYPE ASSIGNMENTS {
-        $$ = new Declaration(getToken(@1), { type: $1, assignments: $2 });
+        $$ = new Declaration(getToken(@1), { type: $1, assignments: $2 })
     };
 
 ASSIGNMENTS : ASSIGNMENTS comma ASSIGNMENT {
-        $$ = $1;
-        $$.push($3);
+        $$ = $1
+        $$.push($3)
     } | ASSIGNMENT {
-        $$ = [$1];
+        $$ = [$1]
     };
 
 ASSIGNMENT : id {
-        $$ = new ExpAssignment(getToken(@1), { id: $1 });
+        $$ = new ExpAssignment(getToken(@1), { id: $1 })
     } | id equals EXPRESSIONS {
-        $$ = new ExpAssignment(getToken(@1), { id: $1, exp: $3 });  
+        $$ = new ExpAssignment(getToken(@1), { id: $1, exp: $3 })  
     } | id equals TERNARY {
-        $$ = new ExpAssignment(getToken(@1), { id: $1, exp: $3 });
+        $$ = new ExpAssignment(getToken(@1), { id: $1, exp: $3 })
     } | INCREMENTALASSIGNMENT {
-        $$ = $1;
+        $$ = $1
     } | VECTORVALUEASSIGNMENT {
-        $$ = $1;
+        $$ = $1
     };
 
 INCREMENTALASSIGNMENT : id plusPlus {
@@ -327,68 +331,68 @@ INCREMENTALASSIGNMENT : id plusPlus {
 
 VECTORVALUEASSIGNMENT : id openSquareBracket EXPRESSIONS closeSquareBracket equals EXPRESSIONS {
         $$ = new VectorPositionAssignment(getToken(@1), { 
-            index: $3, exp: $6, id: new IdValue(getToken(@1), $1) });
+            index: $3, exp: $6, id: new IdValue(getToken(@1), $1) })
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* TODAS LAS EXPRESIONES VALIDAS */
 EXPRESSIONS : EXPRESSIONS plus EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.PLUS });
+            left: $1, right: $3, operator: Operator.PLUS })
     } | EXPRESSIONS equalsEquals EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.EQUALSEQUALS });
+            left: $1, right: $3, operator: Operator.EQUALSEQUALS })
     } | EXPRESSIONS moreOrEquals EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.MOREOREQUALS });
+            left: $1, right: $3, operator: Operator.MOREOREQUALS })
     } | EXPRESSIONS lessOrEquals EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.LESSOREQUALS });
+            left: $1, right: $3, operator: Operator.LESSOREQUALS })
     } | EXPRESSIONS nonEquals EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.NONEQUALS });
+            left: $1, right: $3, operator: Operator.NONEQUALS })
     } | EXPRESSIONS division EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.DIVISION });
+            left: $1, right: $3, operator: Operator.DIVISION })
     } | EXPRESSIONS module EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.MODULE });
+            left: $1, right: $3, operator: Operator.MODULE })
     } | EXPRESSIONS power EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.POWER });
+            left: $1, right: $3, operator: Operator.POWER })
     } | EXPRESSIONS concat EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.CONCAT });
+            left: $1, right: $3, operator: Operator.CONCAT })
     } | EXPRESSIONS times EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.TIMES });
+            left: $1, right: $3, operator: Operator.TIMES })
     } | EXPRESSIONS minus EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.MINUS });
+            left: $1, right: $3, operator: Operator.MINUS })
     } | EXPRESSIONS minor EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.MINOR });
+            left: $1, right: $3, operator: Operator.MINOR })
     } | EXPRESSIONS major EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.MAJOR });
+            left: $1, right: $3, operator: Operator.MAJOR })
     } | EXPRESSIONS and EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator: Operator.AND });
+            left: $1, right: $3, operator: Operator.AND })
     } | EXPRESSIONS or EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
-            left: $1, right: $3, operator:Operator.OR });
+            left: $1, right: $3, operator:Operator.OR })
     } | not EXPRESSIONS %prec UNOT {
         $$ = new Expression(getToken(@1), {
-            left: $2, operator: Operator.NOT });
+            left: $2, operator: Operator.NOT })
     } | minus EXPRESSIONS %prec UMIN {
         $$ = new Expression(getToken(@1), {
-            left: $2, operator: Operator.NEGATION });
+            left: $2, operator: Operator.NEGATION })
     } | openParenthesis EXPRESSIONS closeParenthesis {
-        $$ = new Expression(getToken(@1), { left: $2 });
+        $$ = new Expression(getToken(@1), { left: $2 })
     } | VARVALUE {
-        $$ = new Expression(getToken(@1), { value: $1 });
+        $$ = new Expression(getToken(@1), { value: $1 })
     } | openParenthesis TERNARY closeParenthesis {
-        $$ = $2;
+        $$ = $2
     };
 
 TERNARY : EXPRESSIONS questionMark EXPRESSIONS colom EXPRESSIONS {
@@ -397,10 +401,10 @@ TERNARY : EXPRESSIONS questionMark EXPRESSIONS colom EXPRESSIONS {
     };
 
 EXPLIST : EXPLIST comma EXPRESSIONS {
-        $$ = $1;
-        $$.push($3);
+        $$ = $1
+        $$.push($3)
     } | EXPRESSIONS {
-        $$ = [$1];
+        $$ = [$1]
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -421,20 +425,20 @@ VARVALUE : decimal {
         $$ = new BooleanValue(getToken(@1), $1)
     } | openSquareBracket EXPLIST closeSquareBracket {
         $$ = new VectorValue(getToken(@1), $2)
+    } | VALUEMETHOD {
+        $$ = $1
+    } | VECTORVALUE {
+        $$ = $1
     } | nullType {
         $$ = null
-    } | VALUEMETHOD {
-        $$ = $1;
-    } | VECTORVALUE {
-        $$ = $1;
     };
 
-VALUEMETHOD : FUNCTIONCALL {
+VALUEMETHOD : METHODCALL {
         $$ = $1
-    } | METHODCALL {
-        $$ = $1;
+    } | FUNCTIONCALL {
+        $$ = $1
     } | METHOD {
-        $$ = $1;
+        $$ = $1
     };
 
 VECTORVALUE : VARVALUE openSquareBracket EXPRESSIONS closeSquareBracket {
@@ -444,28 +448,28 @@ VECTORVALUE : VARVALUE openSquareBracket EXPRESSIONS closeSquareBracket {
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* METODOS */
 PARAMSLIST : PARAMSLIST comma PARAMVAR {
-        $$ = $1;
-        $$.push($3);
+        $$ = $1
+        $$.push($3)
     } | PARAMVAR {
-        $$ = [$1];
+        $$ = [$1]
     };
 
 PARAMVAR : TYPE id {
-        $$ = { type: $1, id: $2 };
+        $$ = { type: $1, id: $2 }
     };
 
 FUNCTIONPARAMS : openParenthesis PARAMSLIST closeParenthesis {
-        $$ = $2;
+        $$ = $2
     } | openParenthesis closeParenthesis {
-        $$ = [];
+        $$ = []
     }; 
 
 FUNCTION : TYPE id FUNCTIONPARAMS BLOCKCONTENT {
         $$ = new FunctionBlock(getToken(@1), { 
-            id: $2, type: $1, params: $3, content: $4 });
+            id: $2, type: $1, params: $3, content: $4 })
     } | voidType id FUNCTIONPARAMS BLOCKCONTENT {
         $$ = new FunctionBlock(getToken(@1), { 
-            id: $2, type: DataType.VOID, params: $3, content: $4 });
+            id: $2, type: DataType.VOID, params: $3, content: $4 })
     };
 
 FUNCTIONCALL : id openParenthesis EXPLIST closeParenthesis {
@@ -481,73 +485,87 @@ METHODCALL : VARVALUE dot id openParenthesis EXPLIST closeParenthesis {
         $$ = new ValueMethod(getToken(@1), { 
             value: $1, methodName: $3, params: [] })
     };
-    
+
+/*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
+/* METODOS DE ARRAY */
+ARRAYVOIDMETHOD : id dot ARRAYVOIDMETHODNAME openParenthesis EXPLIST closeParenthesis {
+        $$ = new ValueMethod(getToken(@1), { 
+            value: new IdValue(getToken(@1), $1), methodName: $3, params: $5 })
+    } | id dot ARRAYVOIDMETHODNAME openParenthesis closeParenthesis {
+        $$ = new ValueMethod(getToken(@1), { 
+            value: new IdValue(getToken(@1), $1), methodName: $3, params: [] })
+    };
+
+ARRAYVOIDMETHODNAME : pushRw {
+        $$ = $1;
+    };
+
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* BUILT-IN FUNCTIONS */
 METHOD : PRINT {
-        $$ = $1;
+        $$ = $1
     } | PRINTLN {
-        $$ = $1;
+        $$ = $1
     } | EVAL {
-        $$ = $1;
+        $$ = $1
     } | COS {
-        $$ = $1;
+        $$ = $1
     } | LOG {
-        $$ = $1;
+        $$ = $1
     } | POW {
-        $$ = $1;
+        $$ = $1
     } | SIN {
-        $$ = $1;
+        $$ = $1
     } | SQRT {
-        $$ = $1;
+        $$ = $1
     } | TAN {
-        $$ = $1;
+        $$ = $1
     } | PARSE {
-        $$ = $1;
+        $$ = $1
     } | TODOUBLE {
-        $$ = $1;
+        $$ = $1
     } | TOINT {
-        $$ = $1;
+        $$ = $1
     } | TOSTRING {
-        $$ = $1;
+        $$ = $1
     } | TYPEOF {
-        $$ = $1;
+        $$ = $1
     };
 
 PRINT : printRw openParenthesis EXPLIST closeParenthesis {
-        $$ = new Print(getToken(@1), { params: $3, breakLine: false });
+        $$ = new Print(getToken(@1), { params: $3, breakLine: false })
     };
 
 PRINTLN : printLnRw openParenthesis EXPLIST closeParenthesis {
-        $$ = new Print(getToken(@1), { params: $3, breakLine: true });
+        $$ = new Print(getToken(@1), { params: $3, breakLine: true })
     };
 
 EVAL : evalRw openParenthesis EXPRESSIONS closeParenthesis {
-        $$ = new Evaluate(getToken(@1), { params: [$3] });
+        $$ = new Evaluate(getToken(@1), { params: [$3] })
     };
 
 COS : cosRw openParenthesis EXPRESSIONS closeParenthesis {
-        $$ = new Cos(getToken(@1), { params: [$3] });
+        $$ = new Cos(getToken(@1), { params: [$3] })
     };
 
 LOG : log10Rw openParenthesis EXPRESSIONS closeParenthesis {
-        $$ = new Log10(getToken(@1), { params: [$3] });
+        $$ = new Log10(getToken(@1), { params: [$3] })
     };
 
 POW : powRw openParenthesis EXPLIST closeParenthesis {
-        $$ = new Pow(getToken(@1), { params: $3 });
+        $$ = new Pow(getToken(@1), { params: [$3] })
     };
 
 SIN : sinRw openParenthesis EXPRESSIONS closeParenthesis {
-        $$ = new Sin(getToken(@1), { params: [$3] });
+        $$ = new Sin(getToken(@1), { params: [$3] })
     };
 
 SQRT : sqrtRw openParenthesis EXPRESSIONS closeParenthesis {
-        $$ = new Sqrt(getToken(@1), { params: [$3] });
+        $$ = new Sqrt(getToken(@1), { params: [$3] })
     };
 
 TAN : tanRw openParenthesis EXPRESSIONS closeParenthesis {
-        $$ = new Tan(getToken(@1), { params: [$3] });
+        $$ = new Tan(getToken(@1), { params: [$3] })
     };
 
 PARSE : TYPE dot parseRw openParenthesis EXPRESSIONS closeParenthesis {
@@ -603,15 +621,15 @@ ELSESEQUENCE : elseRw INLINEBLOCKCONTENT {
     };
 
 CONTROLSEQELIFS : CONTROLSEQELIFS CONTROLSEQELIF {
-        $$ = $1;
-        $$.push($2);
+        $$ = $1
+        $$.push($2)
     } | CONTROLSEQELIF {
-        $$ = [$1];
+        $$ = [$1]
     };
 
 CONTROLSEQELIF : elseRw ifRw 
     openParenthesis EXPRESSIONS closeParenthesis INLINEBLOCKCONTENT {
-        $$ = { exp: $4, body: $6 };
+        $$ = { exp: $4, body: $6 }
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -630,14 +648,14 @@ SWITCHSEQ : switchRw openParenthesis EXPRESSIONS closeParenthesis
     };
 
 SWITCHSEQCASES : SWITCHSEQCASES SWITCHSEQCONTENT {
-        $$ = $1;
-        $$.push($2);
+        $$ = $1
+        $$.push($2)
     } | SWITCHSEQCONTENT {
-        $$ = [$1];
+        $$ = [$1]
     };
 
 SWITCHSEQCONTENT : caseRw EXPRESSIONS colom INSTRUCTIONS {
-        $$ = { case: $2, body: $4 };
+        $$ = { case: $2, body: $4 }
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -645,22 +663,18 @@ SWITCHSEQCONTENT : caseRw EXPRESSIONS colom INSTRUCTIONS {
 LOOPSEQ : WHILESEQ | DOWHILESEQ | FORINSEQ | FORSEQ;
 
 WHILESEQ : whileRw openParenthesis EXPRESSIONS closeParenthesis INLINEBLOCKCONTENT {
-        $$ = new CycleControl(getToken(@1), { 
-            condition: $3, body: $5 
-         })
+        $$ = new CycleControl(getToken(@1), { condition: $3, body: $5 })
     };
 
 FORINSEQ : forRw id inRw VARVALUE INLINEBLOCKCONTENT {
         $$ = new ForInLoop(getToken(@1),  {
-            iterVariable: $2, iterReference: $4, body: $5
-        })
+            iterVariable: $2, iterReference: $4, body: $5 })
     };
 
 DOWHILESEQ : doRw INLINEBLOCKCONTENT 
     whileRw openParenthesis EXPRESSIONS closeParenthesis semicolom {
         $$ = new CycleControl(getToken(@1), { 
-            condition: $5, body: $2, isDoLoop: true
-         })
+            condition: $5, body: $2, isDoLoop: true })
     };
 
 FORSEQ : forRw openParenthesis FORSEQPARAMS closeParenthesis INLINEBLOCKCONTENT {
@@ -679,5 +693,5 @@ LOOPESCAPE : breakRw semicolom {
     } | continueRw semicolom {
         $$ = new ReturnValue(getToken(@1), { type: 'Continue' })
     } | returnRw EXPRESSIONS semicolom {
-        $$ = new ReturnValue(getToken(@1), { content: $2, type: 'Return'  });
+        $$ = new ReturnValue(getToken(@1), { content: $2, type: 'Return' })
     };
