@@ -31,11 +31,19 @@ class TypeOf extends FunctionCall {
     )
   }
 
+  // OBTENER TIPO COMO STRING
+  private getTypeAsStrig(valueType: DataType): string {
+    return valueType.type === DataTypeEnum.ARRAY
+      ? `Array<${this.getTypeAsStrig(valueType.gen)}>`
+      : valueType.type
+  }
+
   // OBTENER VALOR
   public getValue(scope: Scope): DataValue {
     // PARAMETRO
     const paramValue = this.props.params[0].getValue(scope)
-    return paramValue.getType(scope).type
+    const valueType = paramValue.getType(scope)
+    return this.getTypeAsStrig(valueType)
   }
 
   // OBTENER TIPO
