@@ -47,6 +47,7 @@
     // VALORES PRIMITIVOS
     const VectorPositionValue = require('../compiler/instruction/value/vector/value').default
     const VectorRangeValue = require('../compiler/instruction/value/vector/range').default
+    const VectorCopyValue = require("../compiler/instruction/value/vector/copy").default
     const BooleanValue = require("../compiler/instruction/value/boolean").default
     const CharValue = require("../compiler/instruction/value/character").default
     const VectorValue = require('../compiler/instruction/value/vector').default
@@ -113,6 +114,7 @@
 "||"                        return addToken(yylloc, 'or')
 
 "&"                         return addToken(yylloc, 'concat')
+"#"                         return addToken(yylloc, 'hash')
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* SIMBOLOS */
@@ -207,7 +209,7 @@ NULLCHAR "\\0"
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* PRESEDENCIA */
-%left 'id' 'openSquareBracket' 'closeSquareBracket'
+%left 'openSquareBracket' 'closeSquareBracket'
 %left 'questionMark'
 %left 'and' 'or'
 %left 'minor' 'lessOrEquals' 'major' 'moreOrEquals' 'equalsEquals' 'nonEquals'
@@ -217,6 +219,7 @@ NULLCHAR "\\0"
 %right UMIN
 %right UNOT
 %nonassoc 'dot' 'comma' 'openParenthesis' 'closeParenthesis' 'semicolom'
+%left 'hash' 'id'
 
 %start START
 
@@ -435,6 +438,8 @@ VARVALUE : decimal {
         $$ = $1
     } | VECTORVALUE {
         $$ = $1
+    } | ARRRAYCOPY {
+        $$ = $1
     } | nullType {
         $$ = null
     };
@@ -449,6 +454,10 @@ VALUEMETHOD : METHODCALL {
 
 VECTORVALUE : VARVALUE openSquareBracket EXPRESSIONS closeSquareBracket {
         $$ = new VectorPositionValue(getToken(@1), { value: $1, index: $3 })
+    };
+
+ARRRAYCOPY : hash VARVALUE {
+        $$ = new VectorCopyValue(getToken(@1), { value: $2 })
     };
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -575,7 +584,7 @@ LOG : log10Rw openParenthesis EXPRESSIONS closeParenthesis {
     };
 
 POW : powRw openParenthesis EXPLIST closeParenthesis {
-        $$ = new Pow(getToken(@1), { params: [$3] })
+        $$ = new Pow(getToken(@1), { params: $3 })
     };
 
 SIN : sinRw openParenthesis EXPRESSIONS closeParenthesis {
