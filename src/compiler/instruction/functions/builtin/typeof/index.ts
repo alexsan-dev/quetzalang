@@ -33,9 +33,16 @@ class TypeOf extends FunctionCall {
 
   // OBTENER TIPO COMO STRING
   private getTypeAsStrig(valueType: DataType): string {
-    return valueType.type === DataTypeEnum.ARRAY
-      ? `Array<${this.getTypeAsStrig(valueType.gen)}>`
-      : valueType.type
+    if (valueType.type === DataTypeEnum.ARRAY) {
+      if (valueType.gen.type === DataTypeEnum.STRUCT) {
+        const nodeTypes =
+          valueType.nodes?.map((nodeType) => this.getTypeAsStrig(nodeType)) ??
+          []
+        return `Array<${nodeTypes
+          .filter((item, pos) => nodeTypes.indexOf(item) == pos)
+          .join(' | ')}>`
+      } else return `Array<${this.getTypeAsStrig(valueType.gen)}>`
+    } else return valueType.type
   }
 
   // OBTENER VALOR

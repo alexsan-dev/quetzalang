@@ -1,3 +1,4 @@
+import { getValueByType, inferTypeValue } from '../tools'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
 import Value from '..'
@@ -6,7 +7,6 @@ import DataType, {
   DataValue,
   TokenInfo,
 } from '../../../utils/types'
-import { inferTypeValue } from '../tools'
 
 class VectorValue extends Value {
   // CONSTRUCTOR
@@ -23,18 +23,17 @@ class VectorValue extends Value {
 
   // OBTENER TIPO DE RESULTADO
   public getType(scope: Scope): DataType {
-    const valType = {
-      type: DataTypeEnum.ARRAY,
-      gen: this.defValues
-        ? inferTypeValue(this.defValues).gen
-        : this.expValue[0]?.getType(scope),
-    }
+    const valType = this.defValues
+      ? inferTypeValue(this.defValues)
+      : {
+          type: DataTypeEnum.ARRAY,
+          gen: this.expValue[0]?.getType(scope),
+        } // TODO: revisar esto
     return valType
   }
 
   // OBTENER LONGITUD
   public length(): DataValue {
-    console.log(this.value)
     return (this.defValues ?? this.expValue)?.length ?? 0
   }
 
@@ -44,7 +43,13 @@ class VectorValue extends Value {
 
   // AGREGAR VALOR
   public push(newVal: DataValue): void {
-    console.log('ay', this.value)
+    if (this.defValues.length) this.defValues.push(newVal)
+    else if (this.expValue.length)
+      this.expValue.push(
+        new Expression(this.token, {
+          value: getValueByType(this.token, inferTypeValue(newVal), newVal),
+        }),
+      )
   }
 
   public push_type(): DataType {
@@ -52,14 +57,19 @@ class VectorValue extends Value {
   }
 
   // OBTENER ULTIMO VALOR
-  public pop(): void {
-    console.log('ay')
+  public pop(scope: Scope): DataValue {
+    const lastValue = (this.defValues ?? this.expValue).pop()
+    if (typeof lastValue === 'object' && 'getValue' in lastValue) {
+      return lastValue.getValue(scope).getValue(scope)
+    } else return lastValue
   }
 
   public pop_type(scope: Scope): DataType {
-    return this.defValues
-      ? inferTypeValue(this.defValues)
-      : this.expValue[0]?.getType(scope)
+    const values = this.defValues ?? this.expValue
+    const lastValue = values[values.length - 1]
+    if (typeof lastValue === 'object' && 'getValue' in lastValue) {
+      return inferTypeValue(lastValue.getValue(scope).getValue(scope))
+    } else return inferTypeValue(lastValue)
   }
 
   // OBTENER VALOR CAST
@@ -67,7 +77,6 @@ class VectorValue extends Value {
     const refValues =
       this.defValues ??
       this.expValue.map((exp) => exp.getValue(scope).getValue(scope))
-    this.value = refValues
     return refValues
   }
 }

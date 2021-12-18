@@ -678,6 +678,18 @@ const operateValues = (
         default:
           break
       }
+      switch (rType?.type) {
+        case DataTypeEnum.STRING:
+          if (!onlyTypes)
+            value = new StringValue(
+              token,
+              (lValue as string) + (rValue as string),
+            )
+          type = DataTypeEnum.STRING
+          break
+        default:
+          break
+      }
       break
 
     // OPERADORES BOOLEANOS

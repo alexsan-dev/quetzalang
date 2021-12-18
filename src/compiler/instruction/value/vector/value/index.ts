@@ -58,7 +58,14 @@ class VectorPositionValue extends Value {
 
   // OBTENER VALOR CAST
   public getType(scope: Scope): DataType {
-    return this.props.value.getType(scope).gen
+    const arryType = this.props.value.getType(scope)
+    if (arryType.type === DataTypeEnum.ARRAY) {
+      if (arryType.gen.type === DataTypeEnum.STRUCT) {
+        return arryType.nodes[
+          (this.props.index.getValue(scope).getValue(scope) as number) ?? 0
+        ]
+      } else return arryType.gen
+    } else return { type: DataTypeEnum.NULL }
   }
 }
 

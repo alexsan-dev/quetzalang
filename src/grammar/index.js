@@ -343,13 +343,15 @@ break;
 case 95:
 
         this.$ = new ValueMethod(getToken(_$[$0-5]), { 
-            value: new IdValue(getToken(_$[$0-5]), $$[$0-5]), methodName: $$[$0-3], params: $$[$0-1] })
+            value: new IdValue(getToken(_$[$0-5]), $$[$0-5]), 
+            methodName: $$[$0-3], params: $$[$0-1], isVoid: true })
     
 break;
 case 96:
 
         this.$ = new ValueMethod(getToken(_$[$0-4]), { 
-            value: new IdValue(getToken(_$[$0-4]), $$[$0-4]), methodName: $$[$0-2], params: [] })
+            value: new IdValue(getToken(_$[$0-4]), $$[$0-4]), 
+            methodName: $$[$0-2], params: [], isVoid: true })
     
 break;
 case 97:

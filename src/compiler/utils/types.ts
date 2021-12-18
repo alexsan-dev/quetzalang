@@ -15,6 +15,7 @@ export enum DataTypeEnum {
 interface DataType {
   type: DataTypeEnum
   gen?: DataType
+  nodes?: DataType[]
 }
 
 // DATOS PRIMITIVOS

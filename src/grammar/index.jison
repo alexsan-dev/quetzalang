@@ -510,10 +510,12 @@ ARRAYRANGEPOSITION : beginRw {
 
 ARRAYVOIDMETHOD : id dot ARRAYVOIDMETHODNAME openParenthesis EXPLIST closeParenthesis {
         $$ = new ValueMethod(getToken(@1), { 
-            value: new IdValue(getToken(@1), $1), methodName: $3, params: $5 })
+            value: new IdValue(getToken(@1), $1), 
+            methodName: $3, params: $5, isVoid: true })
     } | id dot ARRAYVOIDMETHODNAME openParenthesis closeParenthesis {
         $$ = new ValueMethod(getToken(@1), { 
-            value: new IdValue(getToken(@1), $1), methodName: $3, params: [] })
+            value: new IdValue(getToken(@1), $1), 
+            methodName: $3, params: [], isVoid: true })
     };
 
 ARRAYVOIDMETHODNAME : pushRw {

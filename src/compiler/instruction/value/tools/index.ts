@@ -90,8 +90,11 @@ export const getBuiltInMethod = (
   params: DataValue[],
 ): DataValue | undefined => {
   const scopedVal = getScopedValue(scope, value)
+
   if (scopedVal)
-    if (methodName in scopedVal) return scopedVal[methodName](...params)
+    if (methodName in scopedVal) {
+      return scopedVal[methodName](...params, scope)
+    }
 }
 
 /**
@@ -150,7 +153,16 @@ export const inferTypeValue = (value: DataValue): DataType => {
         type: DataTypeEnum.ARRAY,
         gen: inferTypeValue((value as DataValue[])[0]),
       }
-    else return { type: DataTypeEnum.ARRAY, gen: { type: DataTypeEnum.STRUCT } }
+    else {
+      const nodes: DataType[] = (value as DataValue[]).map((val) =>
+        inferTypeValue(val),
+      )
+      return {
+        type: DataTypeEnum.ARRAY,
+        gen: { type: DataTypeEnum.STRUCT },
+        nodes,
+      }
+    }
   } else {
     // VALORES COMO STRINGS
     if (typeof value === 'string') {

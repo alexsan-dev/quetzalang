@@ -26,10 +26,20 @@ class VectorPositionAssignment extends Assignment {
 
   // COMPILAR
   public execute(scope: Scope): void {
-    if (this.props.id.getType(scope).type === DataTypeEnum.ARRAY)
-      if (this.props.index.getType(scope).type === DataTypeEnum.INTEGER)
-        this.setValue(scope, this.props.id.getType(scope).gen)
-      else
+    const arryType = this.props.id.getType(scope)
+
+    if (arryType.type === DataTypeEnum.ARRAY)
+      if (this.props.index.getType(scope).type === DataTypeEnum.INTEGER) {
+        // ARREGLO DINAMICO
+        if (arryType.gen.type === DataTypeEnum.STRUCT) {
+          // INDICE DE EXPRESION
+          const index: number = this.props.index
+            .getValue(scope)
+            .getValue(scope) as number
+          const nodeType = arryType.nodes?.[index]
+          this.setValue(scope, nodeType)
+        } else this.setValue(scope, this.props.id.getType(scope).gen)
+      } else
         addError(
           this.token,
           `La posicion del arreglo ${this.props.id.getId()} debe ser un ${

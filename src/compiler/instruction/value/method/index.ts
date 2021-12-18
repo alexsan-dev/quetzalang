@@ -14,6 +14,7 @@ class ValueMethod extends Value {
     public token: TokenInfo,
     public props: {
       value: Value
+      isVoid?: boolean
       methodName: string
       params: Expression[]
     },
@@ -44,7 +45,10 @@ class ValueMethod extends Value {
     )
   }
 
-  public execute(_scope: Scope, _type?: DataType): void {}
+  public execute(scope: Scope): void {
+    // EJECTUTAR FUNCION SI ES UN VOID
+    if (this.props.isVoid) this.getValue(scope)
+  }
 }
 
 export default ValueMethod
