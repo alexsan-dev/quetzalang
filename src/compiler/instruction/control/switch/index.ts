@@ -32,10 +32,10 @@ class Switch extends Instruction {
     name: 'Return' | 'Break' | 'Continue',
   ) {
     env.addFunction(
-      name,
+      name.toLowerCase(),
       { type: DataTypeEnum.VOID },
       new FunctionBlock(this.token, {
-        id: name,
+        id: name.toLowerCase(),
         type: { type: DataTypeEnum.VOID },
         content: [
           {

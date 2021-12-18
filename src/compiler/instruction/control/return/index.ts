@@ -1,48 +1,57 @@
-import { TokenInfo } from "../../../utils/types";
-import Scope from "../../../runtime/scope";
-import Expression from "../../expression";
-import Instruction from "../../abstract";
-import Value from "../../value";
+import { TokenInfo } from '../../../utils/types'
+import Scope from '../../../runtime/scope'
+import Expression from '../../expression'
+import Instruction from '../../abstract'
+import Value from '../../value'
 
 class ReturnValue extends Instruction {
   // CONSTRUCTOR
-  constructor(public token: TokenInfo, public props: { content?: Expression, type: 'Return' | 'Continue' | 'Break' }) {
-    super(token, props.type);
+  constructor(
+    public token: TokenInfo,
+    public props: {
+      content?: Expression
+      type: 'Return' | 'Continue' | 'Break'
+    },
+  ) {
+    super(token, props.type)
   }
 
   // COMPILAR
   public execute(scope: Scope): void {
     // RECURSIVA
+    let returnScope = scope
     const searchEnvironment = () => {
       if (
-        scope?.getName() !== "Function" &&
-        scope?.getName() !== "Loop" &&
-        scope?.getName() !== "Switch"
+        returnScope?.getName() !== 'Function' &&
+        returnScope?.getName() !== 'Loop' &&
+        returnScope?.getName() !== 'Switch'
       ) {
-        if (scope?.getPrevEnv()) {
-          scope = scope?.getPrevEnv();
-          searchEnvironment();
-        } else return;
-      } else return;
-    };
+        if (returnScope?.getPrevEnv()) {
+          returnScope = returnScope?.getPrevEnv()
+          searchEnvironment()
+        } else return
+      } else return
+    }
 
-    searchEnvironment();
+    searchEnvironment()
 
     // ASIGNAR RETORNO A FUNCION
-    if (scope) {
+    if (returnScope) {
       if (this.props.type === 'Return') {
-        const value = this.props.content?.getValue(scope);
+        const value = this.props.content?.getValue(scope)
         const valueType = value.getType(scope)
 
         // AGREGAR VARIABLE RERTURN
-        scope.addVar("return", valueType, value);
+        returnScope.addVar('return', valueType, value)
       }
 
       // EJECUTAR RETURN
-      const returnFunction = scope.getFunction(this.props.type);
-      if (returnFunction) returnFunction.getValue(scope);
+      const returnFunction = returnScope.getFunction(
+        this.props.type.toLowerCase(),
+      )
+      if (returnFunction) returnFunction.getValue(returnScope)
     }
   }
 }
 
-export default ReturnValue;
+export default ReturnValue

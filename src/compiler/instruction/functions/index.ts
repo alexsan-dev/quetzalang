@@ -36,14 +36,13 @@ class FunctionBlock extends Instruction {
   // ASIGNAR ENTORNO
   public setScope(scope: Scope): void {
     this.scope = new Scope('Function', this.props.id, scope)
-    this.functionValue = undefined
     this.isOnBreak = false
 
     this.scope.addFunction(
-      'Return',
+      'return',
       { type: DataTypeEnum.VOID },
       new FunctionBlock(this.token, {
-        id: 'Return',
+        id: 'return',
         type: { type: DataTypeEnum.VOID },
         content: [
           {

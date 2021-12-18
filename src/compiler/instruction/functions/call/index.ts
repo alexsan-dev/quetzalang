@@ -81,7 +81,9 @@ class FunctionCall extends Instruction {
         if (functionBlock.props.params.length === this.props.params.length) {
           // VERIFICAR TIPOS DE PARAMETROS
           values.forEach((value, index: number) => {
-            if (value.type === functionBlock.props.params[index].type) {
+            if (
+              value.type.type === functionBlock.props.params[index].type.type
+            ) {
               // ASIGNAR VARIABLE A ENTORNO DE FUNCION
               functionScope.addVar(
                 functionBlock.props.params[index].id,
@@ -92,17 +94,18 @@ class FunctionCall extends Instruction {
               addError(
                 this.token,
                 `Se esperaba un ${
-                  functionBlock.props.params[index].type
-                } en el parametro ${index + 1} de la funcion ${this.props.id}.`,
+                  functionBlock.props.params[index].type.type
+                } en el parametro ${index + 1} de la funcion ${
+                  this.props.id
+                } y se obtuvo un ${value.type.type}.`,
               )
             }
           })
-
-          return functionBlock.getValue(functionScope).getValue(functionScope)
+          return functionBlock.getValue(functionScope)?.getValue(functionScope)
         } else
           addError(
             this.token,
-            `Se esperaban ${functionBlock.props.params.length} parametros pero se obtuvieron ${this.props.params.length} en la funcion ${this.props.id}`,
+            `Se esperaban ${functionBlock.props.params.length} parametros pero se obtuvieron ${this.props.params.length} en la funcion ${this.props.id}.`,
           )
       }
     } else addError(this.token, `La funcion ${this.props.id} no existe.`)

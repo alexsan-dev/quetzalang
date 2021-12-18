@@ -39,10 +39,10 @@ class CycleControl extends Instruction {
   ) {
     const that = this
     scope.addFunction(
-      name,
+      name.toLowerCase(),
       { type: DataTypeEnum.VOID },
       new FunctionBlock(this.token, {
-        id: name,
+        id: name.toLowerCase(),
         type: { type: DataTypeEnum.VOID },
         content: [
           {

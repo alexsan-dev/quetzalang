@@ -168,15 +168,19 @@ const bindConsole = (hide: boolean = false) => {
         if (!textarea) return
         args.forEach((arg) => {
           if (textarea) {
-            const parsedValue =
-              JSON.stringify(arg, null, 2)?.replace(/\\n/g, '\n') ?? ''
-            const span = document.createElement('span')
-            span.className = mode
-            span.innerText = `${parsedValue.substring(
-              1,
-              parsedValue.length - 1,
-            )}`
-            textarea.appendChild(span)
+            try {
+              const parsedValue =
+                JSON.stringify(arg, null, 2)?.replace(/\\n/g, '\n') ?? ''
+              const span = document.createElement('span')
+              span.className = mode
+              span.innerText = `${parsedValue.substring(
+                1,
+                parsedValue.length - 1,
+              )}`
+              textarea.appendChild(span)
+            } catch {
+              console.error('Erorr al imprimir.\n')
+            }
           }
         })
       }

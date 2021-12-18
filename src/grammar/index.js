@@ -745,15 +745,15 @@ parse: function parse(input) {
     // VALORES PRIMITIVOS
     const VectorPositionValue = require('../compiler/instruction/value/vector/value').default
     const VectorRangeValue = require('../compiler/instruction/value/vector/range').default
-    const VectorCopyValue = require("../compiler/instruction/value/vector/copy").default
-    const BooleanValue = require("../compiler/instruction/value/boolean").default
-    const CharValue = require("../compiler/instruction/value/character").default
+    const VectorCopyValue = require('../compiler/instruction/value/vector/copy').default
+    const BooleanValue = require('../compiler/instruction/value/boolean').default
+    const CharValue = require('../compiler/instruction/value/character').default
     const VectorValue = require('../compiler/instruction/value/vector').default
-    const StringValue = require("../compiler/instruction/value/string").default
-    const DoubleValue = require("../compiler/instruction/value/double").default
+    const StringValue = require('../compiler/instruction/value/string').default
+    const DoubleValue = require('../compiler/instruction/value/double').default
     const ValueMethod = require('../compiler/instruction/value/method').default
-    const IntValue = require("../compiler/instruction/value/int").default
-    const IdValue = require("../compiler/instruction/value/id").default
+    const IntValue = require('../compiler/instruction/value/int').default
+    const IdValue = require('../compiler/instruction/value/id').default
 
     // AGREGAR TOKEN
     const addToken = (yylloc, name) => {

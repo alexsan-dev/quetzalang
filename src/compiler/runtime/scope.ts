@@ -94,22 +94,14 @@ class Scope {
 
   // OBTENER VARIABLE
   public getVar(id: string): Value | undefined {
-    if (id in this.vars) {
-      return this.vars[id].value
-    } else {
-      if (this.prevScope) return this.prevScope.getVar(id)
-      else return undefined
-    }
+    return id in this.vars ? this.vars[id]?.value : this.prevScope?.getVar(id)
   }
 
   // OBTENER FUNCION
   public getFunction(id: string): FunctionBlock | undefined {
-    if (id in this.functions) {
-      return this.functions[id]?.value
-    } else {
-      if (this.prevScope) return this.prevScope.getFunction(id)
-      else return undefined
-    }
+    return id in this.functions
+      ? this.functions[id]?.value
+      : this.prevScope?.getFunction(id)
   }
 
   // AGREGAR FUNCION
