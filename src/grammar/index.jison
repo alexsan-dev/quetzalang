@@ -210,7 +210,6 @@ NULLCHAR "\\0"
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* PRESEDENCIA */
 %left 'openSquareBracket' 'closeSquareBracket'
-%left 'questionMark'
 %left 'and' 'or'
 %left 'minor' 'lessOrEquals' 'major' 'moreOrEquals' 'equalsEquals' 'nonEquals'
 %left 'plus' 'concat' 'minus'
@@ -402,7 +401,7 @@ EXPRESSIONS : EXPRESSIONS plus EXPRESSIONS {
         $$ = $2
     };
 
-TERNARY : EXPRESSIONS questionMark EXPRESSIONS colom EXPRESSIONS {
+TERNARY : EXPRESSIONS questionMark EXPRESSIONS colom EXPRESSIONS %prec TERN {
         $$ = new Expression(getToken(@1), {
             left: $3, right: $5, condition: $1, operator: Operator.TERNARY })
     };

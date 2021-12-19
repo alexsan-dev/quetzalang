@@ -35,7 +35,16 @@
         <button id="terminalBtn"><i data-feather="terminal"></i></button>
       </div>
       <div id="editorContainer">
-        <div id="editor"></div>
+        <div id="tabs">
+          <button id="editorTab"><i data-feather="code"></i>Editor</button>
+          <button id="translateTab">
+            <i data-feather="globe"></i>Traducción
+          </button>
+        </div>
+        <div id="editorsSlide">
+          <div id="editor"></div>
+          <div id="editorTranslate"></div>
+        </div>
         <div id="codeInfo">
           <span>Quetzalang</span>
           <span id="cursor">Linea 1, Columna: 1</span>
@@ -52,42 +61,11 @@
       </div>
     </main>
 
-    <script type="module" src="scripts/index.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/ace.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/mode-java.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/theme-monokai.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/ext-language_tools.min.js"></script>
-    <script>
-      // VALORES INICIALES
-      const urlParams = new URLSearchParams(window.location.search)
-      const initialValue =
-        urlParams.get('code') || window.localStorage.getItem('code')
-
-      // CONFIGURAR EDITOR
-      const editor = ace.edit('editor', {
-        wrap: true,
-        autoScrollEditorIntoView: true,
-        enableLiveAutocompletion: true,
-      })
-      const JavaMode = ace.require('ace/mode/java').Mode
-      editor.session.setMode(new JavaMode())
-      editor.setTheme('ace/theme/monokai')
-      editor.setFontSize(18)
-
-      // CODIGO INICIAL
-      if (initialValue) editor.setValue(initialValue, -1)
-
-      // CURSOR
-      const codeInfoCursor = document.getElementById('cursor')
-      editor.session.selection.on('changeCursor', function (e) {
-        const cursor = editor.selection.getCursor()
-        codeInfoCursor.innerHTML = `Linea: ${cursor.row + 1}, Columna: ${
-          cursor.column + 1
-        }`
-      })
-
-      feather.replace()
-    </script>
+    <script type="module" src="scripts/index.js"></script>
   </body>
 </html>

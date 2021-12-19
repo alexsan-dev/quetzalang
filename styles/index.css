@@ -6,16 +6,56 @@
 
 main {
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: 70px 1fr;
   grid-template-rows: 1fr auto;
   height: 100vh;
   overflow: hidden;
+  background: hsl(70, 8%, 10%);
 }
 
-#editor {
+#editorsSlide {
+  display: flex;
+  width: 200%;
+  height: calc(100% - 67px);
+  transition: transform 0.2s ease-out;
+}
+
+#editor,
+#editorTranslate {
   position: relative;
-  width: 100%;
-  height: calc(100% - 26px);
+  width: 50%;
+}
+
+#tabs {
+  background: hsl(70, 8%, 14%);
+  display: flex;
+  padding-bottom: 5px;
+}
+
+#tabs > button {
+  appearance: none;
+  outline: none;
+  border: none;
+  padding: 9px 15px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.05);
+  font-family: 'Monaco', 'Menlo';
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 2px solid #2196f3;
+  transition: border-color 0.2s ease-in-out;
+}
+
+#tabs > button:last-child {
+  border-color: transparent;
+}
+
+#tabs > button > svg {
+  height: 18px;
+  margin-right: 5px;
 }
 
 #toolbar {
@@ -25,7 +65,9 @@ main {
   flex-direction: column;
   align-items: center;
   background: hsl(70, 8%, 13%);
-  padding-top: 15px;
+  padding-top: 10px;
+  position: relative;
+  z-index: 2;
 }
 
 #toolbar button,
