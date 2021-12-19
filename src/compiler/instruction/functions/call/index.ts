@@ -91,7 +91,11 @@ class FunctionCall extends Instruction {
               functionScope.addVar(
                 functionBlock.props.params[index].id,
                 value.type,
-                value.value,
+                getValueByType(
+                  this.token,
+                  value.type,
+                  value.value.getValue(scope),
+                ),
               )
             } else {
               addError(

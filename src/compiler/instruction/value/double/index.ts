@@ -21,7 +21,9 @@ class DoubleValue extends Value {
 
   // OBTENER VALOR CAST
   public getValue(): DataValue | undefined {
-    return parseFloat(this.value?.toString() ?? '0')
+    return typeof this.value === 'number'
+      ? this.value
+      : parseFloat(this.value?.toString() ?? '0')
   }
 }
 

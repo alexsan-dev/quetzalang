@@ -21,7 +21,9 @@ class BooleanValue extends Value {
 
   // OBTENER VALOR CAST
   public getValue(): DataValue {
-    return this.value === 'false'
+    return typeof this.value === 'boolean'
+      ? this.value
+      : this.value === 'false'
       ? false
       : this.value === '0'
       ? false

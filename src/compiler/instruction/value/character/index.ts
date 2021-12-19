@@ -21,7 +21,7 @@ class CharValue extends Value {
 
   // OBTENER VALOR CAST
   public getValue(): DataValue | undefined {
-    return (this.value?.toString() ?? '').charAt(0)
+    return (this.value?.toString() ?? '0').charAt(0)
   }
 }
 
