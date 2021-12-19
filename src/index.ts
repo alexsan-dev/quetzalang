@@ -183,7 +183,9 @@ const bindConsole = (hide: boolean = false) => {
           if (consoleTextarea) {
             try {
               const parsedValue =
-                JSON.stringify(arg, null, 2)?.replace(/\\\\n/g, '\n') ?? ''
+                JSON.stringify(arg, null, 2)
+                  ?.replace(/\\\\n/g, '\n')
+                  .replace(/\\n/g, '\n') ?? ''
 
               const span = document.createElement('span')
               span.className = mode
