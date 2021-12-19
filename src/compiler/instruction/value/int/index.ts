@@ -21,7 +21,9 @@ class IntValue extends Value {
 
   // OBTENER VALOR CAST
   public getValue(): DataValue | undefined {
-    return parseInt(this.value?.toString() ?? '0', 10)
+    return typeof this.value === 'number'
+      ? this.value
+      : parseInt(this.value?.toString() ?? '0', 10)
   }
 }
 

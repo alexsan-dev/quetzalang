@@ -1,14 +1,11 @@
 // TOOLS
-import DataType, { DataTypeEnum, TokenInfo } from '../../utils/types'
+import DataType, { DataTypeEnum, DataValue, TokenInfo } from '../../utils/types'
 import Scope from '../../runtime/scope'
-
-// VALORES
 import Instruction from '../abstract'
 import Value from '../value'
 
 class FunctionBlock extends Instruction {
   // GLOBALES
-  private functionValue: Value | undefined
   private scope: Scope | undefined
   private isOnBreak = false
 
@@ -23,7 +20,6 @@ class FunctionBlock extends Instruction {
     },
   ) {
     super(token, 'Function')
-    this.functionValue = undefined
     this.scope = undefined
     this.isOnBreak = false
   }
@@ -65,8 +61,9 @@ class FunctionBlock extends Instruction {
   }
 
   // COMPILAR FUNCION
-  public getValue(scope: Scope): Value | undefined {
+  public getValue(scope: Scope): DataValue | undefined {
     // ASIGNAR SCOPE
+    let functionValue: Value | undefined
     if (!this.scope) this.setScope(scope)
 
     // COMPILAR CONTENIDO
@@ -85,11 +82,11 @@ class FunctionBlock extends Instruction {
     // OBTENER VALOR DE RETORNO
     if (this.props.type.type !== DataTypeEnum.VOID) {
       if (this.scope && 'getVar' in this.scope)
-        this.functionValue = this.scope.getVar('return')
-    } else this.functionValue = undefined
+        functionValue = this.scope.getVar('return')
+    }
 
     // VALOR
-    return this.functionValue
+    return functionValue?.getValue(this.scope)
   }
 
   // AGREGAR FUNCION

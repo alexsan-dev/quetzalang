@@ -57,9 +57,12 @@ class FunctionCall extends Instruction {
   // COMPILAR Y OBTENER VALOR
   public getExecuteValue(scope: Scope): DataValue | undefined {
     // BUSCAR FUNCION
-    const functionBlock: FunctionBlock | undefined = scope.getFunction(
+    const scopedFunction: FunctionBlock | undefined = scope.getFunction(
       this.props.id,
     )
+    const functionBlock = new FunctionBlock(this.token, {
+      ...scopedFunction.props,
+    })
 
     // EJECUTAR
     if (functionBlock) {
@@ -101,7 +104,7 @@ class FunctionCall extends Instruction {
               )
             }
           })
-          return functionBlock.getValue(functionScope)?.getValue(functionScope)
+          return functionBlock.getValue(scope)
         } else
           addError(
             this.token,

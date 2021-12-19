@@ -3,6 +3,7 @@ import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
 import Instruction from '../../abstract'
 import Value from '../../value'
+import { getValueByType } from '../../value/tools'
 
 class ReturnValue extends Instruction {
   // CONSTRUCTOR
@@ -42,7 +43,11 @@ class ReturnValue extends Instruction {
         const valueType = value.getType(scope)
 
         // AGREGAR VARIABLE RERTURN
-        returnScope.addVar('return', valueType, value)
+        returnScope.addVar(
+          'return',
+          valueType,
+          getValueByType(this.token, valueType, value.getValue(scope)),
+        )
       }
 
       // EJECUTAR RETURN
