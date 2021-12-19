@@ -64,7 +64,13 @@ class VectorPositionAssignment extends Assignment {
 
       if (index >= 0 && index < temporal.length) {
         const newValueType = this.props.exp.getType(scope)
-        if (newValueType.type === expectedType.type) {
+        const typeException =
+          (newValueType.type === DataTypeEnum.INTEGER &&
+            expectedType.type === DataTypeEnum.DOUBLE) ||
+          (newValueType.type === DataTypeEnum.DOUBLE &&
+            expectedType.type === DataTypeEnum.INTEGER)
+
+        if (newValueType.type === expectedType.type || typeException) {
           // ASIGNAR NUEVO VALOR
           const newValue = this.props.exp?.getValue(scope).getValue(scope)
           temporal[index] = newValue

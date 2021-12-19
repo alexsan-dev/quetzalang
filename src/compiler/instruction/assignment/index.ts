@@ -21,22 +21,22 @@ class Assignment extends Instruction {
   ): void {
     if (this.id?.length) {
       // EXCEPCIONES PARA NUMEROS
-      const valueType = value.getType(scope)
+      const valueType = value?.getType(scope)
 
       const typeException =
-        (expectedType.type === DataTypeEnum.DOUBLE &&
-          valueType.type === DataTypeEnum.INTEGER) ||
-        (expectedType.type === DataTypeEnum.INTEGER &&
-          valueType.type === DataTypeEnum.DOUBLE)
+        (expectedType?.type === DataTypeEnum.DOUBLE &&
+          valueType?.type === DataTypeEnum.INTEGER) ||
+        (expectedType?.type === DataTypeEnum.INTEGER &&
+          valueType?.type === DataTypeEnum.DOUBLE)
 
-      if (expectedType.type === valueType.type || typeException) {
+      if (expectedType?.type === valueType?.type || typeException) {
         // VALIDAR PARA ARREGLOS
-        if (valueType.type === DataTypeEnum.ARRAY) {
+        if (valueType?.type === DataTypeEnum.ARRAY) {
           // OBTENER VALORES PRIMITIVOS
           const values: { value: DataValue; type: DataType }[] = (
-            value.getValue(scope) as DataValue[]
+            value?.getValue(scope) as DataValue[]
           )
-            .map((value: DataValue) => ({ value, type: valueType.gen }))
+            .map((value: DataValue) => ({ value, type: valueType?.gen }))
             .filter(Boolean) as { value: DataValue; type: DataType }[]
 
           if (values.every((val) => val.type === values[0].type)) {
@@ -55,7 +55,7 @@ class Assignment extends Instruction {
         if (expectedType)
           addError(
             this.token,
-            `No se puede asignar el tipo ${valueType.type} a ${expectedType.type}.`,
+            `No se puede asignar el tipo ${valueType?.type} a ${expectedType?.type}.`,
           )
         else
           addError(

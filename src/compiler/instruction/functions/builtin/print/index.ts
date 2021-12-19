@@ -26,12 +26,17 @@ class Print extends FunctionCall {
   // COMPILAR
   public execute(scope: Scope): void {
     // OBTENER VALORES
-    this.props.params.forEach((exp) => {
+    this.props.params.forEach((exp, expIndex) => {
       const expValue = exp.getValue(scope)
       logs.push(expValue?.getValue(scope))
-      if (this.props.params.length > 1) logs.push(' ')
-      if (this.props.breakLine) logs.push('\n')
+      if (
+        this.props.params.length > 1 &&
+        expIndex < this.props.params.length - 1
+      )
+        logs.push(' ')
     })
+
+    if (this.props.breakLine) logs.push('\n')
   }
 }
 

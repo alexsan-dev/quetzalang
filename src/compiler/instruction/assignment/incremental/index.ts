@@ -4,6 +4,7 @@ import Scope from '../../../runtime/scope'
 import IntValue from '../../value/int'
 import Value from '../../value'
 import Assignment from '../'
+import DoubleValue from '../../value/double'
 
 // ASIGNACIONES
 class IncrementalAssignment extends Assignment {
@@ -38,15 +39,20 @@ class IncrementalAssignment extends Assignment {
 
   // OBTENER VALOR
   public getValue(scope: Scope): Value {
+    // VARIABLE
     const refVar = scope.getVar(this.id ?? '')
 
-    if (refVar)
-      return new IntValue(
-        this.token,
+    if (refVar) {
+      // VALOR
+      const newValue =
         (refVar?.getValue(scope) as number) +
-          (this.props.operator === Operator.PLUSPLUS ? 1 : -1),
-      )
-    else return null
+        (this.props.operator === Operator.PLUSPLUS ? 1 : -1)
+
+      // REASIGNAR
+      if (refVar.getType(scope).type === DataTypeEnum.DOUBLE)
+        return new DoubleValue(this.token, newValue)
+      else return new IntValue(this.token, newValue)
+    } else return null
   }
 }
 

@@ -65,7 +65,7 @@
 %}
 
 %lex
-%options case-insensitive
+// %options case-insensitive
 
 %%
 
@@ -83,6 +83,7 @@
 "double"                    return addToken(yylloc, 'dblType')
 "int"                       return addToken(yylloc, 'intType')
 "true"                      return addToken(yylloc, 'trBool')
+"string"                    return addToken(yylloc, 'strMtd')
 "false"                     return addToken(yylloc, 'flBool')
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
@@ -131,7 +132,7 @@
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* PALABRAS RESERVADAS */
 'toDouble'                  return addToken(yylloc, 'toDoubleRw')
-'printLn'                   return addToken(yylloc, 'printLnRw')
+'println'                   return addToken(yylloc, 'printLnRw')
 'typeof'                    return addToken(yylloc, 'typeOfRw')
 'parse'                     return addToken(yylloc, 'parseRw')
 'log10'                     return addToken(yylloc, 'log10Rw')
@@ -209,6 +210,7 @@ NULLCHAR "\\0"
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* PRESEDENCIA */
+%left 'questionMark' 'colom'
 %left 'openSquareBracket' 'closeSquareBracket'
 %left 'and' 'or'
 %left 'minor' 'lessOrEquals' 'major' 'moreOrEquals' 'equalsEquals' 'nonEquals'
@@ -217,7 +219,7 @@ NULLCHAR "\\0"
 %right 'not'
 %right UMIN
 %right UNOT
-%nonassoc 'dot' 'comma' 'openParenthesis' 'closeParenthesis' 'semicolom'
+%nonassoc 'dot' 'comma' 'openParenthesis' 'closeParenthesis' 'semicolom' 
 %left 'hash' 'id'
 
 %start START
@@ -319,8 +321,6 @@ ASSIGNMENT : id {
         $$ = new ExpAssignment(getToken(@1), { id: $1 })
     } | id equals EXPRESSIONS {
         $$ = new ExpAssignment(getToken(@1), { id: $1, exp: $3 })  
-    } | id equals TERNARY {
-        $$ = new ExpAssignment(getToken(@1), { id: $1, exp: $3 })
     } | INCREMENTALASSIGNMENT {
         $$ = $1
     } | VECTORVALUEASSIGNMENT {
@@ -397,11 +397,7 @@ EXPRESSIONS : EXPRESSIONS plus EXPRESSIONS {
         $$ = new Expression(getToken(@1), { left: $2 })
     } | VARVALUE {
         $$ = new Expression(getToken(@1), { value: $1 })
-    } | openParenthesis TERNARY closeParenthesis {
-        $$ = $2
-    };
-
-TERNARY : EXPRESSIONS questionMark EXPRESSIONS colom EXPRESSIONS %prec TERN {
+    } | EXPRESSIONS questionMark EXPRESSIONS colom EXPRESSIONS {
         $$ = new Expression(getToken(@1), {
             left: $3, right: $5, condition: $1, operator: Operator.TERNARY })
     };
@@ -610,7 +606,7 @@ TOINT : toIntRw openParenthesis EXPRESSIONS closeParenthesis  {
         $$ = new ToInt(getToken(@1), { params: [$3] })
     };
 
-TOSTRING : strType openParenthesis EXPRESSIONS closeParenthesis  {
+TOSTRING : strMtd openParenthesis EXPRESSIONS closeParenthesis  {
         $$ = new ToString(getToken(@1), { params: [$3] })
     };
 
