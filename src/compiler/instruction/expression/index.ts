@@ -1,10 +1,11 @@
 /* eslint-disable indent */
 // TIPOS
 import DataType, { Operator, TokenInfo } from '../../utils/types'
+import Instruction, { TAC } from '../abstract'
 import Scope from '../../runtime/scope'
-import Instruction from '../abstract'
 import operateValues from './tools'
 import Value from '../value'
+import { getTemporal3AC, setLast3AC } from 'compiler/utils/tools'
 
 // ASIGNACIONES
 class Expression extends Instruction {
@@ -49,6 +50,20 @@ class Expression extends Instruction {
       } else return onlyTypes ? left.getType(scope) : left
     } else if (this.props.value)
       return onlyTypes ? this.props.value.getType(scope) : this.props.value
+  }
+
+  // AGREGAR CODIGO 3D
+  public to3AC(scope: Scope): TAC {
+    if (this.props.left) {
+      if (this.props.operator) {
+        return setLast3AC(
+          `${this.props.left.to3AC(scope).label} ${this.props.operator} ${
+            this.props.right.to3AC(scope).label
+          }`,
+        )
+      } else return setLast3AC(`${this.props.left.to3AC(scope).label}`)
+    } else if (this.props.value)
+      return setLast3AC(`${this.props.value.to3AC(scope).label}`)
   }
 
   // COMPILAR VALORES

@@ -7,6 +7,8 @@ import DataType, {
   DataValue,
   TokenInfo,
 } from '../../../utils/types'
+import { add3AC } from 'compiler/utils/tools'
+import { TAC } from 'compiler/instruction/abstract'
 
 class VectorValue extends Value {
   // CONSTRUCTOR
@@ -16,6 +18,11 @@ class VectorValue extends Value {
     public defValues?: DataValue[],
   ) {
     super(token, [])
+  }
+
+  // CODIGO 3D
+  public to3AC(): TAC {
+    return add3AC({ label: '', code: '' }) // TODO: 3d para vectores
   }
 
   // COMPILAR UN VALOR SIEMPRE DEVOLVERA TRUE

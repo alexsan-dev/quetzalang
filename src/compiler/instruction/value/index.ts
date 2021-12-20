@@ -1,6 +1,6 @@
 import DataType, { DataValue, TokenInfo } from '../../utils/types'
+import Instruction, { TAC } from '../abstract'
 import Scope from '../../runtime/scope'
-import Instruction from '../abstract'
 
 abstract class Value extends Instruction {
   // CONSTRUCTOR
@@ -13,6 +13,9 @@ abstract class Value extends Instruction {
 
   // OBTENER VALOR CAST
   public abstract getValue(scope: Scope): DataValue | undefined
+
+  // OBTENER CODIGO 3D
+  public abstract to3AC(scope: Scope): TAC
 }
 
 export default Value

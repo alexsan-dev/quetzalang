@@ -1,4 +1,4 @@
-import { addError } from '../../../../utils/tools'
+import { add3AC, addError } from '../../../../utils/tools'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
 import { getValueByType } from '../../tools'
@@ -8,6 +8,7 @@ import DataType, {
   DataValue,
   TokenInfo,
 } from '../../../../utils/types'
+import { TAC } from '../../../abstract'
 
 class VectorPositionValue extends Value {
   // CONSTRUCTOR
@@ -27,6 +28,11 @@ class VectorPositionValue extends Value {
   // OBTENER VARIABLE DE ID
   public getScopedValue(scope: Scope): Value {
     return getValueByType(this.token, this.getType(scope), this.getValue(scope))
+  }
+
+  // CODIGO 3D
+  public to3AC(): TAC {
+    return add3AC({ label: '', code: '' }) // TODO: 3d para vectores
   }
 
   // OBTENER VALOR

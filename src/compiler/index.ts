@@ -27,4 +27,16 @@ const compile = (instructions: Instruction[]) => {
   else addError({ line: 0, col: 0 }, `No existe el metodo main.`)
 }
 
+// GENERAR CODIGO 3D
+export const translate = (instructions: Instruction[]) => {
+  // CREAR ENTORNO GLOBAL
+  const globalEnv = new Scope('Global', 'Global')
+
+  // PRIMER CICLO PARA ASIGNAR FUNCIONES Y VARIABLES
+  instructions?.forEach((instruction: Instruction) => {
+    // @ts-ignore
+    if ('to3AC' in instruction) instruction.to3AC(globalEnv)
+  })
+}
+
 export default compile

@@ -1,4 +1,4 @@
-import { addError } from '../../../../utils/tools'
+import { add3AC, addError } from '../../../../utils/tools'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
 import VectorValue from '..'
@@ -8,6 +8,7 @@ import DataType, {
   DataValue,
   TokenInfo,
 } from '../../../../utils/types'
+import { TAC } from '../../../abstract'
 
 class VectorRangeValue extends Value {
   // CONSTRUCTOR
@@ -32,6 +33,11 @@ class VectorRangeValue extends Value {
   // OBTENER VARIABLE DE ID
   public getScopedValue(scope: Scope): Value {
     return new VectorValue(this.token, [], this.getValue(scope))
+  }
+
+  // CODIGO 3D
+  public to3AC(): TAC {
+    return add3AC({ label: '', code: '' }) // TODO: 3d para vectores
   }
 
   // OBTENER VALOR

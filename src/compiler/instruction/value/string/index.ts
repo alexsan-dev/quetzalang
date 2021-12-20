@@ -5,15 +5,21 @@ import DataType, {
 } from '../../../utils/types'
 import getStringBind, { BINDREGEX } from '../tools'
 import { getInstructions } from '../../../../index'
+import Instruction, { TAC } from '../../abstract'
 import FunctionCall from '../../functions/call'
 import Scope from '../../../runtime/scope'
-import Instruction from '../../abstract'
 import Value from '../'
+import { setLast3AC } from 'compiler/utils/tools'
 
 class StringValue extends Value {
   // CONSTRUCTOR
   constructor(token: TokenInfo, public value: DataValue) {
     super(token, value)
+  }
+
+  // CODIGO 3D
+  public to3AC(): TAC {
+    return setLast3AC(this.value.toString())
   }
 
   // COMPILAR UN VALOR SIEMPRE DEVOLVERA TRUE

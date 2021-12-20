@@ -1,4 +1,4 @@
-import { addError } from '../../../../utils/tools'
+import { add3AC, addError } from '../../../../utils/tools'
 import Scope from '../../../../runtime/scope'
 import Value from '../..'
 import DataType, {
@@ -7,6 +7,7 @@ import DataType, {
   TokenInfo,
 } from '../../../../utils/types'
 import { getValueByType } from '../../tools'
+import { TAC } from '../../../abstract'
 
 class VectorCopyValue extends Value {
   // CONSTRUCTOR
@@ -20,6 +21,11 @@ class VectorCopyValue extends Value {
   // OBTENER VALOR REAL
   public getScopedValue(scope: Scope): Value {
     return getValueByType(this.token, this.getType(scope), this.getValue(scope))
+  }
+
+  // CODIGO 3D
+  public to3AC(): TAC {
+    return add3AC({ label: '', code: '' }) // TODO: 3d para vectores
   }
 
   // OBTENER VALOR

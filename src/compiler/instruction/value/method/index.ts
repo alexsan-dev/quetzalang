@@ -7,6 +7,8 @@ import {
   getBuiltInMethodType,
   getValueByType,
 } from '../tools'
+import { TAC } from '../../abstract'
+import { add3AC } from '../../../utils/tools'
 
 class ValueMethod extends Value {
   // CONSTRUCTOR
@@ -20,6 +22,11 @@ class ValueMethod extends Value {
     },
   ) {
     super(token, 'Value')
+  }
+
+  // CODIGO 3D
+  public to3AC(): TAC {
+    return add3AC({ label: '', code: '' }) // TODO: 3D para metodos
   }
 
   // OBTENER VALOR REAL

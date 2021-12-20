@@ -1,10 +1,11 @@
 // TOOLS
 import Instruction from 'compiler/instruction/abstract'
 import symbols from 'compiler/lexical/symbols'
+import compile, { translate } from 'compiler'
 import errors from 'compiler/lexical/error'
-import * as parser from 'parser'
+import codes from 'compiler/lexical/3ac'
 import logs from 'compiler/logs'
-import compile from 'compiler'
+import * as parser from 'parser'
 
 // LISTA DE INSTRUCCIONES
 let instructions: Instruction[] = []
@@ -49,10 +50,13 @@ const runCode = () => {
   symbols.length = 0
   errors.length = 0
   logs.length = 0
+  codes.length = 0
 
   // COMPILAR
   instructions = getInstructions(value as string)
   compile(instructions)
+  translate(instructions)
+  console.log(codes)
 
   if (logs.length) console.log(logs.join(''))
   if (errors.length) console.error(errors)

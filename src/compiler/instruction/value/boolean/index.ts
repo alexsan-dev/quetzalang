@@ -4,11 +4,18 @@ import DataType, {
   TokenInfo,
 } from '../../../utils/types'
 import Value from '..'
+import { setLast3AC } from 'compiler/utils/tools'
+import { TAC } from 'compiler/instruction/abstract'
 
 class BooleanValue extends Value {
   // CONSTRUCTOR
   constructor(token: TokenInfo, public value: DataValue) {
     super(token, value)
+  }
+
+  // CODIGO 3D
+  public to3AC(): TAC {
+    return setLast3AC(this.getValue().toString()) // TODO: 3D para metodos
   }
 
   // COMPILAR UN VALOR SIEMPRE DEVOLVERA TRUE
