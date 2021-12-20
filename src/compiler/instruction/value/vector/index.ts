@@ -1,6 +1,6 @@
 import { getValueByType, inferTypeValue } from '../tools'
 import { TAC } from '../../../instruction/abstract'
-import { add3AC } from '../../../utils/tools'
+import { getLast3AC } from '../../../utils/tools'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
 import Value from '..'
@@ -21,8 +21,14 @@ class VectorValue extends Value {
   }
 
   // CODIGO 3D
-  public to3AC(): TAC {
-    return add3AC({ label: '', code: '' }) // TODO: 3d para vectores
+  public to3AC(scope: Scope): TAC {
+    return getLast3AC(
+      `{ ${
+        this.defValues
+          ? this.defValues.join(', ')
+          : this.expValue.map((exp) => exp.to3AC(scope).code).join(', ')
+      } }`,
+    )
   }
 
   // COMPILAR UN VALOR SIEMPRE DEVOLVERA TRUE
@@ -44,6 +50,7 @@ class VectorValue extends Value {
     return (this.defValues ?? this.expValue)?.length ?? 0
   }
 
+  // TIPO DE LONGITUD
   public length_type(): DataType {
     return { type: DataTypeEnum.INTEGER }
   }
@@ -59,6 +66,7 @@ class VectorValue extends Value {
       )
   }
 
+  // TIPO DE PUSH
   public push_type(): DataType {
     return { type: DataTypeEnum.VOID }
   }
@@ -71,6 +79,7 @@ class VectorValue extends Value {
     } else return lastValue
   }
 
+  // TIPO DE POP
   public pop_type(scope: Scope): DataType {
     const values = this.defValues ?? this.expValue
     const lastValue = values[values.length - 1]

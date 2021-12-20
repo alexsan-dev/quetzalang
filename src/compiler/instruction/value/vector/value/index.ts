@@ -1,14 +1,14 @@
-import { add3AC, addError } from '../../../../utils/tools'
+import { addError, getLast3AC } from '../../../../utils/tools'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
 import { getValueByType } from '../../tools'
+import { TAC } from '../../../abstract'
 import Value from '../..'
 import DataType, {
   DataTypeEnum,
   DataValue,
   TokenInfo,
 } from '../../../../utils/types'
-import { TAC } from '../../../abstract'
 
 class VectorPositionValue extends Value {
   // CONSTRUCTOR
@@ -31,8 +31,12 @@ class VectorPositionValue extends Value {
   }
 
   // CODIGO 3D
-  public to3AC(): TAC {
-    return add3AC({ label: '', code: '' }) // TODO: 3d para vectores
+  public to3AC(scope: Scope): TAC {
+    return getLast3AC(
+      `${this.props.value.to3AC(scope).code}[${
+        this.props.index.to3AC(scope).code
+      }]`,
+    )
   }
 
   // OBTENER VALOR

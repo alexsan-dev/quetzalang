@@ -43,6 +43,9 @@ export const getInstructions = (value: string) => {
 
 // EJECUTAR
 const runCode = () => {
+  // CAMBIAR DE PESTAÑA
+  if (!isOnEditorTab) changeTab()
+
   cleanConsole()
   // @ts-ignore
   const value = editor.getValue()
@@ -75,7 +78,11 @@ const translateCode = () => {
     // TRADUCIR
     translate(instructions)
     const translateCodes: string = codes
-      .map((code) => `${code.label} = ${code.code};`)
+      .map((code) => {
+        if (code.label === code.code) {
+          if (code.extra?.length) return `${code.label};\n${code.extra}`
+        } else return `${code.label} = ${code.code};`
+      })
       .join('\n')
     editorTranslate.setValue(translateCodes, -1)
 

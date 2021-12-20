@@ -19,6 +19,7 @@ export type InstructionName =
 export interface TAC {
   label: string
   code: string
+  extra?: string
 }
 
 abstract class Instruction {

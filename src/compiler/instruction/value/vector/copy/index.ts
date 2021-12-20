@@ -1,13 +1,19 @@
-import { add3AC, addError } from '../../../../utils/tools'
+import {
+  add3AC,
+  addError,
+  getLast3AC,
+  getTemporal3AC,
+  setLast3AC,
+} from '../../../../utils/tools'
 import Scope from '../../../../runtime/scope'
+import { getValueByType } from '../../tools'
+import { TAC } from '../../../abstract'
 import Value from '../..'
 import DataType, {
   DataTypeEnum,
   DataValue,
   TokenInfo,
 } from '../../../../utils/types'
-import { getValueByType } from '../../tools'
-import { TAC } from '../../../abstract'
 
 class VectorCopyValue extends Value {
   // CONSTRUCTOR
@@ -24,8 +30,15 @@ class VectorCopyValue extends Value {
   }
 
   // CODIGO 3D
-  public to3AC(): TAC {
-    return add3AC({ label: '', code: '' }) // TODO: 3d para vectores
+  public to3AC(scope: Scope): TAC {
+    const lastTemporal = getTemporal3AC(true)
+    const originArray = this.props.value.to3AC(scope)
+
+    return add3AC({
+      label: lastTemporal,
+      code: lastTemporal,
+      extra: `CC_MEMCPY(${lastTemporal}, ${originArray.code}, sizeof(${originArray.code}))`,
+    }) // TODO: 3d para vectores
   }
 
   // OBTENER VALOR
