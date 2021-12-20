@@ -1,8 +1,8 @@
 // TIPOS
 import DataType, { DataTypeEnum, DataValue, TokenInfo } from '../../utils/types'
-import Instruction, { TAC } from '../abstract'
 import { addError } from '../../utils/tools'
 import Scope from '../../runtime/scope'
+import Instruction from '../abstract'
 import Value from '../value'
 
 // ASIGNACIONES

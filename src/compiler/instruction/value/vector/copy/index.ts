@@ -1,10 +1,4 @@
-import {
-  add3AC,
-  addError,
-  getLast3AC,
-  getTemporal3AC,
-  setLast3AC,
-} from '../../../../utils/tools'
+import { add3AC, addError, getTemporal3AC } from '../../../../utils/tools'
 import Scope from '../../../../runtime/scope'
 import { getValueByType } from '../../tools'
 import { TAC } from '../../../abstract'
@@ -37,8 +31,8 @@ class VectorCopyValue extends Value {
     return add3AC({
       label: lastTemporal,
       code: lastTemporal,
-      extra: `CC_MEMCPY(${lastTemporal}, ${originArray.code}, sizeof(${originArray.code}))`,
-    }) // TODO: 3d para vectores
+      extra: `CC_MEMCPY(${lastTemporal}, ${originArray.code}, sizeof(${originArray.code}));`,
+    })
   }
 
   // OBTENER VALOR

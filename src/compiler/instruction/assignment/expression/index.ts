@@ -1,6 +1,6 @@
-import DataType, { TokenInfo } from '../../../utils/types'
+import DataType, { DataTypeEnum, TokenInfo } from '../../../utils/types'
 import { defaultValues } from '../../expression/tools'
-import { add3AC, setLast3AC } from '../../../utils/tools'
+import { add3AC } from '../../../utils/tools'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
 import { TAC } from '../../abstract'
@@ -29,8 +29,34 @@ class ExpAssignment extends Assignment {
   }
 
   // GENERAR CODIGO 3D
-  public to3AC(scope: Scope): TAC {
-    return add3AC({ label: this.id, code: this.props.exp.to3AC(scope).code })
+  public to3AC(scope: Scope, expectedType?: DataType): TAC {
+    let tac: TAC = { label: '', code: '' }
+
+    // ASIGNAR UN ARREGLO A OTRO
+    const valueType =
+      expectedType ?? scope.getVar(this.props.id)?.getType(scope)
+    if (valueType?.type === DataTypeEnum.ARRAY) {
+      const expTac = this.props.exp?.to3AC(scope)
+      if (expTac) {
+        if (expTac.code.startsWith('{') && expTac.code.endsWith('}'))
+          tac = { label: this.id, code: expTac.code }
+        else
+          tac = {
+            label: this.id,
+            code: this.id,
+            extra: expTac
+              ? `CC_MEMCPY(${this.id}, ${expTac?.code}, sizeof(${expTac?.code}));`
+              : '',
+          }
+      } else
+        tac = {
+          label: this.id,
+          code: this.id,
+          extra: '',
+        }
+    } else tac = { label: this.id, code: this.props.exp.to3AC(scope).code }
+
+    return add3AC(tac)
   }
 
   // OBTENER VALOR

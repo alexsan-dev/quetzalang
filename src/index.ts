@@ -80,7 +80,7 @@ const translateCode = () => {
     const translateCodes: string = codes
       .map((code) => {
         if (code.label === code.code) {
-          if (code.extra?.length) return `${code.label};\n${code.extra}`
+          if (code.extra !== undefined) return `${code.label};\n${code.extra}`
         } else return `${code.label} = ${code.code};`
       })
       .join('\n')
