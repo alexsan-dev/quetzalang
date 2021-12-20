@@ -1,9 +1,9 @@
 // TOOLS
+import codes, { clearTemporalCounter } from 'compiler/lexical/3ac'
 import Instruction from 'compiler/instruction/abstract'
 import symbols from 'compiler/lexical/symbols'
 import compile, { translate } from 'compiler'
 import errors from 'compiler/lexical/error'
-import codes from 'compiler/lexical/3ac'
 import logs from 'compiler/logs'
 import * as parser from 'parser'
 
@@ -51,6 +51,7 @@ const runCode = () => {
   errors.length = 0
   logs.length = 0
   codes.length = 0
+  clearTemporalCounter()
 
   // COMPILAR
   instructions = getInstructions(value as string)

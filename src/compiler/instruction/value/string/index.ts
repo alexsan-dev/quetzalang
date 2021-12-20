@@ -1,15 +1,16 @@
+import getStringBind, { BINDREGEX } from '../tools'
+import { getInstructions } from '../../../../index'
+import Instruction, { TAC } from '../../abstract'
+import { getLast3AC } from '../../../utils/tools'
+import FunctionCall from '../../functions/call'
+import Scope from '../../../runtime/scope'
+import Value from '../'
+
 import DataType, {
   DataTypeEnum,
   DataValue,
   TokenInfo,
 } from '../../../utils/types'
-import getStringBind, { BINDREGEX } from '../tools'
-import { getInstructions } from '../../../../index'
-import Instruction, { TAC } from '../../abstract'
-import FunctionCall from '../../functions/call'
-import Scope from '../../../runtime/scope'
-import Value from '../'
-import { setLast3AC } from 'compiler/utils/tools'
 
 class StringValue extends Value {
   // CONSTRUCTOR
@@ -18,8 +19,8 @@ class StringValue extends Value {
   }
 
   // CODIGO 3D
-  public to3AC(): TAC {
-    return setLast3AC(this.value.toString())
+  public to3AC(scope: Scope): TAC {
+    return getLast3AC(this.getValue(scope) as string)
   }
 
   // COMPILAR UN VALOR SIEMPRE DEVOLVERA TRUE

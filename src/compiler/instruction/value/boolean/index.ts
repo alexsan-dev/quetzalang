@@ -1,11 +1,11 @@
+import { TAC } from 'compiler/instruction/abstract'
+import { getLast3AC } from '../../../utils/tools'
+import Value from '..'
 import DataType, {
   DataTypeEnum,
   DataValue,
   TokenInfo,
 } from '../../../utils/types'
-import Value from '..'
-import { setLast3AC } from 'compiler/utils/tools'
-import { TAC } from 'compiler/instruction/abstract'
 
 class BooleanValue extends Value {
   // CONSTRUCTOR
@@ -15,7 +15,7 @@ class BooleanValue extends Value {
 
   // CODIGO 3D
   public to3AC(): TAC {
-    return setLast3AC(this.getValue().toString()) // TODO: 3D para metodos
+    return getLast3AC(this.getValue().toString())
   }
 
   // COMPILAR UN VALOR SIEMPRE DEVOLVERA TRUE

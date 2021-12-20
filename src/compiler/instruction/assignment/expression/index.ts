@@ -1,11 +1,11 @@
 import DataType, { TokenInfo } from '../../../utils/types'
 import { defaultValues } from '../../expression/tools'
+import { setLast3AC } from '../../../utils/tools'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
 import { TAC } from '../../abstract'
 import Value from '../../value'
 import Assignment from '../'
-import { add3AC } from '../../../utils/tools'
 
 // ASIGNACIONES
 class ExpAssignment extends Assignment {
@@ -28,11 +28,12 @@ class ExpAssignment extends Assignment {
     )
   }
 
+  // GENERAR CODIGO 3D
   public to3AC(scope: Scope): TAC {
-    return add3AC({
-      label: this.props.id,
-      code: `${this.props.exp.to3AC(scope).label}`,
-    })
+    // GENERAR Y GUARDAR
+    const next3ac = setLast3AC(this.props.exp.to3AC(scope).code)
+    scope.set3AC(this.props.id, next3ac)
+    return next3ac
   }
 
   // OBTENER VALOR

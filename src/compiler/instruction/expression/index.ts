@@ -1,11 +1,16 @@
 /* eslint-disable indent */
 // TIPOS
 import DataType, { Operator, TokenInfo } from '../../utils/types'
+import {
+  add3AC,
+  getLast3AC,
+  getTemporal3AC,
+  setLast3AC,
+} from '../../utils/tools'
 import Instruction, { TAC } from '../abstract'
 import Scope from '../../runtime/scope'
 import operateValues from './tools'
 import Value from '../value'
-import { getTemporal3AC, setLast3AC } from 'compiler/utils/tools'
 
 // ASIGNACIONES
 class Expression extends Instruction {
@@ -56,14 +61,21 @@ class Expression extends Instruction {
   public to3AC(scope: Scope): TAC {
     if (this.props.left) {
       if (this.props.operator) {
-        return setLast3AC(
-          `${this.props.left.to3AC(scope).label} ${this.props.operator} ${
-            this.props.right.to3AC(scope).label
+        // OPERAR 3D
+        setLast3AC(
+          `${this.props.left.to3AC(scope).code} ${this.props.operator} ${
+            this.props.right.to3AC(scope).code
           }`,
         )
-      } else return setLast3AC(`${this.props.left.to3AC(scope).label}`)
-    } else if (this.props.value)
-      return setLast3AC(`${this.props.value.to3AC(scope).label}`)
+
+        // CREAR 3D
+        const lastTemporal = getTemporal3AC(false)
+        return {
+          label: lastTemporal,
+          code: lastTemporal,
+        }
+      } else return this.props.left.to3AC(scope)
+    } else if (this.props.value) return this.props.value.to3AC(scope)
   }
 
   // COMPILAR VALORES

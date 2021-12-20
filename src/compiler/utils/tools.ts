@@ -1,8 +1,8 @@
 // TIPOS
 import type { JISONTokenInfo, TokenInfo } from './types'
-import { TAC } from 'compiler/instruction/abstract'
+import codes, { addTemporal } from '../lexical/3ac'
+import { TAC } from '../instruction/abstract'
 import errors from '../lexical/error'
-import codes, { addTemporal, tempCounter } from '../lexical/3ac'
 
 /**
  * Obtener token
@@ -41,19 +41,28 @@ export const add3AC = (code: TAC): TAC => {
  * Obtener siguiente variable temporal
  * @returns
  */
-export const getTemporal3AC = () => {
-  return `t${addTemporal()}`
+export const getTemporal3AC = (add?: boolean) => {
+  return `t${addTemporal(add)}`
 }
 
 /**
- * Asignar codigo 3D con ultimo temporal
+ * Obtener codigo 3D con ultimo temporal
  * @param code
  * @returns
  */
+export const getLast3AC = (code: string): TAC => ({
+  label: getTemporal3AC(false),
+  code,
+})
 
+/**
+ * Agregar codigo 3d con ultimo temporal
+ * @param code
+ * @returns
+ */
 export const setLast3AC = (code: string): TAC =>
   add3AC({
-    label: getTemporal3AC(),
+    label: getTemporal3AC(true),
     code,
   })
 

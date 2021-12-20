@@ -1,10 +1,9 @@
 // TIPOS
 import { getValueByType } from '../instruction/value/tools'
+import { TAC } from '../../compiler/instruction/abstract'
 import DataType, { TokenInfo } from '../utils/types'
-import { addError } from '../utils/tools'
-
-// DATOS
 import FunctionBlock from '../instruction/functions'
+import { addError } from '../utils/tools'
 import Value from '../instruction/value'
 
 type ScopeName =
@@ -21,6 +20,7 @@ class Scope {
     [id: string]: {
       value: Value | undefined
       type: DataType
+      tac?: TAC
     }
   }
 
@@ -71,6 +71,17 @@ class Scope {
       )
   }
 
+  // AGREGAR 3AC
+  public set3AC(id: string, tac?: TAC): void {
+    // NO EXISTE
+    if (this.vars[id]) {
+      this.vars[id] = {
+        ...this.vars[id],
+        tac,
+      }
+    }
+  }
+
   // RE ASIGNAR VARIABLE
   public setVar(id: string, newValue: Value): void {
     if (this.getVar(id) !== undefined) {
@@ -95,6 +106,11 @@ class Scope {
   // OBTENER VARIABLE
   public getVar(id: string): Value | undefined {
     return id in this.vars ? this.vars[id]?.value : this.prevScope?.getVar(id)
+  }
+
+  // OBTENER CODIGO 3D DE VARIABLE
+  public get3AC(id: string): TAC {
+    return id in this.vars ? this.vars[id]?.tac : this.prevScope?.get3AC(id)
   }
 
   // OBTENER FUNCION

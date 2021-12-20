@@ -26,7 +26,7 @@ class Declaration extends Instruction {
   public to3AC(scope: Scope): TAC {
     this.props.assignments.forEach(
       // @ts-ignore
-      (assignment: Assignment) => assignment.to3AC(scope).label,
+      (assignment: Assignment) => assignment.to3AC(scope),
     )
 
     return { label: '', code: '' }
