@@ -1,4 +1,6 @@
 import { getValueByType, inferTypeValue } from '../tools'
+import { TAC } from '../../../instruction/abstract'
+import { add3AC } from '../../../utils/tools'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
 import Value from '..'
@@ -7,8 +9,6 @@ import DataType, {
   DataValue,
   TokenInfo,
 } from '../../../utils/types'
-import { add3AC } from 'compiler/utils/tools'
-import { TAC } from 'compiler/instruction/abstract'
 
 class VectorValue extends Value {
   // CONSTRUCTOR

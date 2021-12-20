@@ -24,7 +24,8 @@ const translateTab = document.getElementById('translateTab')
 const collapseBtn = document.getElementById('collapseBtn')
 const uploadInput = document.getElementById('uploadInput')
 const terminalBtn = document.getElementById('terminalBtn')
-const compileBtn = document.getElementById('runtimeBtn')
+const runtimeBtn = document.getElementById('runtimeBtn')
+const compileBtn = document.getElementById('compileBtn')
 const uploadBtn = document.getElementById('uploadBtn')
 const editorTab = document.getElementById('editorTab')
 const shareBtn = document.getElementById('shareBtn')
@@ -50,20 +51,37 @@ const runCode = () => {
   symbols.length = 0
   errors.length = 0
   logs.length = 0
-  codes.length = 0
-  clearTemporalCounter()
 
   // COMPILAR
   instructions = getInstructions(value as string)
   compile(instructions)
-  translate(instructions)
-  console.log(codes)
 
   if (logs.length) console.log(logs.join(''))
   if (errors.length) console.error(errors)
 
   // ABRIR
   if (!expandedConsole) collapseConsole()
+}
+
+// TRADUCIR CODIGO
+const translateCode = () => {
+  runCode()
+
+  if (instructions.length) {
+    // REINCIIAR
+    codes.length = 0
+    clearTemporalCounter()
+
+    // TRADUCIR
+    translate(instructions)
+    const translateCodes: string = codes
+      .map((code) => `${code.label} = ${code.code};`)
+      .join('\n')
+    editorTranslate.setValue(translateCodes, -1)
+
+    // ABRIR PESTAÑA
+    if (isOnEditorTab) changeTab()
+  }
 }
 
 // ABRIR ARCHIVO
@@ -139,12 +157,13 @@ const saveCode = () => {
 const setEvents = () => {
   collapseBtn?.addEventListener('click', collapseConsole)
   terminalBtn?.addEventListener('click', collapseConsole)
+  compileBtn?.addEventListener('click', translateCode)
   translateTab?.addEventListener('click', changeTab)
   uploadInput?.addEventListener('change', openFile)
   cleanBtn?.addEventListener('click', cleanConsole)
   editorTab?.addEventListener('click', changeTab)
   shareBtn?.addEventListener('click', shareCode)
-  compileBtn?.addEventListener('click', runCode)
+  runtimeBtn?.addEventListener('click', runCode)
   saveBtn?.addEventListener('click', saveCode)
 
   window.addEventListener('keydown', (ev: KeyboardEvent) => {
@@ -169,6 +188,9 @@ const setEvents = () => {
         isCtrl = true
       } else if (ev.key === 'o') {
         uploadBtn?.click()
+        isCtrl = true
+      } else if (ev.key === 'e') {
+        translateCode()
         isCtrl = true
       }
 

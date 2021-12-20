@@ -13,8 +13,8 @@ class IdValue extends Value {
   public execute(): void {}
 
   // CODIGO 3D
-  public to3AC(scope: Scope): TAC {
-    return { label: '', code: scope.get3AC((this.value as string) ?? '').label }
+  public to3AC(): TAC {
+    return { label: '', code: this.value as string }
   }
 
   // OBTENER NOMBRE DE ID

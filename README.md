@@ -37,7 +37,7 @@ npm start
 | ------- | ---------------- |
 | Ctr+P   | Interpretar      |
 | Ctr+R   | Borrar consola   |
-| Ctr+T   | Traducir         |
+| Ctr+E   | Traducir         |
 | Ctr+M   | Ocultar consola  |
 | Ctr+S   | Guardar codigo   |
 | Ctr+U   | Compartir codigo |
