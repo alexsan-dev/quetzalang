@@ -3,7 +3,6 @@ import DataType, { TokenInfo } from '../../../utils/types'
 import Instruction, { TAC } from '../../abstract'
 import Scope from '../../../runtime/scope'
 import Assignment from '../'
-import { add3AC, getTemporal3AC } from '../../../utils/tools'
 
 // DECLARACIONES
 class Declaration extends Instruction {
@@ -24,9 +23,8 @@ class Declaration extends Instruction {
 
   // EJECUTAR 3D
   public to3AC(scope: Scope): TAC {
-    this.props.assignments.forEach(
-      // @ts-ignore
-      (assignment: Assignment) => assignment.to3AC(scope, this.props.type),
+    this.props.assignments.forEach((assignment: Assignment) =>
+      assignment.to3AC(scope, this.props.type),
     )
 
     return { label: '', code: '' }

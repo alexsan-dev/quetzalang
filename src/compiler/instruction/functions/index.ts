@@ -1,7 +1,7 @@
 // TOOLS
 import DataType, { DataTypeEnum, DataValue, TokenInfo } from '../../utils/types'
+import Instruction, { TAC } from '../abstract'
 import Scope from '../../runtime/scope'
-import Instruction from '../abstract'
 import Value from '../value'
 
 class FunctionBlock extends Instruction {
@@ -24,6 +24,11 @@ class FunctionBlock extends Instruction {
     this.isOnBreak = false
   }
 
+  // GENERAR 3D
+  public to3AC(): TAC {
+    return { label: '', code: '' }
+  }
+
   // OBTENER TIPO DE FUNCION
   public getType(): DataType {
     return this.props.type
@@ -44,6 +49,7 @@ class FunctionBlock extends Instruction {
           {
             token: this.token,
             name: 'FunctionCall',
+            to3AC: () => ({ label: '', code: '' }),
             execute: () => {
               this.isOnBreak = true
               return true

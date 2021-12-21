@@ -2,28 +2,30 @@ import DataType, { DataTypeEnum, TokenInfo } from '../../../utils/types'
 import VectorPositionValue from '../../value/vector/value'
 import ExpAssignment from '../../assignment/expression'
 import { getBuiltInMethod } from '../../value/tools'
+import Instruction, { TAC } from '../../abstract'
 import { addError } from '../../../utils/tools'
 import CharValue from '../../value/character'
 import FunctionBlock from '../../functions'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
-import Instruction from '../../abstract'
 import IntValue from '../../value/int'
 import Value from '../../value'
 
-class ForInLoop {
+class ForInLoop extends Instruction {
   private isOnLoopContinue = false
   private isOnLoopBreak = false
 
   // CONSTRUCTOR
   constructor(
-    private token: TokenInfo,
+    public token: TokenInfo,
     public props: {
       iterVariable: string
       iterReference: Value
       body: Instruction[]
     },
-  ) {}
+  ) {
+    super(token, 'Loop')
+  }
 
   // AGREGAR FUNCION DE SALIDA
   private addLoopControlFunction(
@@ -40,6 +42,7 @@ class ForInLoop {
           {
             token: this.token,
             name: 'FunctionCall',
+            to3AC: () => ({ label: '', code: '' }),
             execute: () => {
               if (name == 'continue') this.isOnLoopContinue = true
               else this.isOnLoopBreak = true
@@ -50,6 +53,11 @@ class ForInLoop {
         params: [],
       }),
     )
+  }
+
+  // GENERAR 3D
+  public to3AC(scope: Scope, type?: DataType): TAC {
+    throw new Error('Method not implemented.')
   }
 
   // COMPILAR

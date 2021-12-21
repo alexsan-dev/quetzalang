@@ -30,7 +30,7 @@ abstract class Instruction {
   public abstract execute(scope: Scope, type?: DataType): void
 
   // AGRERGAR 3AC
-  // public abstract to3AC(scope: Scope, type?: DataType): TAC | undefined // TODO: verificar undefined
+  public abstract to3AC(scope: Scope, type?: DataType): TAC | undefined // TODO: verificar undefined
 }
 
 export default Instruction

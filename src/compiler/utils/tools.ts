@@ -1,6 +1,6 @@
 // TIPOS
 import type { JISONTokenInfo, TokenInfo } from './types'
-import codes, { addTemporal } from '../lexical/3ac'
+import codes, { addLabel, addTemporal } from '../lexical/3ac'
 import { TAC } from '../instruction/abstract'
 import errors from '../lexical/error'
 
@@ -43,6 +43,14 @@ export const add3AC = (code: TAC): TAC => {
  */
 export const getTemporal3AC = (add?: boolean) => {
   return `t${addTemporal(add)}`
+}
+
+/**
+ * Obtener ultima etiqueta
+ * @param add
+ */
+export const getLastLabel = (add?: boolean) => {
+  return `l${addLabel(add)}`
 }
 
 /**

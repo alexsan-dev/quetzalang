@@ -1,5 +1,8 @@
 // TOOLS
-import codes, { clearTemporalCounter } from 'compiler/lexical/3ac'
+import codes, {
+  clearLabelCounter,
+  clearTemporalCounter,
+} from 'compiler/lexical/3ac'
 import Instruction from 'compiler/instruction/abstract'
 import symbols from 'compiler/lexical/symbols'
 import compile, { translate } from 'compiler'
@@ -74,14 +77,18 @@ const translateCode = () => {
     // REINCIIAR
     codes.length = 0
     clearTemporalCounter()
+    clearLabelCounter()
 
     // TRADUCIR
     translate(instructions)
     const translateCodes: string = codes
       .map((code) => {
-        if (code.label === code.code) {
-          if (code.extra !== undefined) return `${code.label};\n${code.extra}`
-        } else return `${code.label} = ${code.code};`
+        let final3AC: string = ''
+        if (code.label === code.code) final3AC += code.label + ';\n'
+
+        if (code.extra !== undefined) final3AC += `${code.extra}`
+        else final3AC = `${code.label} = ${code.code};`
+        return final3AC
       })
       .join('\n')
     editorTranslate.setValue(translateCodes, -1)
@@ -128,7 +135,6 @@ const collapseConsole = () => {
   consoleTextarea.style.padding = expandedConsole
     ? '33px 12px 12px 12px'
     : '54px 12px 12px 12px'
-  console.log(chevron)
   chevron.style.transform = `rotate(${expandedConsole ? 180 : 0}deg)`
   setTimeout(
     () => {

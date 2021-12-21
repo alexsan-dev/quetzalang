@@ -1,8 +1,8 @@
 // TIPOS
 import DataType, { DataTypeEnum, DataValue, TokenInfo } from '../../utils/types'
+import Instruction, { TAC } from '../abstract'
 import { addError } from '../../utils/tools'
 import Scope from '../../runtime/scope'
-import Instruction from '../abstract'
 import Value from '../value'
 
 // ASIGNACIONES
@@ -10,6 +10,11 @@ class Assignment extends Instruction {
   // CONSTRUCTOR
   constructor(token: TokenInfo, public id?: string) {
     super(token, 'Assignment')
+  }
+
+  // GENERAR 3D
+  public to3AC(scope: Scope, type?: DataType): TAC {
+    throw new Error('Method not implemented.')
   }
 
   // GUARDAR VARIABLE EN ENTORNO

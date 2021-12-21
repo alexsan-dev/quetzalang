@@ -1,9 +1,9 @@
 import DataType, { DataValue, TokenInfo } from '../../../utils/types'
 import { getValueByType } from '../../value/tools'
+import Instruction, { TAC } from '../../abstract'
 import { addError } from '../../../utils/tools'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
-import Instruction from '../../abstract'
 import Value from '../../value'
 import FunctionBlock from '..'
 
@@ -28,6 +28,11 @@ class FunctionCall extends Instruction {
       this.getType(scope),
       this.getExecuteValue(scope),
     )
+  }
+
+  // GENERAR 3D
+  public to3AC(scope: Scope, type?: DataType): TAC {
+    throw new Error('Method not implemented.')
   }
 
   // OBTENER VALOR

@@ -40,6 +40,7 @@ class ForLoop extends CycleControl {
           {
             token: this.token,
             name: 'FunctionCall',
+            to3AC: () => ({ label: '', code: '' }),
             execute: () => {
               if (name == 'continue') this.isOnLoopContinue = true
               else this.isOnLoopBreak = true

@@ -1,10 +1,10 @@
 import { DataTypeEnum, Operator, TokenInfo } from '../../../utils/types'
 import { addError } from '../../../utils/tools'
+import DoubleValue from '../../value/double'
 import Scope from '../../../runtime/scope'
 import IntValue from '../../value/int'
 import Value from '../../value'
 import Assignment from '../'
-import DoubleValue from '../../value/double'
 
 // ASIGNACIONES
 class IncrementalAssignment extends Assignment {

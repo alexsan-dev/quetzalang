@@ -1,9 +1,8 @@
-import { TokenInfo } from '../../../utils/types'
+import DataType, { TokenInfo } from '../../../utils/types'
+import { getValueByType } from '../../value/tools'
+import Instruction, { TAC } from '../../abstract'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
-import Instruction from '../../abstract'
-import Value from '../../value'
-import { getValueByType } from '../../value/tools'
 
 class ReturnValue extends Instruction {
   // CONSTRUCTOR
@@ -15,6 +14,11 @@ class ReturnValue extends Instruction {
     },
   ) {
     super(token, props.type)
+  }
+
+  // GENERAR 3D
+  public to3AC(scope: Scope, type?: DataType): TAC {
+    throw new Error('Method not implemented.')
   }
 
   // COMPILAR

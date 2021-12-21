@@ -1,8 +1,8 @@
-import { DataTypeEnum, TokenInfo } from '../../../utils/types'
+import DataType, { DataTypeEnum, TokenInfo } from '../../../utils/types'
+import Instruction, { TAC } from '../../abstract'
 import FunctionBlock from '../../functions'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
-import Instruction from '../../abstract'
 
 // PROPS
 interface CaseBody {
@@ -26,6 +26,11 @@ class Switch extends Instruction {
     super(token, 'Switch')
   }
 
+  // GENERAR 3D
+  public to3AC(scope: Scope, type?: DataType): TAC {
+    throw new Error('Method not implemented.')
+  }
+
   // AGREGAR FUNCION DE SALIDA
   private addControlFunction(
     env: Scope,
@@ -41,6 +46,7 @@ class Switch extends Instruction {
           {
             token: this.token,
             name: 'FunctionCall',
+            to3AC: () => ({ label: '', code: '' }),
             execute: () => {
               this.isOnBreak = true
               return true

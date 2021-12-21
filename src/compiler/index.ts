@@ -41,7 +41,6 @@ export const translate = (instructions: Instruction[]) => {
 
   // SEGUNDO CICLO PARA GENERAR 3D
   instructions?.forEach((instruction: Instruction) => {
-    // @ts-ignore
     if ('to3AC' in instruction) instruction.to3AC(globalEnv)
   })
 }
