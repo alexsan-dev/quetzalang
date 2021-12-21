@@ -19,7 +19,7 @@ const consoleTextarea = document.getElementById(
 const editorContainer = document.getElementById(
   'editorsSlide',
 ) as HTMLDivElement
-const chevron = document.getElementById('chevron') as HTMLTextAreaElement
+
 const translateTab = document.getElementById('translateTab')
 const collapseBtn = document.getElementById('collapseBtn')
 const uploadInput = document.getElementById('uploadInput')
@@ -121,11 +121,14 @@ const changeTab = () => {
 
 // OCULTAR CONSOLA
 const collapseConsole = () => {
+  const chevron = document.getElementById('chevron')
+
   // TEXTAREA
   consoleTextarea.style.height = expandedConsole ? '0px' : '40vh'
   consoleTextarea.style.padding = expandedConsole
     ? '33px 12px 12px 12px'
     : '54px 12px 12px 12px'
+  console.log(chevron)
   chevron.style.transform = `rotate(${expandedConsole ? 180 : 0}deg)`
   setTimeout(
     () => {
