@@ -200,7 +200,7 @@ main {
 #reportsContainer {
   width: 33.33%;
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: 50% 50%;
   grid-template-rows: 50% 50%;
   max-height: calc(100vh - 112px);
   overflow: hidden;

@@ -177,12 +177,14 @@ NULLCHAR "\\0"
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* REGEX */
 \"[^\"]*\"				    {
+                                const normalStr = yytext
                                 yytext = yytext.substr(1,yyleng-2);
-                                return addToken(yylloc, 'text', yytext);
+                                return addToken(yylloc, 'text', normalStr);
                             }
 \'[^\']?\'                  {
+                                const normalChar = yytext
                                 yytext = yytext.substr(1,yyleng-2);
-                                return addToken(yylloc, 'character', yytext);
+                                return addToken(yylloc, 'character', normalChar);
 						    }
 
 [0-9]*"."[0-9]+\b           return addToken(yylloc, 'decimal', yytext)

@@ -1249,13 +1249,15 @@ break;
 case 78:"\\0"
 break;
 case 79:
+                                const normalStr = yy_.yytext
                                 yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2);
-                                return addToken(yy_.yylloc, 'text', yy_.yytext);
+                                return addToken(yy_.yylloc, 'text', normalStr);
                             
 break;
 case 80:
+                                const normalChar = yy_.yytext
                                 yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2);
-                                return addToken(yy_.yylloc, 'character', yy_.yytext);
+                                return addToken(yy_.yylloc, 'character', normalChar);
 						    
 break;
 case 81:return addToken(yy_.yylloc, 'decimal', yy_.yytext)
