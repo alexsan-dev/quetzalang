@@ -192,7 +192,7 @@ const generateReports = () => {
 
       // ASIGNAR
       name.innerHTML = symbol.name
-      token.innerHTML = symbol.name
+      token.innerHTML = symbol.token
       line.innerHTML = symbol.line.toString()
       col.innerHTML = symbol.col.toString()
 

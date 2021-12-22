@@ -58,8 +58,8 @@
     const IdValue = require('../compiler/instruction/value/id').default
 
     // AGREGAR TOKEN
-    const addToken = (yylloc, name) => {
-        symbols.push({ ...getToken(yylloc), name })
+    const addToken = (yylloc, name, token) => {
+        symbols.push({ ...getToken(yylloc), name, token })
         return name
     }
 %}
@@ -75,94 +75,94 @@
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* TIPOS DE DATOS */
-"char"                      return addToken(yylloc, 'charType')
-"boolean"                   return addToken(yylloc, 'boolType')
-"null"                      return addToken(yylloc, 'nullType')
-"void"                      return addToken(yylloc, 'voidType')
-"String"                    return addToken(yylloc, 'strType')
-"double"                    return addToken(yylloc, 'dblType')
-"int"                       return addToken(yylloc, 'intType')
-"true"                      return addToken(yylloc, 'trBool')
-"string"                    return addToken(yylloc, 'strMtd')
-"false"                     return addToken(yylloc, 'flBool')
+"char"                      return addToken(yylloc, 'charType', 'char')
+"boolean"                   return addToken(yylloc, 'boolType', 'boolean')
+"null"                      return addToken(yylloc, 'nullType', 'null')
+"void"                      return addToken(yylloc, 'voidType', 'void')
+"String"                    return addToken(yylloc, 'strType', 'string')
+"double"                    return addToken(yylloc, 'dblType', 'double')
+"int"                       return addToken(yylloc, 'intType', 'int')
+"true"                      return addToken(yylloc, 'trBool', 'truee')
+"string"                    return addToken(yylloc, 'strMtd', 'string')
+"false"                     return addToken(yylloc, 'flBool', 'false')
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* OPERADORES */
-"<="                        return addToken(yylloc, 'lessOrEquals')
-">="                        return addToken(yylloc, 'moreOrEquals')
-"=="                        return addToken(yylloc, 'equalsEquals')
-"--"                        return addToken(yylloc, 'minusMinus')
-"!="                        return addToken(yylloc, 'nonEquals')
-"++"                        return addToken(yylloc, 'plusPlus')
+"<="                        return addToken(yylloc, 'lessOrEquals', '<=')
+">="                        return addToken(yylloc, 'moreOrEquals', '>=')
+"=="                        return addToken(yylloc, 'equalsEquals', '==')
+"--"                        return addToken(yylloc, 'minusMinus', '--')
+"!="                        return addToken(yylloc, 'nonEquals', '!=')
+"++"                        return addToken(yylloc, 'plusPlus', '++')
 
-"?"                         return addToken(yylloc, 'questionMark')
-":"                         return addToken(yylloc, 'colom')
+"?"                         return addToken(yylloc, 'questionMark', '?')
+":"                         return addToken(yylloc, 'colom', ':')
 
-"/"                         return addToken(yylloc, 'division')
-"%"                         return addToken(yylloc, 'module')
-"*"                         return addToken(yylloc, 'times')
-"^"                         return addToken(yylloc, 'power')
+"/"                         return addToken(yylloc, 'division', '/')
+"%"                         return addToken(yylloc, 'module', '%')
+"*"                         return addToken(yylloc, 'times', '*')
+"^"                         return addToken(yylloc, 'power', '^')
 
-"="                         return addToken(yylloc, 'equals')
-"<"                         return addToken(yylloc, 'minor')
-">"                         return addToken(yylloc, 'major')
+"="                         return addToken(yylloc, 'equals', '=')
+"<"                         return addToken(yylloc, 'minor', '<')
+">"                         return addToken(yylloc, 'major', '>')
 
-"-"                         return addToken(yylloc, 'minus')
-"+"                         return addToken(yylloc, 'plus')
+"-"                         return addToken(yylloc, 'minus', '-')
+"+"                         return addToken(yylloc, 'plus', '+')
 
-"&&"                        return addToken(yylloc, 'and')
-"!"                         return addToken(yylloc, 'not')
-"||"                        return addToken(yylloc, 'or')
+"&&"                        return addToken(yylloc, 'and', '&&')
+"!"                         return addToken(yylloc, 'not', '!')
+"||"                        return addToken(yylloc, 'or', '||')
 
-"&"                         return addToken(yylloc, 'concat')
-"#"                         return addToken(yylloc, 'hash')
+"&"                         return addToken(yylloc, 'concat', '&')
+"#"                         return addToken(yylloc, 'hash', '#')
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* SIMBOLOS */
-"."                         return addToken(yylloc, 'dot')
-","                         return addToken(yylloc, 'comma')
-";"                         return addToken(yylloc, 'semicolom')
-"{"                         return addToken(yylloc, 'openBracket')
-"}"                         return addToken(yylloc, 'closeBracket')
-"("                         return addToken(yylloc, 'openParenthesis')
-")"                         return addToken(yylloc, 'closeParenthesis')
-"["                         return addToken(yylloc, 'openSquareBracket')
-"]"                         return addToken(yylloc, 'closeSquareBracket')
+"."                         return addToken(yylloc, 'dot', '.')
+","                         return addToken(yylloc, 'comma', ',')
+";"                         return addToken(yylloc, 'semicolom', ';')
+"{"                         return addToken(yylloc, 'openBracket', '{')
+"}"                         return addToken(yylloc, 'closeBracket', '}')
+"("                         return addToken(yylloc, 'openParenthesis', '(')
+")"                         return addToken(yylloc, 'closeParenthesis', ')')
+"["                         return addToken(yylloc, 'openSquareBracket', '[')
+"]"                         return addToken(yylloc, 'closeSquareBracket', ']')
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* PALABRAS RESERVADAS */
-'toDouble'                  return addToken(yylloc, 'toDoubleRw')
-'println'                   return addToken(yylloc, 'printLnRw')
-'typeof'                    return addToken(yylloc, 'typeOfRw')
-'parse'                     return addToken(yylloc, 'parseRw')
-'log10'                     return addToken(yylloc, 'log10Rw')
-'print'                     return addToken(yylloc, 'printRw')
-'toInt'                     return addToken(yylloc, 'toIntRw')
-'begin'                     return addToken(yylloc, 'beginRw')
-'sqrt'                      return addToken(yylloc, 'sqrtRw')
-'eval'                      return addToken(yylloc, 'evalRw')
-'push'                      return addToken(yylloc, 'pushRw')
-'cos'                       return addToken(yylloc, 'cosRw')
-'pow'                       return addToken(yylloc, 'powRw')
-'sin'                       return addToken(yylloc, 'sinRw')
-'tan'                       return addToken(yylloc, 'tanRw')
-'end'                       return addToken(yylloc, 'endRw')
+'toDouble'                  return addToken(yylloc, 'toDoubleRw', 'toDouble')
+'println'                   return addToken(yylloc, 'printLnRw', 'println')
+'typeof'                    return addToken(yylloc, 'typeOfRw', 'typeof')
+'parse'                     return addToken(yylloc, 'parseRw', 'parse')
+'log10'                     return addToken(yylloc, 'log10Rw', 'log10')
+'print'                     return addToken(yylloc, 'printRw', 'print')
+'toInt'                     return addToken(yylloc, 'toIntRw', 'toInt')
+'begin'                     return addToken(yylloc, 'beginRw', 'begin')
+'sqrt'                      return addToken(yylloc, 'sqrtRw', 'sqrt')
+'eval'                      return addToken(yylloc, 'evalRw', 'eval')
+'push'                      return addToken(yylloc, 'pushRw', 'push')
+'cos'                       return addToken(yylloc, 'cosRw', 'cos')
+'pow'                       return addToken(yylloc, 'powRw', 'pow')
+'sin'                       return addToken(yylloc, 'sinRw', 'sin')
+'tan'                       return addToken(yylloc, 'tanRw', 'tan')
+'end'                       return addToken(yylloc, 'endRw', 'end')
 
-'else'                      return addToken(yylloc, 'elseRw')
-'if'                        return addToken(yylloc, 'ifRw')
+'else'                      return addToken(yylloc, 'elseRw', 'else')
+'if'                        return addToken(yylloc, 'ifRw', 'if')
 
-'default'                   return addToken(yylloc, 'defaultRw')
-'switch'                    return addToken(yylloc, 'switchRw')
-'break'                     return addToken(yylloc, 'breakRw')
-'case'                      return addToken(yylloc, 'caseRw')
+'default'                   return addToken(yylloc, 'defaultRw', 'default')
+'switch'                    return addToken(yylloc, 'switchRw', 'switch')
+'break'                     return addToken(yylloc, 'breakRw', 'break')
+'case'                      return addToken(yylloc, 'caseRw', 'case')
 
-'while'                     return addToken(yylloc, 'whileRw')
-'for'                       return addToken(yylloc, 'forRw')
-'do'                        return addToken(yylloc, 'doRw')
-'in'                        return addToken(yylloc, 'inRw')
+'while'                     return addToken(yylloc, 'whileRw', 'while')
+'for'                       return addToken(yylloc, 'forRw', 'for')
+'do'                        return addToken(yylloc, 'doRw', 'do')
+'in'                        return addToken(yylloc, 'inRw', 'in')
 
-'continue'                  return addToken(yylloc, 'continueRw')
-'return'                    return addToken(yylloc, 'returnRw')
+'continue'                  return addToken(yylloc, 'continueRw', 'continue')
+'return'                    return addToken(yylloc, 'returnRw', 'return')
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* SECUENCIAS DE ESCAPE */
@@ -178,16 +178,16 @@ NULLCHAR "\\0"
 /* REGEX */
 \"[^\"]*\"				    {
                                 yytext = yytext.substr(1,yyleng-2);
-                                return addToken(yylloc, 'text');
+                                return addToken(yylloc, 'text', yytext);
                             }
 \'[^\']?\'                  {
                                 yytext = yytext.substr(1,yyleng-2);
-                                return addToken(yylloc, 'character');
+                                return addToken(yylloc, 'character', yytext);
 						    }
 
-[0-9]*"."[0-9]+\b           return addToken(yylloc, 'decimal')
-[0-9]+\b				    return addToken(yylloc, 'integer')
-([a-zA-Z])[a-zA-Z0-9_]*	    return addToken(yylloc, 'id')
+[0-9]*"."[0-9]+\b           return addToken(yylloc, 'decimal', yytext)
+[0-9]+\b				    return addToken(yylloc, 'integer', yytext)
+([a-zA-Z])[a-zA-Z0-9_]*	    return addToken(yylloc, 'id', yytext)
 <<EOF>>				        return 'EOF'
 
 .                           {

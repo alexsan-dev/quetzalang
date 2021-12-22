@@ -756,8 +756,8 @@ parse: function parse(input) {
     const IdValue = require('../compiler/instruction/value/id').default
 
     // AGREGAR TOKEN
-    const addToken = (yylloc, name) => {
-        symbols.push({ ...getToken(yylloc), name })
+    const addToken = (yylloc, name, token) => {
+        symbols.push({ ...getToken(yylloc), name, token })
         return name
     }
 
@@ -1096,143 +1096,143 @@ case 1:/* IGNORE */
 break;
 case 2:/* IGNORE */
 break;
-case 3:return addToken(yy_.yylloc, 'charType')
+case 3:return addToken(yy_.yylloc, 'charType', 'char')
 break;
-case 4:return addToken(yy_.yylloc, 'boolType')
+case 4:return addToken(yy_.yylloc, 'boolType', 'boolean')
 break;
-case 5:return addToken(yy_.yylloc, 'nullType')
+case 5:return addToken(yy_.yylloc, 'nullType', 'null')
 break;
-case 6:return addToken(yy_.yylloc, 'voidType')
+case 6:return addToken(yy_.yylloc, 'voidType', 'void')
 break;
-case 7:return addToken(yy_.yylloc, 'strType')
+case 7:return addToken(yy_.yylloc, 'strType', 'string')
 break;
-case 8:return addToken(yy_.yylloc, 'dblType')
+case 8:return addToken(yy_.yylloc, 'dblType', 'double')
 break;
-case 9:return addToken(yy_.yylloc, 'intType')
+case 9:return addToken(yy_.yylloc, 'intType', 'int')
 break;
-case 10:return addToken(yy_.yylloc, 'trBool')
+case 10:return addToken(yy_.yylloc, 'trBool', 'truee')
 break;
-case 11:return addToken(yy_.yylloc, 'strMtd')
+case 11:return addToken(yy_.yylloc, 'strMtd', 'string')
 break;
-case 12:return addToken(yy_.yylloc, 'flBool')
+case 12:return addToken(yy_.yylloc, 'flBool', 'false')
 break;
-case 13:return addToken(yy_.yylloc, 'lessOrEquals')
+case 13:return addToken(yy_.yylloc, 'lessOrEquals', '<=')
 break;
-case 14:return addToken(yy_.yylloc, 'moreOrEquals')
+case 14:return addToken(yy_.yylloc, 'moreOrEquals', '>=')
 break;
-case 15:return addToken(yy_.yylloc, 'equalsEquals')
+case 15:return addToken(yy_.yylloc, 'equalsEquals', '==')
 break;
-case 16:return addToken(yy_.yylloc, 'minusMinus')
+case 16:return addToken(yy_.yylloc, 'minusMinus', '--')
 break;
-case 17:return addToken(yy_.yylloc, 'nonEquals')
+case 17:return addToken(yy_.yylloc, 'nonEquals', '!=')
 break;
-case 18:return addToken(yy_.yylloc, 'plusPlus')
+case 18:return addToken(yy_.yylloc, 'plusPlus', '++')
 break;
-case 19:return addToken(yy_.yylloc, 'questionMark')
+case 19:return addToken(yy_.yylloc, 'questionMark', '?')
 break;
-case 20:return addToken(yy_.yylloc, 'colom')
+case 20:return addToken(yy_.yylloc, 'colom', ':')
 break;
-case 21:return addToken(yy_.yylloc, 'division')
+case 21:return addToken(yy_.yylloc, 'division', '/')
 break;
-case 22:return addToken(yy_.yylloc, 'module')
+case 22:return addToken(yy_.yylloc, 'module', '%')
 break;
-case 23:return addToken(yy_.yylloc, 'times')
+case 23:return addToken(yy_.yylloc, 'times', '*')
 break;
-case 24:return addToken(yy_.yylloc, 'power')
+case 24:return addToken(yy_.yylloc, 'power', '^')
 break;
-case 25:return addToken(yy_.yylloc, 'equals')
+case 25:return addToken(yy_.yylloc, 'equals', '=')
 break;
-case 26:return addToken(yy_.yylloc, 'minor')
+case 26:return addToken(yy_.yylloc, 'minor', '<')
 break;
-case 27:return addToken(yy_.yylloc, 'major')
+case 27:return addToken(yy_.yylloc, 'major', '>')
 break;
-case 28:return addToken(yy_.yylloc, 'minus')
+case 28:return addToken(yy_.yylloc, 'minus', '-')
 break;
-case 29:return addToken(yy_.yylloc, 'plus')
+case 29:return addToken(yy_.yylloc, 'plus', '+')
 break;
-case 30:return addToken(yy_.yylloc, 'and')
+case 30:return addToken(yy_.yylloc, 'and', '&&')
 break;
-case 31:return addToken(yy_.yylloc, 'not')
+case 31:return addToken(yy_.yylloc, 'not', '!')
 break;
-case 32:return addToken(yy_.yylloc, 'or')
+case 32:return addToken(yy_.yylloc, 'or', '||')
 break;
-case 33:return addToken(yy_.yylloc, 'concat')
+case 33:return addToken(yy_.yylloc, 'concat', '&')
 break;
-case 34:return addToken(yy_.yylloc, 'hash')
+case 34:return addToken(yy_.yylloc, 'hash', '#')
 break;
-case 35:return addToken(yy_.yylloc, 'dot')
+case 35:return addToken(yy_.yylloc, 'dot', '.')
 break;
-case 36:return addToken(yy_.yylloc, 'comma')
+case 36:return addToken(yy_.yylloc, 'comma', ',')
 break;
-case 37:return addToken(yy_.yylloc, 'semicolom')
+case 37:return addToken(yy_.yylloc, 'semicolom', ';')
 break;
-case 38:return addToken(yy_.yylloc, 'openBracket')
+case 38:return addToken(yy_.yylloc, 'openBracket', '{')
 break;
-case 39:return addToken(yy_.yylloc, 'closeBracket')
+case 39:return addToken(yy_.yylloc, 'closeBracket', '}')
 break;
-case 40:return addToken(yy_.yylloc, 'openParenthesis')
+case 40:return addToken(yy_.yylloc, 'openParenthesis', '(')
 break;
-case 41:return addToken(yy_.yylloc, 'closeParenthesis')
+case 41:return addToken(yy_.yylloc, 'closeParenthesis', ')')
 break;
-case 42:return addToken(yy_.yylloc, 'openSquareBracket')
+case 42:return addToken(yy_.yylloc, 'openSquareBracket', '[')
 break;
-case 43:return addToken(yy_.yylloc, 'closeSquareBracket')
+case 43:return addToken(yy_.yylloc, 'closeSquareBracket', ']')
 break;
-case 44:return addToken(yy_.yylloc, 'toDoubleRw')
+case 44:return addToken(yy_.yylloc, 'toDoubleRw', 'toDouble')
 break;
-case 45:return addToken(yy_.yylloc, 'printLnRw')
+case 45:return addToken(yy_.yylloc, 'printLnRw', 'println')
 break;
-case 46:return addToken(yy_.yylloc, 'typeOfRw')
+case 46:return addToken(yy_.yylloc, 'typeOfRw', 'typeof')
 break;
-case 47:return addToken(yy_.yylloc, 'parseRw')
+case 47:return addToken(yy_.yylloc, 'parseRw', 'parse')
 break;
-case 48:return addToken(yy_.yylloc, 'log10Rw')
+case 48:return addToken(yy_.yylloc, 'log10Rw', 'log10')
 break;
-case 49:return addToken(yy_.yylloc, 'printRw')
+case 49:return addToken(yy_.yylloc, 'printRw', 'print')
 break;
-case 50:return addToken(yy_.yylloc, 'toIntRw')
+case 50:return addToken(yy_.yylloc, 'toIntRw', 'toInt')
 break;
-case 51:return addToken(yy_.yylloc, 'beginRw')
+case 51:return addToken(yy_.yylloc, 'beginRw', 'begin')
 break;
-case 52:return addToken(yy_.yylloc, 'sqrtRw')
+case 52:return addToken(yy_.yylloc, 'sqrtRw', 'sqrt')
 break;
-case 53:return addToken(yy_.yylloc, 'evalRw')
+case 53:return addToken(yy_.yylloc, 'evalRw', 'eval')
 break;
-case 54:return addToken(yy_.yylloc, 'pushRw')
+case 54:return addToken(yy_.yylloc, 'pushRw', 'push')
 break;
-case 55:return addToken(yy_.yylloc, 'cosRw')
+case 55:return addToken(yy_.yylloc, 'cosRw', 'cos')
 break;
-case 56:return addToken(yy_.yylloc, 'powRw')
+case 56:return addToken(yy_.yylloc, 'powRw', 'pow')
 break;
-case 57:return addToken(yy_.yylloc, 'sinRw')
+case 57:return addToken(yy_.yylloc, 'sinRw', 'sin')
 break;
-case 58:return addToken(yy_.yylloc, 'tanRw')
+case 58:return addToken(yy_.yylloc, 'tanRw', 'tan')
 break;
-case 59:return addToken(yy_.yylloc, 'endRw')
+case 59:return addToken(yy_.yylloc, 'endRw', 'end')
 break;
-case 60:return addToken(yy_.yylloc, 'elseRw')
+case 60:return addToken(yy_.yylloc, 'elseRw', 'else')
 break;
-case 61:return addToken(yy_.yylloc, 'ifRw')
+case 61:return addToken(yy_.yylloc, 'ifRw', 'if')
 break;
-case 62:return addToken(yy_.yylloc, 'defaultRw')
+case 62:return addToken(yy_.yylloc, 'defaultRw', 'default')
 break;
-case 63:return addToken(yy_.yylloc, 'switchRw')
+case 63:return addToken(yy_.yylloc, 'switchRw', 'switch')
 break;
-case 64:return addToken(yy_.yylloc, 'breakRw')
+case 64:return addToken(yy_.yylloc, 'breakRw', 'break')
 break;
-case 65:return addToken(yy_.yylloc, 'caseRw')
+case 65:return addToken(yy_.yylloc, 'caseRw', 'case')
 break;
-case 66:return addToken(yy_.yylloc, 'whileRw')
+case 66:return addToken(yy_.yylloc, 'whileRw', 'while')
 break;
-case 67:return addToken(yy_.yylloc, 'forRw')
+case 67:return addToken(yy_.yylloc, 'forRw', 'for')
 break;
-case 68:return addToken(yy_.yylloc, 'doRw')
+case 68:return addToken(yy_.yylloc, 'doRw', 'do')
 break;
-case 69:return addToken(yy_.yylloc, 'inRw')
+case 69:return addToken(yy_.yylloc, 'inRw', 'in')
 break;
-case 70:return addToken(yy_.yylloc, 'continueRw')
+case 70:return addToken(yy_.yylloc, 'continueRw', 'continue')
 break;
-case 71:return addToken(yy_.yylloc, 'returnRw')
+case 71:return addToken(yy_.yylloc, 'returnRw', 'return')
 break;
 case 72:"\""
 break;
@@ -1250,19 +1250,19 @@ case 78:"\\0"
 break;
 case 79:
                                 yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2);
-                                return addToken(yy_.yylloc, 'text');
+                                return addToken(yy_.yylloc, 'text', yy_.yytext);
                             
 break;
 case 80:
                                 yy_.yytext = yy_.yytext.substr(1,yy_.yyleng-2);
-                                return addToken(yy_.yylloc, 'character');
+                                return addToken(yy_.yylloc, 'character', yy_.yytext);
 						    
 break;
-case 81:return addToken(yy_.yylloc, 'decimal')
+case 81:return addToken(yy_.yylloc, 'decimal', yy_.yytext)
 break;
-case 82:return addToken(yy_.yylloc, 'integer')
+case 82:return addToken(yy_.yylloc, 'integer', yy_.yytext)
 break;
-case 83:return addToken(yy_.yylloc, 'id')
+case 83:return addToken(yy_.yylloc, 'id', yy_.yytext)
 break;
 case 84:return 5
 break;
