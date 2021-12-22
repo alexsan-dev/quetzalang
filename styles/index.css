@@ -15,7 +15,7 @@ main {
 
 #editorsSlide {
   display: flex;
-  width: 200%;
+  width: 300%;
   height: calc(100% - 67px);
   transition: transform 0.2s ease-out;
 }
@@ -23,7 +23,7 @@ main {
 #editor,
 #editorTranslate {
   position: relative;
-  width: 50%;
+  width: 33.33%;
 }
 
 #tabs {
@@ -39,18 +39,18 @@ main {
   padding: 9px 15px;
   color: #fff;
   background: rgba(0, 0, 0, 0.05);
-  font-family: 'Monaco', 'Menlo';
+  font-family: 'Montserrat', sans-serif;
   margin: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 2px solid #2196f3;
+  border-bottom: 2px solid transparent;
   transition: border-color 0.2s ease-in-out;
 }
 
-#tabs > button:last-child {
-  border-color: transparent;
+#tabs > button:first-child {
+  border-color: #2196f3;
 }
 
 #tabs > button > svg {
@@ -112,7 +112,7 @@ main {
   top: 0px;
   left: 0px;
   width: 100%;
-  font-family: 'Monaco', 'Menlo';
+  font-family: 'Montserrat', sans-serif;
   color: rgba(255, 255, 255, 0.8);
   z-index: 2;
   padding: 12px;
@@ -170,7 +170,7 @@ main {
   position: relative;
   bottom: 0;
   right: 0;
-  font-family: 'Monaco', 'Menlo';
+  font-family: 'Montserrat', sans-serif;
   color: rgba(255, 255, 255, 0.8);
   width: 100%;
   display: flex;
@@ -195,4 +195,113 @@ main {
 
 .clsError {
   color: rgba(238, 80, 52, 0.8);
+}
+
+#reportsContainer {
+  width: 33.33%;
+  display: grid;
+  grid-template-columns: 40% 60%;
+  grid-template-rows: 50% 50%;
+  max-height: calc(100vh - 112px);
+  overflow: hidden;
+}
+
+#ast {
+  grid-column: 1/1;
+  grid-row: 1/3;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.symbolTable {
+  padding: 20px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto 1fr;
+  row-gap: 20px;
+}
+
+.symbolTable:first-child {
+  grid-row: 1/2;
+}
+
+.symbolTable:last-child {
+  grid-row: 2/3;
+}
+
+.symbolTable > div {
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.symbolTable > div > svg {
+  margin-right: 15px;
+  margin-left: 5px;
+  transform: scale(1.3);
+}
+
+.symbolTable > .list {
+  border: 2px solid#2196f3;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.symbolTable > .list > div:first-child,
+#tokensList > div,
+#errorsList > div {
+  font-family: 'Montserrat', sans-serif;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 170px 1fr 70px 70px;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 10px 20px;
+  width: 100%;
+  column-gap: 20px;
+}
+
+.symbolTable > .list > div:first-child {
+  background: rgba(0, 0, 0, 0.3);
+  font-weight: bold;
+}
+
+.symbolTable > .list > div > span {
+  text-align: left;
+  display: block;
+  border-right: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.symbolTable > .list > div > span:last-child {
+  border-right: none;
+}
+
+#tokensList {
+  overflow-y: auto;
+  width: 100%;
+}
+
+#errorsList {
+  overflow-y: auto;
+  width: 100%;
+}
+
+#tokensList > div > span,
+#errorsList > div > span {
+  text-align: left;
+  display: block;
+  padding-right: 20px;
+  border-right: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+#tokensList > div > span:last-child,
+#errorsList > div > span:last-child {
+  border-right: none;
+}
+
+#tokensList > div:nth-child(odd),
+#errorsList > div:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.1);
 }

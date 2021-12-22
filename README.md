@@ -42,3 +42,4 @@ npm start
 | Ctr+S   | Guardar codigo   |
 | Ctr+U   | Compartir codigo |
 | Ctr+O   | Abrir archivo    |
+| Ctr+K   | Generar reportes |

@@ -13,7 +13,7 @@ import * as parser from 'parser'
 // LISTA DE INSTRUCCIONES
 let instructions: Instruction[] = []
 let expandedConsole = true
-let isOnEditorTab = true
+let tabIndex = 0
 
 // ELEMENTOS
 const consoleTextarea = document.getElementById(
@@ -29,8 +29,12 @@ const uploadInput = document.getElementById('uploadInput')
 const terminalBtn = document.getElementById('terminalBtn')
 const runtimeBtn = document.getElementById('runtimeBtn')
 const compileBtn = document.getElementById('compileBtn')
+const tokensList = document.getElementById('tokensList')
+const errorsList = document.getElementById('errorsList')
+const reportsTab = document.getElementById('reportsTab')
 const uploadBtn = document.getElementById('uploadBtn')
 const editorTab = document.getElementById('editorTab')
+const tokensBtn = document.getElementById('tokensBtn')
 const shareBtn = document.getElementById('shareBtn')
 const cleanBtn = document.getElementById('cleanBtn')
 const saveBtn = document.getElementById('saveBtn')
@@ -47,7 +51,9 @@ export const getInstructions = (value: string) => {
 // EJECUTAR
 const runCode = () => {
   // CAMBIAR DE PESTAÑA
-  if (!isOnEditorTab) changeTab()
+  tokensList.innerHTML = ''
+  errorsList.innerHTML = ''
+  if (tabIndex !== 0) changeTab(0)()
 
   cleanConsole()
   // @ts-ignore
@@ -71,7 +77,7 @@ const runCode = () => {
 
 // TRADUCIR CODIGO
 const translateCode = () => {
-  runCode()
+  if (instructions.length === 0) runCode()
 
   if (instructions.length) {
     // REINCIIAR
@@ -94,7 +100,7 @@ const translateCode = () => {
     editorTranslate.setValue(translateCodes, -1)
 
     // ABRIR PESTAÑA
-    if (isOnEditorTab) changeTab()
+    if (tabIndex !== 1) changeTab(1)()
   }
 }
 
@@ -117,13 +123,12 @@ const openFile = (ev: Event) => {
 const cleanConsole = () => (consoleTextarea.innerHTML = '')
 
 // CAMBIAR DE PESTAÑA
-const changeTab = () => {
-  isOnEditorTab = !isOnEditorTab
-  editorContainer.style.transform = `translateX(-${
-    50 * (isOnEditorTab ? 0 : 1)
-  }%)`
-  editorTab.style.borderColor = isOnEditorTab ? '#2196f3' : 'transparent'
-  translateTab.style.borderColor = !isOnEditorTab ? '#2196f3' : 'transparent'
+const changeTab = (index: number) => () => {
+  tabIndex = index
+  editorContainer.style.transform = `translateX(-${33.33 * tabIndex}%)`
+  editorTab.style.borderColor = tabIndex === 0 ? '#2196f3' : 'transparent'
+  reportsTab.style.borderColor = tabIndex === 2 ? '#2196f3' : 'transparent'
+  translateTab.style.borderColor = tabIndex === 1 ? '#2196f3' : 'transparent'
 }
 
 // OCULTAR CONSOLA
@@ -169,15 +174,74 @@ const saveCode = () => {
   window.localStorage.setItem('code', value)
 }
 
+// GENERAR REPORTES
+const generateReports = () => {
+  // COMPILAR Y GENERAR
+  if (instructions.length === 0) runCode()
+  if (expandedConsole) collapseConsole()
+
+  if (instructions.length) {
+    // GENERAR SIMBOLOS
+    symbols.forEach((symbol) => {
+      // CREAR
+      const li = document.createElement('div')
+      const name = document.createElement('span')
+      const token = document.createElement('span')
+      const line = document.createElement('span')
+      const col = document.createElement('span')
+
+      // ASIGNAR
+      name.innerHTML = symbol.name
+      token.innerHTML = symbol.name
+      line.innerHTML = symbol.line.toString()
+      col.innerHTML = symbol.col.toString()
+
+      // AGREGAR
+      li.appendChild(name)
+      li.appendChild(token)
+      li.appendChild(line)
+      li.appendChild(col)
+      tokensList.appendChild(li)
+    })
+
+    // GENERAR ERRORES
+    errors.forEach((symbol) => {
+      // CREAR
+      const li = document.createElement('div')
+      const name = document.createElement('span')
+      const token = document.createElement('span')
+      const line = document.createElement('span')
+      const col = document.createElement('span')
+
+      // ASIGNAR
+      name.innerHTML = symbol.type
+      token.innerHTML = symbol.msg
+      line.innerHTML = symbol.token.line.toString()
+      col.innerHTML = symbol.token.col.toString()
+
+      // AGREGAR
+      li.appendChild(name)
+      li.appendChild(token)
+      li.appendChild(line)
+      li.appendChild(col)
+      errorsList.appendChild(li)
+    })
+
+    if (tabIndex !== 2) changeTab(2)()
+  }
+}
+
 // EVENTOS
 const setEvents = () => {
   collapseBtn?.addEventListener('click', collapseConsole)
   terminalBtn?.addEventListener('click', collapseConsole)
+  translateTab?.addEventListener('click', changeTab(1))
+  tokensBtn?.addEventListener('click', generateReports)
   compileBtn?.addEventListener('click', translateCode)
-  translateTab?.addEventListener('click', changeTab)
+  editorTab?.addEventListener('click', changeTab(0))
+  reportsTab.addEventListener('click', changeTab(2))
   uploadInput?.addEventListener('change', openFile)
   cleanBtn?.addEventListener('click', cleanConsole)
-  editorTab?.addEventListener('click', changeTab)
   shareBtn?.addEventListener('click', shareCode)
   runtimeBtn?.addEventListener('click', runCode)
   saveBtn?.addEventListener('click', saveCode)
@@ -207,6 +271,9 @@ const setEvents = () => {
         isCtrl = true
       } else if (ev.key === 'e') {
         translateCode()
+        isCtrl = true
+      } else if (ev.key === 'k') {
+        generateReports()
         isCtrl = true
       }
 

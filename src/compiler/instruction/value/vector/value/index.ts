@@ -43,17 +43,21 @@ class VectorPositionValue extends Value {
   public getValue(scope: Scope): DataValue | undefined {
     // OBTENER INDICE
     const indexValue = this.props.index.getValue(scope)
+    const indexType = indexValue?.getType(scope)
 
     // VALIDAR INDEX
-    if (indexValue?.getType(scope).type === DataTypeEnum.INTEGER) {
+    if (
+      indexType.type === DataTypeEnum.INTEGER ||
+      indexType.type === DataTypeEnum.DOUBLE
+    ) {
       // VALIDAR VARIABLE
-      const indexPrimitive = indexValue.getValue(scope) as number
+      const indexPrimitive = indexValue.getValue(scope) as number | string
 
       if (this.props.value.getType(scope).type === DataTypeEnum.ARRAY) {
         const array: DataValue[] = this.props.value?.getValue(
           scope,
         ) as DataValue[]
-        if (array) return array[indexPrimitive]
+        if (array) return array[parseInt(indexPrimitive.toString(), 10)]
       } else
         addError(
           this.token,

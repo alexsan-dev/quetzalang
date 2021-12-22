@@ -19,6 +19,12 @@
     <meta name="MobileOptimized" content="width" />
     <title>Quetzalang</title>
     <link rel="stylesheet" href="styles/index.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <main>
@@ -31,6 +37,7 @@
         <input type="file" id="uploadInput" style="display: none" />
         <button id="shareBtn"><i data-feather="share-2"></i></button>
         <button id="compileBtn"><i data-feather="globe"></i></button>
+        <button id="tokensBtn"><i data-feather="key"></i></button>
         <button id="cleanBtn"><i data-feather="x-circle"></i></button>
         <button id="terminalBtn"><i data-feather="terminal"></i></button>
       </div>
@@ -40,10 +47,56 @@
           <button id="translateTab">
             <i data-feather="globe"></i>Traducción
           </button>
+          <button id="reportsTab"><i data-feather="file"></i>Reportes</button>
         </div>
         <div id="editorsSlide">
           <div id="editor"></div>
           <div id="editorTranslate"></div>
+          <div id="reportsContainer">
+            <div id="ast"></div>
+            <div class="symbolTable">
+              <div>
+                <i data-feather="key"></i>
+                <div>
+                  <h2>Lista de simbolos</h2>
+                  <p>
+                    Aqui se muestra la lista de tokens generados por el
+                    analizador.
+                  </p>
+                </div>
+              </div>
+              <div class="list">
+                <div>
+                  <span>Nombre</span>
+                  <span>Token</span>
+                  <span>Linea</span>
+                  <span>Columna</span>
+                </div>
+                <div id="tokensList"></div>
+              </div>
+            </div>
+            <div class="symbolTable">
+              <div>
+                <i data-feather="x-circle"></i>
+                <div>
+                  <h2>Lista de errores</h2>
+                  <p>
+                    La lista de erores se mostrara si existen errores lexicos,
+                    sintacticos o semanticos.
+                  </p>
+                </div>
+              </div>
+              <div class="list">
+                <div>
+                  <span>Tipo</span>
+                  <span>Descripción</span>
+                  <span>Linea</span>
+                  <span>Columna</span>
+                </div>
+                <div id="errorsList"></div>
+              </div>
+            </div>
+          </div>
         </div>
         <div id="codeInfo">
           <span>Quetzalang</span>

@@ -425,8 +425,8 @@ VARVALUE : decimal {
         $$ = new BooleanValue(getToken(@1), $1)
     } | flBool {
         $$ = new BooleanValue(getToken(@1), $1)
-    } | openSquareBracket EXPLIST closeSquareBracket {
-        $$ = new VectorValue(getToken(@1), $2)
+    } | ARRAYLIST {
+        $$ = $1
     } | ARRAYRANGE {
         $$ = $1
     } | VALUEMETHOD {
@@ -450,11 +450,7 @@ VALUEMETHOD : METHODCALL {
 VECTORVALUE : VARVALUE openSquareBracket EXPRESSIONS closeSquareBracket {
         $$ = new VectorPositionValue(getToken(@1), { value: $1, index: $3 })
     };
-
-ARRRAYCOPY : hash VARVALUE {
-        $$ = new VectorCopyValue(getToken(@1), { value: $2 })
-    };
-
+    
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* METODOS */
 PARAMSLIST : PARAMSLIST comma PARAMVAR {
@@ -498,6 +494,16 @@ METHODCALL : VARVALUE dot id openParenthesis EXPLIST closeParenthesis {
 
 /*. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .*/
 /* METODOS DE ARRAY */
+ARRRAYCOPY : hash VARVALUE {
+        $$ = new VectorCopyValue(getToken(@1), { value: $2 })
+    };
+
+ARRAYLIST : openSquareBracket EXPLIST closeSquareBracket {
+        $$ = new VectorValue(getToken(@1), $2)
+    } | openSquareBracket closeSquareBracket {
+        $$ = new VectorValue(getToken(@1), [])
+    };
+
 ARRAYRANGE : VARVALUE openSquareBracket 
     ARRAYRANGEPOSITION colom ARRAYRANGEPOSITION closeSquareBracket {
         $$ = new VectorRangeValue(getToken(@1), { 
