@@ -1,8 +1,10 @@
-import DataType, { DataTypeEnum, TokenInfo } from '../../../utils/types'
+import { DataTypeEnum, Operator, TokenInfo } from '../../../utils/types'
 import Instruction, { TAC } from '../../abstract'
+import { add3AC } from '../../../utils/tools'
 import FunctionBlock from '../../functions'
 import Scope from '../../../runtime/scope'
 import Expression from '../../expression'
+import Condition from '..'
 
 // PROPS
 interface CaseBody {
@@ -27,8 +29,45 @@ class Switch extends Instruction {
   }
 
   // GENERAR 3D
-  public to3AC(scope: Scope, type?: DataType): TAC {
-    throw new Error('Method not implemented.')
+  public to3AC(scope: Scope): TAC {
+    // GENERAR CODIGO COMO SI FUERA UN IF
+    let code: string = ''
+    const casesCopy = [...this.props.cases]
+    const caseValue = casesCopy.pop().case.getValue(scope)
+
+    const ifControl = new Condition(this.token, {
+      valid: {
+        exp: new Expression(this.token, {
+          left: this.props.value,
+          operator: Operator.EQUALSEQUALS,
+          right: new Expression(this.token, { value: caseValue }),
+        }),
+        body: this.props.cases[0].body,
+      },
+      fallback:
+        casesCopy.map((caseExp) => ({
+          exp: new Expression(this.token, {
+            left: this.props.value,
+            operator: Operator.EQUALSEQUALS,
+            right: new Expression(this.token, {
+              value: caseExp.case.getValue(scope),
+            }),
+          }),
+          body: caseExp.body,
+        })) || [],
+      inValid: this.props.default
+        ? {
+            exp: {} as Expression,
+            body: this.props.default.body,
+          }
+        : undefined,
+    })
+
+    // AGRERGAR
+    code = ifControl.to3AC(scope).extra
+
+    // AGREGAR
+    return add3AC({ label: '', code: '-' })
   }
 
   // AGREGAR FUNCION DE SALIDA

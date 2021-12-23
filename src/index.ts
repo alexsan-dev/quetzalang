@@ -51,8 +51,6 @@ export const getInstructions = (value: string) => {
 // EJECUTAR
 const runCode = () => {
   // CAMBIAR DE PESTAÑA
-  tokensList.innerHTML = ''
-  errorsList.innerHTML = ''
   if (tabIndex !== 0) changeTab(0)()
 
   cleanConsole()
@@ -97,6 +95,7 @@ const translateCode = () => {
         return final3AC
       })
       .join('\n')
+
     editorTranslate.setValue(translateCodes, -1)
 
     // ABRIR PESTAÑA
@@ -176,6 +175,9 @@ const saveCode = () => {
 
 // GENERAR REPORTES
 const generateReports = () => {
+  tokensList.innerHTML = ''
+  errorsList.innerHTML = ''
+
   // COMPILAR Y GENERAR
   if (instructions.length === 0) runCode()
   if (expandedConsole) collapseConsole()

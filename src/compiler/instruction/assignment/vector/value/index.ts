@@ -1,7 +1,8 @@
-import { addError } from '../../../../utils/tools'
+import { add3AC, addError } from '../../../../utils/tools'
 import VectorValue from '../../../value/vector'
 import Scope from '../../../../runtime/scope'
 import Expression from '../../../expression'
+import { TAC } from '../../../abstract'
 import IdValue from '../../../value/id'
 import Assignment from '../../'
 import DataType, {
@@ -22,6 +23,16 @@ class VectorPositionAssignment extends Assignment {
     },
   ) {
     super(token, '')
+  }
+
+  // AGREGAR 3D
+  public to3AC(scope: Scope): TAC {
+    // INDICE DE EXPRESION
+    const index = this.props.index.to3AC(scope)
+    return add3AC({
+      label: `${this.props.id.to3AC().code}[${index.code}]`,
+      code: `${this.props.exp.to3AC(scope).code}`,
+    })
   }
 
   // COMPILAR

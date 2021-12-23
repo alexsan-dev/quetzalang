@@ -1,8 +1,13 @@
-import { DataTypeEnum, Operator, TokenInfo } from '../../../utils/types'
-import { addError } from '../../../utils/tools'
+import DataType, {
+  DataTypeEnum,
+  Operator,
+  TokenInfo,
+} from '../../../utils/types'
+import { add3AC, addError } from '../../../utils/tools'
 import DoubleValue from '../../value/double'
 import Scope from '../../../runtime/scope'
 import IntValue from '../../value/int'
+import { TAC } from '../../abstract'
 import Value from '../../value'
 import Assignment from '../'
 
@@ -14,6 +19,16 @@ class IncrementalAssignment extends Assignment {
     public props: { id: string; operator: Operator },
   ) {
     super(token, props.id)
+  }
+
+  // GENERAR 3D
+  public to3AC(): TAC {
+    return add3AC({
+      label: `${this.props.id}`,
+      code: `${this.props.id} ${
+        this.props.operator === Operator.PLUSPLUS ? '+ 1' : '- 1'
+      }`,
+    })
   }
 
   // COMPILAR
