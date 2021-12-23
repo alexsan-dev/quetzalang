@@ -88,10 +88,13 @@ const translateCode = () => {
     const translateCodes: string = codes
       .map((code) => {
         let final3AC: string = ''
-        if (code.label === code.code) final3AC += code.label + ';\n'
+        if (code.isMultiple) final3AC = code.code
+        else {
+          if (code.label === code.code) final3AC += code.label + ';\n'
+          else final3AC = `${code.label} = ${code.code};`
+        }
 
-        if (code.extra !== undefined) final3AC += `${code.extra}`
-        else final3AC = `${code.label} = ${code.code};`
+        if (code.modifier) final3AC += code.modifier
         return final3AC
       })
       .join('\n')

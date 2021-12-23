@@ -21,13 +21,13 @@ class ReturnValue extends Instruction {
   public to3AC(scope: Scope): TAC {
     const code =
       this.props.type === 'Return'
-        ? `return ${this.props.content?.to3AC(scope)?.code}`
-        : this.props.type.toLowerCase()
+        ? `return ${this.props.content?.to3AC(scope)?.code};`
+        : `${this.props.type.toLowerCase()};`
 
     return add3AC({
       label: '',
       code,
-      extra: `${code};`,
+      isMultiple: true,
     })
   }
 

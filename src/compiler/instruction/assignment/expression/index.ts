@@ -44,7 +44,7 @@ class ExpAssignment extends Assignment {
           tac = {
             label: this.id,
             code: this.id,
-            extra: expTac
+            modifier: expTac
               ? `CC_MEMCPY(${this.id}, ${expTac?.code}, sizeof(${expTac?.code}));`
               : '',
           }
@@ -52,7 +52,6 @@ class ExpAssignment extends Assignment {
         tac = {
           label: this.id,
           code: this.id,
-          extra: '',
         }
     } else tac = { label: this.id, code: this.props.exp.to3AC(scope).code }
 

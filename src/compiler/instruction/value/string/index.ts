@@ -20,7 +20,7 @@ class StringValue extends Value {
 
   // CODIGO 3D
   public to3AC(scope: Scope): TAC {
-    return getLast3AC(this.getValue(scope) as string)
+    return getLast3AC(`"${this.getValue(scope) as string}"`)
   }
 
   // COMPILAR UN VALOR SIEMPRE DEVOLVERA TRUE

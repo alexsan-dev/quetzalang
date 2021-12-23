@@ -1,6 +1,6 @@
+import { add3AC, getLastLabel, getTemporal3AC } from '../../utils/tools'
 import Instruction, { TAC } from '../abstract'
 import { TokenInfo } from '../../utils/types'
-import { add3AC, getLastLabel, getTemporal3AC } from '../../utils/tools'
 import Scope from '../../runtime/scope'
 import Expression from '../expression'
 
@@ -31,15 +31,16 @@ class Condition extends Instruction {
 
     if (!this.props.inValid && !this.props.fallback) {
       const exitLabel = getLastLabel(true)
+      const code = `if(${
+        this.props.valid.exp.to3AC(scope).code
+      }) goto ${validLabel};\ngoto ${exitLabel};\n${validLabel}:\n${this.props.valid.body
+        .map((exp) => exp?.to3AC(scope)?.code)
+        .join('\n')}\ngoto ${exitLabel};\n${exitLabel}: ;\n`
 
       return add3AC({
         label: getTemporal3AC(false),
-        code: '',
-        extra: `if(${
-          this.props.valid.exp.to3AC(scope).code
-        }) goto ${validLabel};\ngoto ${exitLabel};\n${validLabel}:\n${this.props.valid.body
-          .map((exp) => exp?.to3AC(scope)?.code)
-          .join('\n')}\ngoto ${exitLabel};\n${exitLabel}: ;\n`, // TODO: resto de instrucciones
+        code,
+        isMultiple: true,
       })
     }
 
@@ -47,19 +48,20 @@ class Condition extends Instruction {
     else if (this.props.valid && this.props.inValid && !this.props.fallback) {
       const inValidLabel = getLastLabel(true)
       const exitLabel = getLastLabel(true)
+      const code = `if(${
+        this.props.valid.exp.to3AC(scope).code
+      }) goto ${validLabel};\ngoto ${inValidLabel};\n${validLabel}:\n${this.props.valid.body
+        .map((exp) => exp?.to3AC(scope)?.code)
+        .join(
+          '\n',
+        )}goto ${exitLabel};\n${inValidLabel}:\n${this.props.inValid.body
+        .map((exp) => exp?.to3AC(scope)?.code)
+        .join('\n')}\n${exitLabel}: ;\n`
 
       return add3AC({
         label: getTemporal3AC(false),
-        code: '',
-        extra: `if(${
-          this.props.valid.exp.to3AC(scope).code
-        }) goto ${validLabel};\ngoto ${inValidLabel};\n${validLabel}:\n${this.props.valid.body
-          .map((exp) => exp?.to3AC(scope)?.code)
-          .join(
-            '\n',
-          )}goto ${exitLabel};\n${inValidLabel}:\n${this.props.inValid.body
-          .map((exp) => exp?.to3AC(scope)?.code)
-          .join('\n')}\n${exitLabel}: ;\n`, // TODO: resto de instrucciones
+        code,
+        isMultiple: true,
       })
     }
 
@@ -95,20 +97,21 @@ class Condition extends Instruction {
 
       const elifSequence = getElif3AC()
       const exitLabel = getLastLabel(true)
+      const code = `if(${
+        this.props.valid.exp.to3AC(scope).code
+      }) goto ${validLabel};\ngoto ${inValidLabel};\n${validLabel}:\n${this.props.valid.body
+        .map((exp) => exp?.to3AC(scope)?.code)
+        .join(
+          '\n',
+        )}\ngoto ${exitLabel};\n${inValidLabel}:\n${elifSequence.replace(
+        /EXITLABEL/g,
+        exitLabel,
+      )}\n${exitLabel}: ;`
 
       return add3AC({
         label: getTemporal3AC(false),
-        code: '',
-        extra: `if(${
-          this.props.valid.exp.to3AC(scope).code
-        }) goto ${validLabel};\ngoto ${inValidLabel};\n${validLabel}:\n${this.props.valid.body
-          .map((exp) => exp?.to3AC(scope)?.code)
-          .join(
-            '\n',
-          )}\ngoto ${exitLabel};\n${inValidLabel}:\n${elifSequence.replace(
-          /EXITLABEL/g,
-          exitLabel,
-        )}\n${exitLabel}: ;`, // TODO: resto de instrucciones
+        code,
+        isMultiple: true,
       })
     }
   }

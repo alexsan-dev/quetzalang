@@ -1,4 +1,5 @@
 import DataType, { DataTypeEnum, TokenInfo } from '../../utils/types'
+import { add3AC, getTemporal3AC } from '../../utils/tools'
 import Instruction, { TAC } from '../abstract'
 import FunctionBlock from '../functions'
 import Scope from '../../runtime/scope'
@@ -62,8 +63,30 @@ class CycleControl extends Instruction {
   }
 
   // GENERAR 3D
-  public to3AC(scope: Scope, type?: DataType): TAC {
-    throw new Error('Method not implemented.')
+  public to3AC(scope: Scope): TAC {
+    if (!this.props.isDoLoop) {
+      const loopLabel = getTemporal3AC(true)
+      const conditionLabel = getTemporal3AC(true)
+      const exitLabel = getTemporal3AC(true)
+      const ifCode = this.props.condition.to3AC(scope).code
+
+      const code: string = `${loopLabel}:\nif(${ifCode}) goto ${conditionLabel};\ngoto ${exitLabel};\n${conditionLabel}:\n${this.props.body
+        .map((exp) => `${exp.to3AC(scope).code}`)
+        .join('\n')}\ngoto ${loopLabel};\n${exitLabel}: ;`
+
+      // AGREGAR
+      return add3AC({ label: '', code, isMultiple: true })
+    } else {
+      const conditionLabel = getTemporal3AC(true)
+      const ifCode = this.props.condition.to3AC(scope).code
+
+      const code: string = `${conditionLabel}:\n${this.props.body
+        .map((exp) => `${exp.to3AC(scope).code}`)
+        .join('\n')}\nif(${ifCode}) goto ${conditionLabel};`
+
+      // AGREGAR
+      return add3AC({ label: '', code, isMultiple: true })
+    }
   }
 
   // COMPILAR

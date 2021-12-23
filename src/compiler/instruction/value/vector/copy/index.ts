@@ -31,7 +31,7 @@ class VectorCopyValue extends Value {
     return add3AC({
       label: lastTemporal,
       code: lastTemporal,
-      extra: `CC_MEMCPY(${lastTemporal}, ${originArray.code}, sizeof(${originArray.code}));`,
+      modifier: `CC_MEMCPY(${lastTemporal}, ${originArray.code}, sizeof(${originArray.code}));`,
     })
   }
 

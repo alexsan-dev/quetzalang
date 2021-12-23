@@ -17,9 +17,10 @@ export type InstructionName =
   | 'Switch'
 
 export interface TAC {
+  isMultiple?: boolean
+  modifier?: string
   label: string
   code: string
-  extra?: string
 }
 
 abstract class Instruction {

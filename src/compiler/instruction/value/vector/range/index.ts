@@ -42,7 +42,7 @@ class VectorRangeValue extends Value {
     return add3AC({
       label: lastTemporal,
       code: lastTemporal,
-      extra: `${lastTemporal} = { ${this.getValue(scope).join(', ')} };`,
+      modifier: `${lastTemporal} = { ${this.getValue(scope).join(', ')} };`,
     })
   }
 

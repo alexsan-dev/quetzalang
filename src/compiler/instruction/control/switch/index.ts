@@ -64,10 +64,10 @@ class Switch extends Instruction {
     })
 
     // AGRERGAR
-    code = ifControl.to3AC(scope).extra
+    code = ifControl.to3AC(scope).code
 
     // AGREGAR
-    return add3AC({ label: '', code: '-' })
+    return { label: '', code, isMultiple: true }
   }
 
   // AGREGAR FUNCION DE SALIDA
